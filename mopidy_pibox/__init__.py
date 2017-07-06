@@ -27,7 +27,7 @@ class Extension(ext.Extension):
         schema = super(Extension, self).get_config_schema()
         return schema
 
-    def my_app_factory(config, core)
+    def my_app_factory(config, core):
         return [
         ('/', MyRequestHandler, {'core': core})
         ]
