@@ -34,6 +34,9 @@ class Extension(ext.Extension):
 
     def setup(self, registry):
 
+        ##from .frontend import PiboxFrontend
+        ##registry.add('frontend', PiboxFrontend)
+
         # TODO: Edit or remove entirely
         registry.add('http:app', {
             'name': self.ext_name,

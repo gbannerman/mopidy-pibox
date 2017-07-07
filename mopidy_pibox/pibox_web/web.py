@@ -21,10 +21,8 @@ class MyRequestHandler(tornado.web.RequestHandler):
         play_song()
 
 def play_song():
-    spot_backend = backend.SpotifyBackend()
-    
-    playback_prov = spot_backend.playback
-    
+    list_of_tracks = []
     uri = 'spotify:track:0Lx6O1tC3CPF1giLJIt5Jv'
-    track = models.Track(uri=uri)
-    playback_prov.change_track(track)
+    list_of_uris.append(uri)
+    self.core.tracklist.add(list_of_uris)
+    self.core.playback.next()
