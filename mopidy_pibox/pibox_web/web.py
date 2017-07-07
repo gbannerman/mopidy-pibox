@@ -18,11 +18,13 @@ class MyRequestHandler(tornado.web.RequestHandler):
         self.write(
             'Hello, world! This is Mopidy %s' %
             self.core.get_version().get())
-        play_song()
+        play_song(self.core)
 
-def play_song():
-    list_of_tracks = []
+def play_song(core):
+    list_of_uris = []
     uri = 'spotify:track:0Lx6O1tC3CPF1giLJIt5Jv'
     list_of_uris.append(uri)
-    self.core.tracklist.add(list_of_uris)
-    self.core.playback.next()
+    list_of_uris.append(uri)
+    core.tracklist.add(list_of_uris)
+    core.playback.next()
+    core.playback.play()
