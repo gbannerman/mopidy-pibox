@@ -21,9 +21,11 @@ class MyRequestHandler(tornado.web.RequestHandler):
         self.core.tracklist.clear()
         list_of_uris.append(uri)
         list_of_uris.append(uri)
+        self.core.tracklist.repeat = True
         self.core.tracklist.add(list_of_uris)
         self.core.playback.next()
         self.core.playback.play()
+        self.core.playback.play().get()
 
 # def play_song(core):
 #     list_of_uris = []
