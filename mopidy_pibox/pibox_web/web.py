@@ -8,13 +8,21 @@ import spotify
 
 from mopidy_spotify import backend, playback
 
-class MyRequestHandler(tornado.web.RequestHandler):
+class SearchHandler(tornado.web.RequestHandler):
     def initialize(self, core):
         self.core = core
 
     def get(self):
-        search_result = self.core.library.search(any=['run the jewels'], uris=['spotify:']).get()
+        search_term = self.get_body_argument("message")
+        search_result = self.core.library.search(any=[search_term], uris=['spotify:']).get()
         self.render("tracks.html", search_result=search_result)
+
+class MainHandler(tornado.web.RequestHandler):
+    def initialize(self):
+
+    def get(self):
+        self.render("search.html", search_result=search_result)
+
 
 # def play_song(core):
 #     list_of_uris = []
