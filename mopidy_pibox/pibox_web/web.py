@@ -23,7 +23,8 @@ class MainHandler(tornado.web.RequestHandler):
         self.render("search.html")
 
 class AddTrackHandler(tornado.web.RequestHandler):
-    def initialize(self):
+    def initialize(self, core):
+        self.core = core
 
     def get(self):
         uri = self.get_argument("uri", None)
