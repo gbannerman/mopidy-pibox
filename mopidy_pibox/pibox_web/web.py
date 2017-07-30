@@ -13,13 +13,9 @@ class MyRequestHandler(tornado.web.RequestHandler):
         self.core = core
 
     def get(self):
-        list_of_uris = []
         uri = 'spotify:track:0Lx6O1tC3CPF1giLJIt5Jv'
-        self.core.tracklist.clear()
-        list_of_uris.append(uri)
-        list_of_uris.append(uri)
-        self.core.tracklist.repeat = True
-        self.core.tracklist.add(list_of_uris)
+        self.core.tracklist.add(uri)
+        self.core.tracklist.add(uri)
         self.core.playback.next()
         self.core.playback.play()
         self.write(
