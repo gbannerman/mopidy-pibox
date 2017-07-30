@@ -14,7 +14,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
 
     def get(self):
         search_results = self.core.library.search(any=['run the jewels'], uris=['spotify:']).get()
-        self.render("tracks.html", tracks=search_results.tracks)
+        self.render("tracks.html", tracks=search_results)
 
 # def play_song(core):
 #     list_of_uris = []
