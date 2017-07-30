@@ -24,8 +24,9 @@ class MyRequestHandler(tornado.web.RequestHandler):
         self.core.playback.play()
         self.core.playback.play().get()
         self.write(
-            'Hello, world! length: %s, state: %s' %
-            self.core.tracklist.length,
+            'Hello, world! Next track: %s, Previous track: %s, state: %s' %
+            self.core.tracklist.next_track().get().track.name,
+            self.core.tracklist.previous_track().get().track.name,
             self.core.playback.state )
 
 # def play_song(core):
