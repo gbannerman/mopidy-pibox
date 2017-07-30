@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 def my_app_factory(config, core):
     return [
         ('/', web.MainHandler),
-        ('/results', web.SearchHandler, {'core': core}),
-        ('/add', web.AddTrackHandler, {'core': core})
+        ('/results/', web.SearchHandler, {'core': core}),
+        ('/add/', web.AddTrackHandler, {'core': core})
     ]
 
 
