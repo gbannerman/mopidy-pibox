@@ -13,14 +13,21 @@ class SearchHandler(tornado.web.RequestHandler):
         self.core = core
 
     def get(self):
-        search_term = self.get_body_argument("message")
+        search_term = self.get_body_argument("query")
         search_result = self.core.library.search(any=[search_term], uris=['spotify:']).get()
-        self.render("tracks.html", search_result=search_result)
+        self.render("tracks.html", search_result=search_result, search_term=search_term)
 
 class MainHandler(tornado.web.RequestHandler):
     def initialize(self):
 
     def get(self):
+        self.render("search.html")
+
+class AddTrackHandler(tornado.web.RequestHandler):
+    def initialize(self):
+
+    def get(self):
+        uri = self.get_argument("uri", None)
         self.render("search.html", search_result=search_result)
 
 
