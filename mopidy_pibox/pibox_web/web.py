@@ -24,8 +24,8 @@ class MyRequestHandler(tornado.web.RequestHandler):
         self.core.playback.play()
         self.write(
             'Hello, world! length: %s, state: %s' %
-            self.core.tracklist.length.get(),
-            self.core.playback.state.get() )
+            (self.core.tracklist.length.get(),
+            self.core.playback.state.get()) )
 
 # def play_song(core):
 #     list_of_uris = []
