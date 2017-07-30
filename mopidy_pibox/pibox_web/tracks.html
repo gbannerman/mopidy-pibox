@@ -1,13 +1,13 @@
 <html>
   <head>
     <title>Results</title>
-    <link rel="stylesheet" type="text/css" href="/style/tracks.css">
+    <link rel="stylesheet" type="text/css" href="style/tracks.css">
   </head>
   <body>
   <p>Results for "{{ search_term }}"</p>
     <ul>
       {% for track in search_result[0].tracks %}
-      <li><b>{{ track.name }}
+      <li><b>{{ track.name }} - {{ track.artists }}
       </b>: <a href="www.google.com/{{ track.uri }}">ADD</a></li>
       {% end %}
     </ul>
