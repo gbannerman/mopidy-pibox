@@ -7,7 +7,9 @@
   <p>Results for "{{ search_term }}"</p>
     <ul>
       {% for track in search_result[0].tracks %}
-      <li><b>{{ track.name }} - {{ track.artists.pop() }}
+      <li><b>{{ track.name }} - 
+      {% for artist in track.artists %}
+      {{ artist.name}}
       </b>: <a href="www.google.com/{{ track.uri }}">ADD</a></li>
       {% end %}
     </ul>
