@@ -13,15 +13,10 @@ class MyRequestHandler(tornado.web.RequestHandler):
         self.core = core
 
     def get(self):
-        uri = 'spotify:track:0Lx6O1tC3CPF1giLJIt5Jv'
-        self.core.tracklist.add(uri)
-        self.core.tracklist.add(uri)
-        self.core.playback.next()
-        self.core.playback.play()
+        self.core.library.search(artist=['run the jewels'], uris=['spotify:']).get()
         self.write(
-            'Hello, world! length: %s, state: %s' %
-            (self.core.tracklist.length.get(),
-            self.core.playback.state.get()) )
+            'Hello, world! length: %s' %
+            (self.core.library.search(artist=['run the jewels'], uris=['spotify:']).get())
 
 # def play_song(core):
 #     list_of_uris = []
