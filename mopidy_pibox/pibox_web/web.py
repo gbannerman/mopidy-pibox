@@ -18,7 +18,6 @@ class SearchHandler(tornado.web.RequestHandler):
         self.render("tracks.html", search_result=search_result, search_term=search_term)
 
 class MainHandler(tornado.web.RequestHandler):
-    def initialize(self):
 
     def get(self):
         self.render("search.html")
