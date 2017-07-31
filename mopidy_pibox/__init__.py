@@ -13,10 +13,14 @@ __version__ = '0.1.0'
 logger = logging.getLogger(__name__)
 
 def my_app_factory(config, core):
+
+	path = os.path.join(os.path.dirname(__file__), 'pibox_web/style')
+
     return [
-        ('/', web.MainHandler),
-        ('/results/', web.SearchHandler, {'core': core}),
-        ('/add/', web.AddTrackHandler, {'core': core})
+        (r'/', web.MainHandler),
+        (r'/results/', web.SearchHandler, {'core': core}),
+        (r'/add/', web.AddTrackHandler, {'core': core}),
+        (r"/style/(.*)", web.StaticFileHandler, {"path": path}),
     ]
 
 
@@ -43,4 +47,5 @@ class Extension(ext.Extension):
         registry.add('http:app', {
             'name': self.ext_name,
             'factory': my_app_factory,
+            ''
         })
