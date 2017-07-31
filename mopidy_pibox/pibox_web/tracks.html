@@ -10,11 +10,15 @@
       <li><b>{{ track.name }} -
         {% set i = 0 %} 
         {% for artist in track.artists %}
-          {{ artist.name}}
+          {{ artist.name }}
           {% set i += 1 %}
           {% if i != len(track.artists) %}, {% end %}
         {% end %}
-      </b>: {{ track.performers }} : <a href="../style/tracks.css">ADD</a></li>
+      </b>: 
+      {% for performer in track.performers %}
+          {{ performer }}
+      {% end %}  
+       : <a href="../style/tracks.css">ADD</a></li>
       {% end %}
     </ul>
   </body>
