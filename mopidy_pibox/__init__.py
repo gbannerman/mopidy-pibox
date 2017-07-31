@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 def my_app_factory(config, core):
 
-	path = os.path.join(os.path.dirname(__file__), 'pibox_web/style')
+    path = os.path.join(os.path.dirname(__file__), 'pibox_web/style')
 
     return [
         (r'/', web.MainHandler),
