@@ -1,45 +1,24 @@
-/*body {
-	font-family: 'Roboto', sans-serif;
-	width: 100%;
+html, body {
+    height: 100%;
 }
 
-input {
-	font-family: 'Roboto', sans-serif;
-	width: 90%;
-	height: 20%;
-	margin-top: 40%;
-	margin-bottom: 40%; 
-	margin-left: 5%;
-	margin-right: 5%;
+.main {
+    height: 100%;
+    width: 100%;
+    display: table;
 }
 
-form {
-	height: 100%;
-	width: 100%;
-}*/
-
-html,body{width:100%;height:100%}
-
-.depth {
-    display: inline-block;
-    width: 20%;
-    border: 1px solid rgba(255,255,255,0.6);
-    background: linear-gradient(#eee, #fff);
-    transition: all 0.3s ease-out;
-    box-shadow: 
-        inset 0 1px 4px rgba(0,0,0,0.4);
-    padding: 5px;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    color: #F00;
-	text-align: left; 
-	font-family: 'Roboto', sans-serif;
+.wrapper {
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
 }
-span {
-	display: flex;
-  	justify-content: center;
-  	align-items: center;
-/*    display: inline-block;
-    width:40%;
-    outline: 1px dashed red;*/
+
+#searchField{
+    height: 25px;
+    width: 200px;
+    display:inline-block;
+    margin:4px auto;
+    font-family: 'Roboto', sans-serif;
 }
