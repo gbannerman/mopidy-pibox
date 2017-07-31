@@ -29,6 +29,7 @@ class AddTrackHandler(tornado.web.RequestHandler):
     def get(self):
         uri = self.get_argument("uri", None)
         new_position = self.core.tracklist.length.get()
+        self.core.tracklist.consume = True
         self.core.tracklist.add(uri=uri, at_position=new_position)
         redirect_url = '/pibox/'
         self.redirect(url=redirect_url)
