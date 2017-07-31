@@ -23,11 +23,6 @@
     font-family: 'Roboto', sans-serif;
 }*/
 
-
-html, body {
-    height: 100%;
-}
-
 .main {
     height: 100%;
     width: 100%;
@@ -61,7 +56,6 @@ table td {
 
 table {
   width: 65%;
-  min-width: 10em;
   display: inline-block;
   text-align: center;
   empty-cells: show;
