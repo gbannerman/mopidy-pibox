@@ -28,7 +28,8 @@ class AddTrackHandler(tornado.web.RequestHandler):
 
     def get(self):
         uri = self.get_argument("uri", None)
-        self.core.tracklist.add(uri=uri, at_position=null)
+        new_position = self.core.tracklist.length.get()
+        self.core.tracklist.add(uri=uri, at_position=new_position)
 
 class StartHandler(tornado.web.RequestHandler):
     def initialize(self, core):
