@@ -36,10 +36,13 @@ class StartHandler(tornado.web.RequestHandler):
         self.core = core
 
     def get(self):
-        if (self.core.playback.state == PlaybackState.PLAYING):
+        if (self.core.playback.state.get() == PlaybackState.PLAYING):
             self.core.playback.pause()
         else:
             self.core.playback.play()
+
+        self.write('Hello, world! Currently: %s' %
+            self.core.playback.state.get())
 
 
 # def play_song(core):
