@@ -47,5 +47,4 @@ class Extension(ext.Extension):
         registry.add('http:app', {
             'name': self.ext_name,
             'factory': my_app_factory,
-            ''
         })
