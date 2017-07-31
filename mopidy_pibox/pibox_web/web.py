@@ -6,7 +6,7 @@ import tornado.web
 
 import spotify
 
-from mopidy_spotify import backend, playback
+from mopidy.core import PlaybackState
 
 class SearchHandler(tornado.web.RequestHandler):
     def initialize(self, core):
@@ -28,7 +28,17 @@ class AddTrackHandler(tornado.web.RequestHandler):
 
     def get(self):
         uri = self.get_argument("uri", None)
-        self.core.tracklist.add(uri=uri, at_position=0)
+        self.core.tracklist.add(uri=uri, at_position=null)
+
+class StartHandler(tornado.web.RequestHandler):
+    def initialize(self, core):
+        self.core = core
+
+    def get(self):
+        if (self.core.playback.state == PlaybackState.PLAYING):
+            self.core.playback.pause()
+        else:
+            self.core.playback.play()
 
 
 # def play_song(core):
