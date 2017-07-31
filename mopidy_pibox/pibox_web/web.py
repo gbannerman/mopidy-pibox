@@ -28,7 +28,7 @@ class AddTrackHandler(tornado.web.RequestHandler):
 
     def get(self):
         uri = self.get_argument("uri", None)
-        self.render("search.html", search_result=search_result)
+        self.core.tracklist.add(uri)
 
 
 # def play_song(core):

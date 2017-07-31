@@ -15,7 +15,7 @@
           {% set i += 1 %}
           {% if i != len(track.artists) %}, {% end %}
         {% end %}
-      </b>: <a href="../style/tracks.css">ADD</a></li>
+      </b>: <a href="/pibox/add/?uri={{ track.uri }}">ADD</a></li>
       {% end %}
     </ul>
   </body>
