@@ -6,10 +6,12 @@
   <body>
   <p>Results for "{{ search_term }}"</p>
     <ul>
-      {% for i, track in search_result[0].tracks %}
-      <li><b>{{ track.name }} - 
+      {% for track in search_result[0].tracks %}
+      <li><b>{{ track.name }} -
+        {% i = 0 %} 
         {% for artist in track.artists %}
           {{ artist.name}}
+          {% i+=1 %}
           {% if i != len(track.artists) %}, {% end %}
         {% end %}
       </b>: <a href="../style/tracks.css">ADD</a></li>
