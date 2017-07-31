@@ -1,6 +1,7 @@
 body {
 	font-family: 'Roboto', sans-serif;
 	width: 100%;
+	background-color: red;
 }
 
 input {
