@@ -24,19 +24,21 @@
 }*/
 
 .main {
-    height: 100%;
-    width: 100%;
-    display: table;
+    display: flex;
+    flex-direction: column;
+    background-color: blue;
 }
 
 .wrapper {
-    display: table-row;
+    display: inline-block;
     height: 50%;
     text-align: center;
+    background-color: red;
     vertical-align: middle;
 }
 
 .tracks {
+    background-color: green;
     display: table-row;
     height: 50%;
     text-align: center;
@@ -57,6 +59,7 @@ table td {
 table {
   width: 65%;
   display: inline-block;
+  min
   text-align: center;
   empty-cells: show;
   border: 1px solid #000;
@@ -74,11 +77,13 @@ table {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  background-color: blue;
   width: 65%;
   margin: 0 auto;
 }
 
 .info {
   flex-grow: 2;
+  background-color: yellow;
   text-align: center;
 }
