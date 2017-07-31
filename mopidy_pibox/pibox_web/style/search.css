@@ -1,4 +1,4 @@
-html, body {
+/*html, body {
     height: 100%;
 }
 
@@ -21,4 +21,70 @@ html, body {
     display:inline-block;
     margin:4px auto;
     font-family: 'Roboto', sans-serif;
+}*/
+
+
+html, body {
+    height: 100%;
+}
+
+.main {
+    height: 100%;
+    width: 100%;
+    display: table;
+}
+
+.wrapper {
+    display: table-row;
+    height: 50%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.tracks {
+    display: table-row;
+    height: 50%;
+    text-align: center;
+    vertical-align: middle;
+    padding: 50px 50px 50px 50x; 
+}
+
+table td {
+    min-width: 2em;
+    min-height: 2em;
+    border: 1px solid #000;
+}
+
+.title {
+  width: 99%;
+}
+
+table {
+  width: 65%;
+  min-width: 10em;
+  display: inline-block;
+  text-align: center;
+  empty-cells: show;
+  border: 1px solid #000;
+}
+
+#searchField{
+    height: 25px;
+    width: 65%;
+    display:inline-block;
+    margin:4px auto;
+    font-family: 'Roboto', sans-serif;
+}
+
+.playing {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 65%;
+  margin: 0 auto;
+}
+
+.info {
+  flex-grow: 2;
+  text-align: center;
 }
