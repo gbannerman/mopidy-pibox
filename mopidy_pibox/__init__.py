@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import logging
 import os
+import tornado.web
 
 from mopidy import config, ext
 
@@ -20,7 +21,7 @@ def my_app_factory(config, core):
         (r'/', web.MainHandler),
         (r'/results/', web.SearchHandler, {'core': core}),
         (r'/add/', web.AddTrackHandler, {'core': core}),
-        (r"/style/(.*)", web.StaticFileHandler, {"path": path}),
+        (r"/style/(.*)", tornado.web.StaticFileHandler, {"path": path}),
     ]
 
 
