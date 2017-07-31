@@ -1,4 +1,4 @@
-body {
+/*body {
 	font-family: 'Roboto', sans-serif;
 	width: 100%;
 }
@@ -16,4 +16,27 @@ input {
 form {
 	height: 100%;
 	width: 100%;
+}*/
+
+html,body{width:100%;height:100%}
+
+.depth {
+    display: inline-block;
+    width: 20%;
+    border: 1px solid rgba(255,255,255,0.6);
+    background: linear-gradient(#eee, #fff);
+    transition: all 0.3s ease-out;
+    box-shadow: 
+        inset 0 1px 4px rgba(0,0,0,0.4);
+    padding: 5px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #F00;
+	text-align: center; 
+	font-family:customfont;
+}
+span {
+    display: inline-block;
+    width:40%;
+    outline: 1px dashed red;
 }
