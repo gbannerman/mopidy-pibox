@@ -2,6 +2,7 @@
   <head>
     <title>Results</title>
     <link rel="stylesheet" type="text/css" href="../style/tracks.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   </head>
   <body>
   <p>Results for "{{ search_term }}"</p>
@@ -10,15 +11,11 @@
       <li><b>{{ track.name }} -
         {% set i = 0 %} 
         {% for artist in track.artists %}
-          {{ artist.name }}
+          {{ artist.name}}
           {% set i += 1 %}
           {% if i != len(track.artists) %}, {% end %}
         {% end %}
-      </b>: 
-      {% for performer in track.performers %}
-          {{ performer }}
-      {% end %}  
-       : <a href="../style/tracks.css">ADD</a></li>
+      </b>: <a href="../style/tracks.css">ADD</a></li>
       {% end %}
     </ul>
   </body>

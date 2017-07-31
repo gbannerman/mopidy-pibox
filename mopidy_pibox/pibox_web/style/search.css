@@ -1,0 +1,10 @@
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
+input {
+	font-family: 'Roboto', sans-serif;
+	width: 90%;
+	margin-left: 5%;
+    margin-right: 5%;
+}
