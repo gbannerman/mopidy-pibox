@@ -30,6 +30,7 @@ class AddTrackHandler(tornado.web.RequestHandler):
         uri = self.get_argument("uri", None)
         new_position = self.core.tracklist.length.get()
         self.core.tracklist.add(uri=uri, at_position=new_position)
+        self.redirect(url=redirect_url)
 
 class StartHandler(tornado.web.RequestHandler):
     def initialize(self, core):
