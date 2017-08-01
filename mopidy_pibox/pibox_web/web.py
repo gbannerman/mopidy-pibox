@@ -24,7 +24,10 @@ class MainHandler(tornado.web.RequestHandler):
 
     def get(self):
         playing = self.core.playback.get_current_track().get()
-        images = self.core.library.get_images([playing.uri])[playing.uri]
+        if playing is not None:
+            images = self.core.library.get_images([playing.uri]).get()[playing.uri]
+        else:
+            images = []
         queue = self.core.tracklist.slice(1, 4).get()
         self.render("search.html", playing=playing, queue=queue, image=images)
 
