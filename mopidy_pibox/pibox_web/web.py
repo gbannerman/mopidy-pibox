@@ -41,7 +41,7 @@ class AddTrackHandler(tornado.web.RequestHandler):
         self.core.tracklist.set_consume(True)
         self.core.tracklist.set_repeat(False)
         redirect_url = '/goooooogle/'
-        if not (played_already(uri) or in_tracklist(uri)):
+        if not (self.played_already(uri) or self.in_tracklist(uri)):
             self.core.tracklist.add(uri=uri, at_position=new_position)
             redirect_url = '/pibox/'
         self.redirect(url=redirect_url)
