@@ -25,22 +25,15 @@ img {
 }
 
 table {
-  margin-top: 10px;
   border-collapse: collapse;
-}
-
-/*table tr {
-  border: 1px solid #000;
-  border-collapse: collapse;
-}*/
-
-table, td, th {
-  border: 1px solid black;
 }
 
 td {
-  min-width: 2em;
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
+
 .title {
   width: 99%;
 }
