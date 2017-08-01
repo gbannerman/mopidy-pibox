@@ -23,7 +23,7 @@
     font-family: 'Roboto', sans-serif;
 }*/
 
-.img {
+img {
 	flex-basis: auto;
     height: 110px;
     width: auto;
@@ -76,7 +76,7 @@ table {
   justify-content: center;
   flex-direction: row;
   background-color: blue;
-  margin: 0 auto;
+/*  margin: 0 auto;*/
 }
 
 .info {
