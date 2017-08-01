@@ -1,8 +1,8 @@
-/*html, body {
+html, body {
     height: 100%;
 }
 
-.main {
+/*.main {
     height: 100%;
     width: 100%;
     display: table;
@@ -25,13 +25,12 @@
 
 img {
 	flex-basis: auto;
-    height: 190px;
-    width: auto;
+    width: 50%;
+    height: auto;
 }
 
 .main {
-    width: 95%;
-    margin: 0 auto;
+    width: 100%;
     display: flex;
     flex-direction: column;
     background-color: blue;
