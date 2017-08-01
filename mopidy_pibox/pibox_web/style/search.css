@@ -26,11 +26,13 @@ img {
 
 table td {
   min-width: 2em;
+  border-collapse: collapse;
 /*    min-height: 2em;*/ 
 }
 
 table tr {
   border: 1px solid #000;
+  border-collapse: collapse;
 }
 
 .title {
@@ -49,6 +51,7 @@ table {
 tbody {
   border: 0px hidden #000;
   empty-cells: hide;
+  border-collapse: collapse;
 }
 
 #searchField{
