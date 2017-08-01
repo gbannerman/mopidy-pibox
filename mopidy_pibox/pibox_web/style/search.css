@@ -66,9 +66,7 @@ table {
 }
 
 #searchField{
-    height: 25px;
     display:inline-block;
-    margin:4px auto;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -86,10 +84,10 @@ table {
   text-align: center;
 }
 
-.h2 {
-  font-size: 30px;
+h2 {
+  font-size: 4em;
 }
 
-.h3 {
+h3 {
   font-size: 24px;
 }
