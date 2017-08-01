@@ -41,6 +41,11 @@ table {
   margin-top: 10px;
   display: inline-block;
   text-align: center;
+  border: 0px solid #000;
+}
+
+tbody {
+  border: 0px solid #000;
 }
 
 #searchField{
