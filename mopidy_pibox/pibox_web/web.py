@@ -65,6 +65,7 @@ class AddTrackHandler(tornado.web.RequestHandler):
 
 class StartHandler(tornado.web.RequestHandler):
     def initialize(self, core, config):
+        self.config = config
         self.core = core
         self.application.settings['cookie_secret'] = self.config['pibox']['cookie_secret']
         self.application.settings['login_url'] = '/login/'
