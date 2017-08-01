@@ -2,27 +2,6 @@ html, body {
     height: 100%;
 }
 
-/*.main {
-    height: 100%;
-    width: 100%;
-    display: table;
-}
-
-.wrapper {
-    display: table-cell;
-    height: 100%;
-    vertical-align: middle;
-    text-align: center;
-}
-
-#searchField{
-    height: 25px;
-    width: 200px;
-    display:inline-block;
-    margin:4px auto;
-    font-family: 'Roboto', sans-serif;
-}*/
-
 img {
 	flex-basis: auto;
     width: 50%;
@@ -46,9 +25,12 @@ img {
 }
 
 table td {
-     min-width: 2em;
+  min-width: 2em;
 /*    min-height: 2em;*/ 
-    border: 1px solid #000;
+}
+
+table tr {
+  border: 1px solid #000;
 }
 
 .title {
@@ -59,8 +41,6 @@ table {
   margin-top: 10px;
   display: inline-block;
   text-align: center;
-  empty-cells: show;
-  border: 1px solid #000;
 }
 
 #searchField{
