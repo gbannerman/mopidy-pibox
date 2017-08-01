@@ -57,7 +57,7 @@ class AddTrackHandler(tornado.web.RequestHandler):
         return uri in played_tracks
 
     def in_tracklist(self, uri):
-        length = self.core.tracklist.filter({'uri': [uri]}).get()
+        length = len(self.core.tracklist.filter({'uri': [uri]}).get())
         if length == 0:
             return False
         else:
