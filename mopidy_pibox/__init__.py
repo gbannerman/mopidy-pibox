@@ -27,7 +27,7 @@ def my_app_factory(config, core):
         (r'/results/', web.SearchHandler, {'core': core}),
         (r'/add/', web.AddTrackHandler, {'core': core, 'session': this_session}),
         (r"/style/(.*)", tornado.web.StaticFileHandler, {"path": path}),
-        (r"/start/", web.StartHandler, {'core': core}),
+        (r"/start/", web.StartHandler, {'core': core, 'config': config}),
         (r"/history/", web.HistoryHandler, {'core': core}),
     ]
 
