@@ -24,11 +24,11 @@ img {
     text-align: center;
 }
 
-table td {
-  min-width: 2em;
+table {
+  margin-top: 10px;
+  text-align: center;
+  empty-cells: hide;
   border-collapse: collapse;
-  background-color: green;
-/*    min-height: 2em;*/ 
 }
 
 table tr {
@@ -36,24 +36,14 @@ table tr {
   border-collapse: collapse;
 }
 
+table td {
+  min-width: 2em;
+  border-collapse: collapse;
+  background-color: green;
+/*    min-height: 2em;*/ 
+}
 .title {
   width: 99%;
-}
-
-table {
-  margin-top: 10px;
-  display: inline-block;
-  text-align: center;
-  border: 0px hidden #000;
-  empty-cells: hide;
-  border-collapse: collapse;
-  background-color: red;
-}
-
-tbody {
-  border: 0px hidden #000;
-  empty-cells: hide;
-  border-collapse: collapse;
 }
 
 #searchField{

@@ -24,14 +24,12 @@
       </div>
     </div>
     <table>
-      <tbody>
-        {% for tl_track in queue %}
-        <tr>
-          <td colspan="2" class="title">{{ tl_track.track.name }}</td>
-          <td>SKIP</td>
-        </tr>
-        {% end %}
-      </tbody>
+      {% for tl_track in queue %}
+      <tr>
+        <td colspan="2" class="title">{{ tl_track.track.name }}</td>
+        <td>SKIP</td>
+      </tr>
+      {% end %}
     </table>
   </div>
   {% end %}
