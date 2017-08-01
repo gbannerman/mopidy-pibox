@@ -18,9 +18,13 @@ class SearchHandler(tornado.web.RequestHandler):
         self.render("tracks.html", search_result=search_result, search_term=search_term)
 
 class MainHandler(tornado.web.RequestHandler):
+    def initialize(self, core):
+        self.core = core
 
     def get(self):
-        self.render("search.html")
+        playing = self.core.playback.get_current_track().get()
+        queue = self.core.tracklist.slice(1, 4).get()
+        self.render("search.html", playing=playing, queue=queue)
 
 class AddTrackHandler(tornado.web.RequestHandler):
     def initialize(self, core):
@@ -29,7 +33,9 @@ class AddTrackHandler(tornado.web.RequestHandler):
     def get(self):
         uri = self.get_argument("uri", None)
         new_position = self.core.tracklist.length.get()
-        self.core.tracklist.consume = True
+        self.core.tracklist.set_consume(True)
+        self.core.tracklist.set_repeat(False)
+        self.core.tracklist.repeat = 
         self.core.tracklist.add(uri=uri, at_position=new_position)
         redirect_url = '/pibox/'
         self.redirect(url=redirect_url)

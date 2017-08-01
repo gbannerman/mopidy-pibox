@@ -8,33 +8,37 @@
   <body>
 
   <div class="main">
+  {% if playing is not None %}
   <div class="tracks">
     <h3>Now Playing</h3>
     <div class="playing">
       <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/96/RunTheJewels3.jpg/220px-RunTheJewels3.jpg">
       <div class="info">
-        <h2>Legend Has It</h2>
-        <h3>Run The Jewels</h3>
-        <h3>Run The Jewels 3</h3>
+        <h2>{{ playing.name }}</h2>
+        <h3>{{ playing.artists.pop() }}</h3>
+        <h3>{{ playing.album.name }}</h3>
       </div>
     </div>
     <table>
       <tbody>
+        {% for tl_track in queue %}
         <tr>
-          <td colspan="2" class="title">Miike Snow - Genghis Khan</td>
+          <td colspan="2" class="title">{{ tl_track.track.name }}</td>
           <td>SKIP</td>
         </tr>
-        <tr>
+        {% end %}
+<!--         <tr>
           <td colspan="2" class="title">Danny Brown - Grown Up</td>
           <td>SKIP</td>
         </tr>
         <tr>
           <td colspan="2" class="title">Rage Against The Machine - Bombtrack</td>
           <td>SKIP</td>
-        </tr>
+        </tr> -->
       </tbody>
     </table>
   </div>
+  {% end %}
   <div class="wrapper">
       <form action="/pibox/results/" method="POST">
         <input name="query" type="text" id="searchField" placeholder="search...">

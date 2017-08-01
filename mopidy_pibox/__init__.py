@@ -18,7 +18,7 @@ def my_app_factory(config, core):
     path = os.path.join(os.path.dirname(__file__), 'pibox_web/style')
 
     return [
-        (r'/', web.MainHandler),
+        (r'/', web.MainHandler, {'core': core}),
         (r'/results/', web.SearchHandler, {'core': core}),
         (r'/add/', web.AddTrackHandler, {'core': core}),
         (r"/style/(.*)", tornado.web.StaticFileHandler, {"path": path}),
