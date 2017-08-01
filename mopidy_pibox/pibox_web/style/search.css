@@ -25,7 +25,7 @@
 
 img {
 	flex-basis: auto;
-    height: 30%;
+    height: 110px;
     width: auto;
 }
 
@@ -86,9 +86,9 @@ table {
 }
 
 h2 {
-  font-size: 80px;
+  font-size: 30px;
 }
 
 h3 {
-  font-size: 70px;
+  font-size: 20px;
 }
