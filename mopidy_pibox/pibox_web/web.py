@@ -25,6 +25,8 @@ class MainHandler(tornado.web.RequestHandler):
         playing = self.core.playback.get_current_track().get()
         if playing is not None:
             artist = list(playing.artists)[0]
+        else:
+            artist = 'EMPTY'
         queue = self.core.tracklist.slice(1, 4).get()
         self.render("search.html", playing=playing, queue=queue, artist=artist)
 
