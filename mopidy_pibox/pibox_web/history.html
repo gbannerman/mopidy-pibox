@@ -9,10 +9,10 @@
     <ul>
       {% for track in history %}
       <li><b>
-      {{ track.name}} -
-        {% for artist in track.album.artists %}
+      {{ track.name }} -
+<!--         {% for artist in track.album.artists %}
           {{ artist.name }}
-        {% end %}
+        {% end %} -->
       </b></li>
       {% end %}
     </ul>
