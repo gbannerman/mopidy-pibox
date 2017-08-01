@@ -25,11 +25,11 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         playing = self.core.playback.get_current_track().get()
         if playing is not None:
-            images = self.core.library.get_images([playing.uri]).get()[playing.uri]
+            image = self.core.library.get_images([playing.uri]).get()[playing.uri][0]
         else:
-            images = []
+            image = None
         queue = self.core.tracklist.slice(1, 4).get()
-        self.render("search.html", playing=playing, queue=queue, image=images)
+        self.render("search.html", playing=playing, queue=queue, image=image)
 
 class AddTrackHandler(tornado.web.RequestHandler):
     def initialize(self, core):
