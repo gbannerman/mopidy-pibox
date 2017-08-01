@@ -32,22 +32,20 @@ class MainHandler(tornado.web.RequestHandler):
         self.render("search.html", playing=playing, queue=queue, image=image)
 
 class AddTrackHandler(tornado.web.RequestHandler):
-    def initialize(self, core):
+    def initialize(self, core, session):
         self.core = core
+        self.session = session
 
     def get(self):
         uri = self.get_argument("uri", None)
         new_position = self.core.tracklist.length.get()
         self.core.tracklist.set_consume(True)
         self.core.tracklist.set_repeat(False)
-        redirect_url = '/goooooogle/'
-        queued = self.in_tracklist(uri)
-        played = self.played_already(uri)
-        if not (played or queued):
+        redirect_url = '/invalid/'
+        if not (self.played_already(uri) or self.in_tracklist(uri) or self.in_blacklist(uri)):
             self.core.tracklist.add(uri=uri, at_position=new_position)
             redirect_url = '/pibox/'
-        self.render("test.html", played=played, in_tracklist=queued)
-        # self.redirect(url=redirect_url)
+        self.redirect(url=redirect_url)
 
     def played_already(self, uri):
         history = self.core.history.get_history().get()
@@ -62,6 +60,9 @@ class AddTrackHandler(tornado.web.RequestHandler):
             return False
         else:
             return True
+
+    def in_blacklist(self, uri):
+        return uri in self.session.blacklist
 
 
 class StartHandler(tornado.web.RequestHandler):

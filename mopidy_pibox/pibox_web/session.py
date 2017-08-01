@@ -1,8 +1,5 @@
 class PiboxSession(object):
 
-	def __init__(self, history):
-		self.history = history
-
-	def add_track_to_history(self, uri):
-		self.history.append(uri)
+	def __init__(self):
+		self.blacklist = ['spotify:track:312A8WfROSLvZbMDHBUPDp', 'spotify:track:42F4K181FFdhkbDAaoxDye']
 		

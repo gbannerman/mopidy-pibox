@@ -16,12 +16,12 @@ logger = logging.getLogger(__name__)
 def my_app_factory(config, core):
 
     path = os.path.join(os.path.dirname(__file__), 'pibox_web/style')
-    # session = session.PiboxSession([])
+    this_session = session.PiboxSession()
 
     return [
         (r'/', web.MainHandler, {'core': core}),
         (r'/results/', web.SearchHandler, {'core': core}),
-        (r'/add/', web.AddTrackHandler, {'core': core}),
+        (r'/add/', web.AddTrackHandler, {'core': core, 'session': this_session}),
         (r"/style/(.*)", tornado.web.StaticFileHandler, {"path": path}),
         (r"/start/", web.StartHandler, {'core': core}),
         ("/history/", web.HistoryHandler, {'core': core}),
