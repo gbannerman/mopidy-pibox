@@ -39,8 +39,6 @@ class AddTrackHandler(tornado.web.RequestHandler):
     def get(self):
         uri = self.get_argument("uri", None)
         new_position = self.core.tracklist.length.get()
-        self.core.tracklist.set_consume(True)
-        self.core.tracklist.set_repeat(False)
         redirect_url = '/invalid/'
         if not (self.played_already(uri) or self.in_tracklist(uri) or self.in_blacklist(uri)):
             self.core.tracklist.add(uri=uri, at_position=new_position)
@@ -68,11 +66,15 @@ class AddTrackHandler(tornado.web.RequestHandler):
 class StartHandler(tornado.web.RequestHandler):
     def initialize(self, core):
         self.core = core
+        self.application.settings['cookie_secret'] = self.config['pibox']['cookie_secret']
+        self.application.settings['login_url'] = '/login/'
 
     def get(self):
         if (self.core.playback.state.get() == PlaybackState.PLAYING):
             self.core.playback.pause()
         else:
+            self.core.tracklist.set_consume(True)
+            self.core.tracklist.set_repeat(False)
             self.core.playback.play()
         redirect_url = '/pibox/'
         self.redirect(url=redirect_url)
@@ -81,6 +83,7 @@ class HistoryHandler(tornado.web.RequestHandler):
     def initialize(self, core):
         self.core = core
 
+    @tornado.web.authenticated
     def get(self):
         history = self.core.history.get_history().get()
         tracks_played = []

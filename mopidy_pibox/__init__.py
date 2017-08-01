@@ -18,18 +18,18 @@ def my_app_factory(config, core):
     path = os.path.join(os.path.dirname(__file__), 'pibox_web/style')
     this_session = session.PiboxSession()
     settings = {
-    "cookie_secret": "pibox",
+    "cookie_secret": "__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
     "login_url": "/login",
 }
 
-    return ([
+    return [
         (r'/', web.MainHandler, {'core': core}),
         (r'/results/', web.SearchHandler, {'core': core}),
         (r'/add/', web.AddTrackHandler, {'core': core, 'session': this_session}),
         (r"/style/(.*)", tornado.web.StaticFileHandler, {"path": path}),
         (r"/start/", web.StartHandler, {'core': core}),
-        ("/history/", web.HistoryHandler, {'core': core}),
-    ], **settings)
+        (r"/history/", web.HistoryHandler, {'core': core}),
+    ]
 
 
 class Extension(ext.Extension):
