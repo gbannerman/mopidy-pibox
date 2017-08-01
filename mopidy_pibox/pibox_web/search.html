@@ -15,7 +15,9 @@
       <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/96/RunTheJewels3.jpg/220px-RunTheJewels3.jpg">
       <div class="info">
         <h2>{{ playing.name }}</h2>
-        <h3>{{ playing.artists.pop() }}</h3>
+        <h3>{% for artist in playing.artists %}
+          {{ artist.name }}
+        </h3>
         <h3>{{ playing.album.name }}</h3>
       </div>
     </div>
