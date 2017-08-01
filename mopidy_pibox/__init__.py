@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 def my_app_factory(config, core):
 
     path = os.path.join(os.path.dirname(__file__), 'pibox_web/style')
-    session = session.PiboxSession([])
+    # session = session.PiboxSession([])
 
     return [
         (r'/', web.MainHandler, {'core': core}),
