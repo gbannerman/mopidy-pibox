@@ -26,21 +26,17 @@ img {
 
 table {
   margin-top: 10px;
-  text-align: center;
-  empty-cells: hide;
   border-collapse: collapse;
 }
 
-table tr {
+/*table tr {
   border: 1px solid #000;
   border-collapse: collapse;
-}
+}*/
 
 table td {
   min-width: 2em;
-  border-collapse: collapse;
-  background-color: green;
-/*    min-height: 2em;*/ 
+  border: 1px solid black;
 }
 .title {
   width: 99%;
