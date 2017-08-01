@@ -43,6 +43,7 @@ table {
   text-align: center;
   border: 0px hidden #000;
   empty-cells: hide;
+  border-collapse: collapse;
 }
 
 tbody {
