@@ -6,7 +6,7 @@ import tornado.web
 
 from mopidy import config, ext
 
-from pibox_web import web
+from pibox_web import web, session
 
 __version__ = '0.1.1'
 
@@ -16,14 +16,15 @@ logger = logging.getLogger(__name__)
 def my_app_factory(config, core):
 
     path = os.path.join(os.path.dirname(__file__), 'pibox_web/style')
+    session = session.PiboxSession([])
 
     return [
         (r'/', web.MainHandler, {'core': core}),
         (r'/results/', web.SearchHandler, {'core': core}),
-        (r'/add/', web.AddTrackHandler, {'core': core}),
+        (r'/add/', web.AddTrackHandler, {'core': core),
         (r"/style/(.*)", tornado.web.StaticFileHandler, {"path": path}),
         (r"/start/", web.StartHandler, {'core': core}),
-        (r"/history/", web.HistoryHandler, {'core': core}),
+        ("/history/", web.HistoryHandler, {'core': core),
     ]
 
 
@@ -43,10 +44,6 @@ class Extension(ext.Extension):
 
     def setup(self, registry):
 
-        # from .frontend import PiboxFrontend
-        # registry.add('frontend', PiboxFrontend)
-
-        # TODO: Edit or remove entirely
         registry.add('http:app', {
             'name': self.ext_name,
             'factory': my_app_factory,
