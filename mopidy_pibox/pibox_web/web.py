@@ -44,7 +44,8 @@ class AddTrackHandler(tornado.web.RequestHandler):
         if not (self.played_already(uri) or self.in_tracklist(uri)):
             self.core.tracklist.add(uri=uri, at_position=new_position)
             redirect_url = '/pibox/'
-        self.redirect(url=redirect_url)
+        self.render("test.html", played=self.played_already(uri), in_tracklist=self.in_tracklist(uri))
+        # self.redirect(url=redirect_url)
 
     def played_already(self, uri):
         history = self.core.history.get_history().get()
