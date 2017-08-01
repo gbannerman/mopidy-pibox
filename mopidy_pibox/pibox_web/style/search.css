@@ -27,6 +27,7 @@ img {
 table td {
   min-width: 2em;
   border-collapse: collapse;
+  background-color: green;
 /*    min-height: 2em;*/ 
 }
 
@@ -46,6 +47,7 @@ table {
   border: 0px hidden #000;
   empty-cells: hide;
   border-collapse: collapse;
+  background-color: red;
 }
 
 tbody {
