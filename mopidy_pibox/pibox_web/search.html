@@ -26,7 +26,10 @@
     <table>
       {% for tl_track in queue %}
       <tr>
-        <td colspan="2" class="title">{{ tl_track.track.name }}</td>
+        <td colspan="2" class="title">{{ tl_track.track.name }} - 
+        {% for artist in tl_track.track.album.artists %}
+          {{ artist.name }}
+        {% end %}</td>
         <td>SKIP</td>
       </tr>
       {% end %}

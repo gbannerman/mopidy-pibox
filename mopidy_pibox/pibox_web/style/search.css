@@ -41,6 +41,8 @@ td {
 #searchField{
 	margin-top: 10px;
   display:inline-block;
+  font-size: 20px;
+  width: 80%;
   font-family: 'Roboto', sans-serif;
 }
 
