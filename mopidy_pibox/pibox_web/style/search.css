@@ -46,8 +46,8 @@ img {
 }
 
 table td {
-/*     min-width: 2em;
-    min-height: 2em; */
+     min-width: 2em;
+/*    min-height: 2em;*/ 
     border: 1px solid #000;
 }
 
@@ -56,6 +56,7 @@ table td {
 }
 
 table {
+  margin-top: 10px;
   display: inline-block;
   text-align: center;
   empty-cells: show;
