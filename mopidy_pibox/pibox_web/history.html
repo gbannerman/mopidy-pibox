@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
   </head>
   <body>
-  <p>{{ history }}</p>
+    <ul>
+      {% for track in history %}
+      <li><b>
+      {{ track.name}} -
+        {% for artist in track.album.artists %}
+          {{ artist.name }}
+        {% end %}
+      </b></li>
+      {% end %}
+    </ul>
   </body>
 </html>

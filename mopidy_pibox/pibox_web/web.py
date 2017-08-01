@@ -62,4 +62,7 @@ class HistoryHandler(tornado.web.RequestHandler):
 
     def get(self):
         history = self.core.history.get_history().get()
-        self.render("history.html", history=history)
+        tracks_played = []
+        for tup in history:
+            tracks_played.append(tup[1])
+        self.render("history.html", history=tracks_played)
