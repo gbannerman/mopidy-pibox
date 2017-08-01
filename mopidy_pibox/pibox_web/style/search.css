@@ -39,19 +39,13 @@
 }
 
 .wrapper {
-    display: block;
     text-align: center;
     background-color: red;
-    vertical-align: middle;
 }
 
 .tracks {
     background-color: green;
-    display: table-row;
-    height: 50%;
     text-align: center;
-    vertical-align: middle;
-    padding: 50px 50px 50px 50x; 
 }
 
 table td {
@@ -80,6 +74,7 @@ table {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  flex-direction: row;
   background-color: blue;
   margin: 0 auto;
 }
