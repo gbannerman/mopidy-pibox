@@ -56,12 +56,10 @@ class StartHandler(tornado.web.RequestHandler):
         redirect_url = '/pibox/'
         self.redirect(url=redirect_url)
 
+class HistoryHandler(tornado.web.RequestHandler):
+    def initialize(self, core):
+        self.core = core
 
-# def play_song(core):
-#     list_of_uris = []
-#     uri = 'spotify:track:0Lx6O1tC3CPF1giLJIt5Jv'
-#     list_of_uris.append(uri)
-#     list_of_uris.append(uri)
-#     core.tracklist.add(list_of_uris)
-#     core.playback.next()
-#     core.playback.play()
+    def get(self):
+        history = self.core.history.get_history().get()
+        self.render("history.html", history=history)
