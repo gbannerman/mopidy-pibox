@@ -17,6 +17,7 @@
         <h2>{{ playing.name }}</h2>
         <h3>{% for artist in playing.artists %}
           {{ artist.name }}
+          {% end %}
         </h3>
         <h3>{{ playing.album.name }}</h3>
       </div>
