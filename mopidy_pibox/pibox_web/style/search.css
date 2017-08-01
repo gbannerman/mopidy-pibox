@@ -34,9 +34,12 @@ table {
   border-collapse: collapse;
 }*/
 
-table td {
-  min-width: 2em;
+table, td, th {
   border: 1px solid black;
+}
+
+td {
+  min-width: 2em;
 }
 .title {
   width: 99%;
