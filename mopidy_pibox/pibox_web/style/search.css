@@ -41,11 +41,13 @@ table {
   margin-top: 10px;
   display: inline-block;
   text-align: center;
-  border: 0px solid #000;
+  border: 0px hidden #000;
+  empty-cells: hide;
 }
 
 tbody {
-  border: 0px solid #000;
+  border: 0px hidden #000;
+  empty-cells: hide;
 }
 
 #searchField{
