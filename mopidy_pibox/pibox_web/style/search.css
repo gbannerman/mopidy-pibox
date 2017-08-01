@@ -24,15 +24,17 @@
 }*/
 
 .main {
+    width: 95%;
+    margin: 0 auto;
+    justify-content: center;
     display: flex;
     flex-direction: column;
     background-color: blue;
-    font-family: 'Roboto', sans-serif; 
+    font-family: 'Roboto', sans-serif;
 }
 
 .wrapper {
     display: inline-block;
-    height: 50%;
     text-align: center;
     background-color: red;
     vertical-align: middle;
@@ -48,8 +50,8 @@
 }
 
 table td {
-    min-width: 2em;
-    min-height: 2em;
+/*     min-width: 2em;
+    min-height: 2em; */
     border: 1px solid #000;
 }
 
@@ -58,9 +60,7 @@ table td {
 }
 
 table {
-  width: 65%;
   display: inline-block;
-  min
   text-align: center;
   empty-cells: show;
   border: 1px solid #000;
@@ -68,7 +68,6 @@ table {
 
 #searchField{
     height: 25px;
-    width: 65%;
     display:inline-block;
     margin:4px auto;
     font-family: 'Roboto', sans-serif;
@@ -79,7 +78,6 @@ table {
   flex-wrap: wrap;
   justify-content: center;
   background-color: blue;
-  width: 65%;
   margin: 0 auto;
 }
 
