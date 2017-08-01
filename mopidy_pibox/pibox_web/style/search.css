@@ -23,6 +23,12 @@
     font-family: 'Roboto', sans-serif;
 }*/
 
+.img {
+	flex-basis: auto;
+    height: 110px;
+    width: auto;
+}
+
 .main {
     width: 95%;
     margin: 0 auto;
@@ -33,7 +39,7 @@
 }
 
 .wrapper {
-    display: inline-block;
+    display: block;
     text-align: center;
     background-color: red;
     vertical-align: middle;
@@ -85,7 +91,7 @@ table {
 }
 
 h2 {
-  font-size: 4em;
+  font-size: 30px;
 }
 
 h3 {
