@@ -30,6 +30,7 @@ def my_app_factory(config, core):
         (r"/start/", web.StartHandler, {'core': core, 'config': config}),
         (r"/history/", web.HistoryHandler, {'core': core, 'session': this_session}),
         (r"/vote/", web.VoteHandler, {'core': core, 'session': this_session}),
+        (r"/invalid/", web.PageHandler, {'page': 'invalid.html'}),
     ]
 
 

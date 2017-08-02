@@ -105,4 +105,10 @@ class VoteHandler(tornado.web.RequestHandler):
         if vote_count >= 2:
             self.core.tracklist.remove({'uri': [uri]})
             self.session.blacklist.append(uri)
+        redirect_url = '/pibox/'
+        self.redirect(url=redirect_url)
+
+class PageHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("invalid.html")
         
