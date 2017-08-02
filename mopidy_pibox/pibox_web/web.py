@@ -39,7 +39,7 @@ class AddTrackHandler(tornado.web.RequestHandler):
     def get(self):
         uri = self.get_argument("uri", None)
         new_position = self.core.tracklist.length.get()
-        redirect_url = '/invalid/'
+        redirect_url = '/pibox/invalid/'
         if not (self.played_already(uri) or self.in_tracklist(uri) or self.in_blacklist(uri)):
             self.session.count += 1
             self.core.tracklist.add(uri=uri, at_position=new_position)
