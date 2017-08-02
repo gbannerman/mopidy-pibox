@@ -29,6 +29,7 @@ def my_app_factory(config, core):
         (r"/style/(.*)", tornado.web.StaticFileHandler, {"path": path}),
         (r"/start/", web.StartHandler, {'core': core, 'config': config}),
         (r"/history/", web.HistoryHandler, {'core': core, 'session': this_session}),
+        (r"/vote/", web.VoteHandler, {'core': core, 'session': this_session}),
     ]
 
 

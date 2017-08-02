@@ -92,3 +92,17 @@ class HistoryHandler(tornado.web.RequestHandler):
         for tup in history:
             tracks_played.append(tup[1].uri)
         self.render("history.html", history=tracks_played, count=self.session.count)
+
+class VoteHandler(tornado.web.RequestHandler):
+    def initialize(self, core, session):
+        self.core = core
+        self.session = session
+
+    def get(self):
+        uri = self.get_argument("uri", None)
+        vote_count = self.session.votes.get(uri, 0) + 1
+        self.session.votes[uri] = vote_count
+        if vote_count >= 2:
+            self.core.playback.remove({'uri': [uri]})
+            self.session.blacklist.append(uri)
+        

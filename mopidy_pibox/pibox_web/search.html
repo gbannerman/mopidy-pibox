@@ -30,7 +30,7 @@
         {% for artist in tl_track.track.album.artists %}
           {{ artist.name }}
         {% end %}</td>
-        <td>SKIP</td>
+        <td><a href="/pibox/vote/?uri={{ tl_track.track.uri }}">SKIP</a></td>
       </tr>
       {% end %}
     </table>
