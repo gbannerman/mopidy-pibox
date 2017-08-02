@@ -109,6 +109,9 @@ class VoteHandler(tornado.web.RequestHandler):
         self.redirect(url=redirect_url)
 
 class PageHandler(tornado.web.RequestHandler):
+    def initialize(self, page):
+        self.page = page
+
     def get(self):
-        self.render("invalid.html")
+        self.render(page)
         
