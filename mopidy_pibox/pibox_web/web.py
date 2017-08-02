@@ -41,6 +41,7 @@ class AddTrackHandler(tornado.web.RequestHandler):
         new_position = self.core.tracklist.length.get()
         redirect_url = '/invalid/'
         if not (self.played_already(uri) or self.in_tracklist(uri) or self.in_blacklist(uri)):
+            self.session.count += 1
             self.core.tracklist.add(uri=uri, at_position=new_position)
             redirect_url = '/pibox/'
         self.redirect(url=redirect_url)
@@ -81,13 +82,13 @@ class StartHandler(tornado.web.RequestHandler):
         self.redirect(url=redirect_url)
 
 class HistoryHandler(tornado.web.RequestHandler):
-    def initialize(self, core):
+    def initialize(self, core, session):
         self.core = core
+        self.session = session
 
-    @tornado.web.authenticated
     def get(self):
         history = self.core.history.get_history().get()
         tracks_played = []
         for tup in history:
             tracks_played.append(tup[1].uri)
-        self.render("history.html", history=tracks_played)
+        self.render("history.html", history=tracks_played, count=self.session.count)
