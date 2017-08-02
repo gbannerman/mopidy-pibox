@@ -10,8 +10,9 @@ html, body {
 tr.clickable-row { cursor: pointer; }
 
 table {
-  border-collapse: collapse;
-  text-align: center;
+	margin: 0 auto;
+  	border-collapse: collapse;
+  	text-align: center;
 }
 
 td {
