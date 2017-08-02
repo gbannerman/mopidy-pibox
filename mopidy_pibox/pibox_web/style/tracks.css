@@ -1,7 +1,20 @@
-ul li {
-	list-style-type: none;
+html, body {
+    height: 100%;
 }
 
-body {
-	font-family: 'Roboto', sans-serif;
+.main {
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+
+tr.clickableRow { cursor: pointer; }
+
+table {
+  border-collapse: collapse;
+}
+
+td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }

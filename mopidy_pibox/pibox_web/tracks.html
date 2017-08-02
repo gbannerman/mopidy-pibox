@@ -6,18 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
   </head>
   <body>
-  <p>Results for "{{ search_term }}"</p>
-    <ul>
-      {% for track in search_result[0].tracks %}
-      <li><b>{{ track.name }} -
-        {% set i = 0 %} 
-        {% for artist in track.artists %}
-          {{ artist.name}}
-          {% set i += 1 %}
-          {% if i != len(track.artists) %}, {% end %}
+    <div class="main">
+      <h3>Results for "{{ search_term }}"</h3>
+      <table>
+        {% for track in search_result[0].tracks %}
+        <tr class="clickable-row" data-url="/pibox/add/?uri={{ track.uri }}">
+          <td>{{ track.name }}</td>
+          <td>
+          {% set i = 0 %} 
+          {% for artist in track.artists %}
+            {{ artist.name}}
+            {% set i += 1 %}
+            {% if i != len(track.artists) %}, {% end %}
+          {% end %}
+          </td>
+        </tr>
         {% end %}
-      </b>: <a href="/pibox/add/?uri={{ track.uri }}">ADD</a></li>
-      {% end %}
-    </ul>
+      </table>
+    </div>
   </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript">
+  jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.location = $(this).data('url');
+    });
+  });
+</script>
 </html>
+
+<!-- : <a href="/pibox/add/?uri={{ track.uri }}">ADD</a></li> -->
