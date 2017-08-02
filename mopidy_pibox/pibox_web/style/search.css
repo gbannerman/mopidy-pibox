@@ -44,6 +44,7 @@ td {
   font-size: 20px;
   width: 80%;
   font-family: 'Roboto', sans-serif;
+  padding: 2px 5px 2px 5px;
   border-radius: 3px;
   border: 1px solid transparent;
   border-top: none;
