@@ -103,6 +103,6 @@ class VoteHandler(tornado.web.RequestHandler):
         vote_count = self.session.votes.get(uri, 0) + 1
         self.session.votes[uri] = vote_count
         if vote_count >= 2:
-            self.core.playback.remove({'uri': [uri]})
+            self.core.tracklist.remove({'uri': [uri]})
             self.session.blacklist.append(uri)
         
