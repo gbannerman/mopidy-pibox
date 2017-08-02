@@ -44,6 +44,11 @@ td {
   font-size: 20px;
   width: 80%;
   font-family: 'Roboto', sans-serif;
+  padding:6px 15px 6px 30px;
+  background: url('/pibox/res/ic_search.png') no-repeat 8px 6px;
+  border-radius:15px; 
+  -moz-border-radius:15px; 
+  -webkit-border-radius:15px;
 }
 
 .playing {
