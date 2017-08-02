@@ -113,5 +113,5 @@ class PageHandler(tornado.web.RequestHandler):
         self.page = page
 
     def get(self):
-        self.render(page)
+        self.render(self.page)
         
