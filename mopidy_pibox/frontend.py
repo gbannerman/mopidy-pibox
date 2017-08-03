@@ -12,7 +12,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		self.uri = 'spotify:user:gavinbannerman:playlist:1KSdLBbLJbTx0XYrWBVnrs'
 
 	def on_receive(self, message):
-        self.uri = message.get('playlist')
+		self.uri = message.get('playlist')
 
 	def track_playback_ended(self, tl_track, time_position):
 		if self.core.tracklist.get_length().get() == 0:
