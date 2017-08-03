@@ -40,28 +40,10 @@ class AddTrackHandler(tornado.web.RequestHandler):
         uri = self.get_argument("uri", None)
         new_position = self.core.tracklist.length.get()
         redirect_url = '/pibox/invalid/'
-        if not (self.played_already(uri) or self.in_tracklist(uri) or self.in_blacklist(uri)):
-            self.session.count += 1
+        if not (played_already(uri) or in_tracklist(uri) or in_blacklist(uri)):
             self.core.tracklist.add(uri=uri, at_position=new_position)
             redirect_url = '/pibox/'
         self.redirect(url=redirect_url)
-
-    def played_already(self, uri):
-        history = self.core.history.get_history().get()
-        played_tracks = []
-        for tup in history:
-            played_tracks.append(tup[1].uri)
-        return uri in played_tracks
-
-    def in_tracklist(self, uri):
-        length = len(self.core.tracklist.filter({'uri': [uri]}).get())
-        if length == 0:
-            return False
-        else:
-            return True
-
-    def in_blacklist(self, uri):
-        return uri in self.session.blacklist
 
 
 class StartHandler(tornado.web.RequestHandler):
@@ -91,7 +73,7 @@ class HistoryHandler(tornado.web.RequestHandler):
         tracks_played = []
         for tup in history:
             tracks_played.append(tup[1].uri)
-        self.render("history.html", history=tracks_played, count=self.session.count)
+        self.render("history.html", history=tracks_played)
 
 class VoteHandler(tornado.web.RequestHandler):
     def initialize(self, core, session):
@@ -108,10 +90,38 @@ class VoteHandler(tornado.web.RequestHandler):
         redirect_url = '/pibox/'
         self.redirect(url=redirect_url)
 
+class PlaylistHandler(tornado.web.RequestHandler):
+    def initialize(self, core, session):
+        self.core = core
+        self.session = session
+
+    def get(self):
+        playlists = self.core.playlists.as_list().get()
+        self.render("playlists.html", playlists=playlists)
+        
+
 class PageHandler(tornado.web.RequestHandler):
     def initialize(self, page):
         self.page = page
 
     def get(self):
         self.render(self.page)
+
+
+def played_already(self, uri):
+    history = self.core.history.get_history().get()
+    played_tracks = []
+    for tup in history:
+        played_tracks.append(tup[1].uri)
+    return uri in played_tracks
+
+def in_tracklist(self, uri):
+    length = len(self.core.tracklist.filter({'uri': [uri]}).get())
+    if length == 0:
+        return False
+    else:
+        return True
+
+def in_blacklist(self, uri):
+    return uri in self.session.blacklist
         
