@@ -24,13 +24,14 @@ def my_app_factory(config, core):
 
     return [
         (r'/', web.MainHandler, {'core': core}),
-        (r'/results/', web.SearchHandler, {'core': core}),
-        (r'/add/', web.AddTrackHandler, {'core': core, 'session': this_session}),
+        (r'/results/?', web.SearchHandler, {'core': core}),
+        (r'/add/?', web.AddTrackHandler, {'core': core, 'session': this_session}),
         (r"/style/(.*)", tornado.web.StaticFileHandler, {"path": path}),
-        (r"/start/", web.StartHandler, {'core': core, 'config': config}),
-        (r"/history/", web.HistoryHandler, {'core': core, 'session': this_session}),
-        (r"/vote/", web.VoteHandler, {'core': core, 'session': this_session}),
-        (r"/invalid/", web.PageHandler, {'page': 'invalid.html'}),
+        (r"/start/?", web.StartHandler, {'core': core, 'config': config}),
+        (r"/history/?", web.HistoryHandler, {'core': core, 'session': this_session}),
+        (r"/vote/?", web.VoteHandler, {'core': core, 'session': this_session}),
+        (r"/invalid/?", web.PageHandler, {'page': 'invalid.html'}),
+
     ]
 
 
