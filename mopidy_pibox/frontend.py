@@ -18,11 +18,10 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 	def track_playback_ended(self, tl_track, time_position):
 		if self.core.tracklist.get_length().get() == 0:
 			playlist = self.core.playlists.get_items(self.uri).get()
-			new_track_uri = None
-			attempts = 0
-			while ((pibox_web.web.played_already(uri, self.core) or pibox_web.web.in_tracklist(uri, self.core)) and attempts < len(playlist)):
-				new_track_uri = random.choice(playlist).uri
-				attempts += 1
-			self.core.tracklist.add(uri=new_track_uri, at_position=0).get()
-			if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
-				self.core.playback.play()
+			for ref in playlist:
+				new_track_uri = ref.uri
+				if not (pibox_web.web.played_already(new_track_uri, self.core)):
+					self.core.tracklist.add(uri=new_track_uri, at_position=0).get()
+					if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
+							self.core.playback.play()
+			
