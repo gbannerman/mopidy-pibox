@@ -2,7 +2,7 @@ import pykka
 import random
 
 from mopidy import core
-from pibox_web import web
+import pibox_web
 
 
 class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
@@ -20,7 +20,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 			playlist = self.core.playlists.get_items(self.uri).get()
 			new_track_uri = None
 			attempts = 0
-			while ((played_already(uri, self.core) or in_tracklist(uri, self.core)) and attempts < len(playlist)):
+			while ((pibox_web.web.played_already(uri, self.core) or pibox_web.web.in_tracklist(uri, self.core)) and attempts < len(playlist)):
 				new_track_uri = random.choice(playlist).uri
 				attempts += 1
 			self.core.tracklist.add(uri=new_track_uri, at_position=0).get()
