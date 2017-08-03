@@ -44,7 +44,7 @@ class AddTrackHandler(tornado.web.RequestHandler):
         uri = self.get_argument("uri", None)
         new_position = self.core.tracklist.length.get()
         redirect_url = '/pibox/invalid/'
-        if not (played_already(uri) or in_tracklist(uri) or in_blacklist(uri)):
+        if not (played_already(uri, self.core) or in_tracklist(uri, self.core) or in_blacklist(self.session, uri)):
             self.core.tracklist.add(uri=uri, at_position=new_position)
             redirect_url = '/pibox/'
         self.redirect(url=redirect_url)
@@ -123,20 +123,20 @@ class PageHandler(tornado.web.RequestHandler):
         self.render(self.page)
 
 
-def played_already(self, uri):
-    history = self.core.history.get_history().get()
+def played_already(uri, core):
+    history = core.history.get_history().get()
     played_tracks = []
     for tup in history:
         played_tracks.append(tup[1].uri)
     return uri in played_tracks
 
-def in_tracklist(self, uri):
-    length = len(self.core.tracklist.filter({'uri': [uri]}).get())
+def in_tracklist(uri, core):
+    length = len(core.tracklist.filter({'uri': [uri]}).get())
     if length == 0:
         return False
     else:
         return True
 
-def in_blacklist(self, uri):
-    return uri in self.session.blacklist
+def in_blacklist(session, uri):
+    return uri in session.blacklist
         
