@@ -9,7 +9,7 @@ import tornado.web
 import spotify
 
 from mopidy.core import PlaybackState
-from frontend import PiboxFrontend
+import frontend
 
 
 class SearchHandler(tornado.web.RequestHandler):
@@ -109,7 +109,7 @@ class ActorHandler(tornado.web.RequestHandler):
 
     def get(self):
         new_playlist = 'spotify:user:gavinbannerman:playlist:2rCHm6qkyTY71ENxpbb0zi'
-        actors = pykka.ActorRegistry.get_by_class(PiboxFrontend)
+        actors = pykka.ActorRegistry.get_by_class(frontend.PiboxFrontend)
         for actor_ref in actors:
             actor_ref.tell({'playlist': new_playlist})
         self.render("actors.html", actors=actors)
