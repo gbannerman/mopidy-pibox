@@ -9,7 +9,7 @@ import tornado.web
 import spotify
 
 from mopidy.core import PlaybackState
-import frontend
+from mopidy_pibox import frontend
 
 
 class SearchHandler(tornado.web.RequestHandler):
