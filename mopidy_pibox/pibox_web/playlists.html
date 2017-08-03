@@ -10,7 +10,7 @@
       <h3>Available playlists"</h3>
       <table>
         {% for ref in playlists %}
-        <tr class="clickable-row" data-url="/pibox/playlists/change/?uri={{ track.uri }}">
+        <tr class="clickable-row" data-url="/pibox/playlists/change/?uri={{ ref.uri }}">
           <td>{{ ref.name }}</td>
         </tr>
         {% end %}
