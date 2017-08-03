@@ -15,5 +15,5 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		if self.core.tracklist.get_length().get() == 0:
 			new_track_uri = random.choice(self.core.playlists.get_items(self.uri).get()).uri
 			self.core.tracklist.add(uri=new_track_uri, at_position=0).get()
-			if self.core.playback.get_state().get() == PlaybackState.STOPPED:
+			if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
 				self.core.playback.play()
