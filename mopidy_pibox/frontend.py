@@ -11,6 +11,9 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		self.config = config
 		self.uri = 'spotify:user:gavinbannerman:playlist:1KSdLBbLJbTx0XYrWBVnrs'
 
+	def on_receive(self, message):
+        self.uri = message.get('playlist')
+
 	def track_playback_ended(self, tl_track, time_position):
 		if self.core.tracklist.get_length().get() == 0:
 			new_track_uri = random.choice(self.core.playlists.get_items(self.uri).get()).uri
