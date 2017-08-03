@@ -103,16 +103,17 @@ class PlaylistHandler(tornado.web.RequestHandler):
         playlists = self.core.playlists.as_list().get()
         self.render("playlists.html", playlists=playlists)
 
-class ActorHandler(tornado.web.RequestHandler):
+class ChangePlaylistHandler(tornado.web.RequestHandler):
     def initialize(self, core):
         self.core = core
 
     def get(self):
-        new_playlist = 'spotify:user:gavinbannerman:playlist:2rCHm6qkyTY71ENxpbb0zi'
+        new_playlist = self.get_argument("uri", None)
         actors = pykka.ActorRegistry.get_by_class(frontend.PiboxFrontend)
         for actor_ref in actors:
             actor_ref.tell({'playlist': new_playlist})
-        self.render("actors.html", actors=actors)
+        redirect_url = '/pibox/'
+        self.redirect(url=redirect_url)
         
 
 class PageHandler(tornado.web.RequestHandler):
