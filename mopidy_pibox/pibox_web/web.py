@@ -2,11 +2,14 @@ from __future__ import absolute_import, unicode_literals
 
 import os
 
+import pykka
+
 import tornado.web
 
 import spotify
 
 from mopidy.core import PlaybackState
+
 
 class SearchHandler(tornado.web.RequestHandler):
     def initialize(self, core):
@@ -98,6 +101,14 @@ class PlaylistHandler(tornado.web.RequestHandler):
     def get(self):
         playlists = self.core.playlists.as_list().get()
         self.render("playlists.html", playlists=playlists)
+
+class ActorHandler(tornado.web.RequestHandler):
+    def initialize(self, core):
+        self.core = core
+
+    def get(self):
+        actors = pykka.ActorRegistry.get_all()
+        self.render("actors.html", actors=actors)
         
 
 class PageHandler(tornado.web.RequestHandler):
