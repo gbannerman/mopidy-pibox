@@ -24,9 +24,11 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 						self.core.playback.play()
 
 	def played_already(self, uri, core):
-        history = self.core.history.get_history().get()
-        played_tracks = []
-        for tup in history:
-            played_tracks.append(tup[1].uri)
-        return uri in played_tracks
+		history = self.core.history.get_history().get()
+		played_tracks = []
+		for tup in history:
+			played_tracks.append(tup[1].uri)
+		return uri in played_tracks
+
+		#comment
 			
