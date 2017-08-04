@@ -2,8 +2,6 @@ import pykka
 import random
 
 from mopidy import core
-import pibox_web
-
 
 class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 	def __init__(self, config, core):
@@ -20,8 +18,15 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 			playlist = self.core.playlists.get_items(self.uri).get()
 			for ref in playlist:
 				new_track_uri = ref.uri
-				if not (pibox_web.web.played_already(new_track_uri, self.core)):
+				if not (self.played_already(new_track_uri, self.core)):
 					self.core.tracklist.add(uri=new_track_uri, at_position=0).get()
 					if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
-							self.core.playback.play()
+						self.core.playback.play()
+
+	def played_already(self, uri, core):
+        history = self.core.history.get_history().get()
+        played_tracks = []
+        for tup in history:
+            played_tracks.append(tup[1].uri)
+        return uri in played_tracks
 			
