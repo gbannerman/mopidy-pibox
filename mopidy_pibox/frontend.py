@@ -18,7 +18,6 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
 		logger = logging.getLogger(__name__)
 		if self.core.tracklist.get_length().get() == 0:
-			logger.info("NO SONGS IN TRACKLIST")
 			playlist = self.core.playlists.get_items(self.uri).get()
 			for ref in playlist:
 				new_track_uri = ref.uri
