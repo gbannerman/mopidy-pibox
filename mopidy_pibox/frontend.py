@@ -20,14 +20,15 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		if self.core.tracklist.get_length().get() == 0:
 			logger.info("NO SONGS IN TRACKLIST")
 			playlist = self.core.playlists.get_items(self.uri).get()
+			logger.info(len(playlist.length))
 			for ref in playlist:
-				logger.info("trying " + ref.name)
 				new_track_uri = ref.uri
 				if not (self.played_already(new_track_uri, self.core)):
 					self.core.tracklist.add(uri=new_track_uri, at_position=0).get()
-					logger.info("ADDED PLAYLIST SONG TO TRACKLIST")
+					logger.info("Auto-added " + ref.name + " to tracklist")
 					if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
 						self.core.playback.play()
+					break
 
 	def played_already(self, uri, core):
 		history = self.core.history.get_history().get()
