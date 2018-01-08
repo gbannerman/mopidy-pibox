@@ -18,6 +18,9 @@ export class App extends Component {
     mopidy.on("state:online", function () {
       loading = false;
     });
+    mopidy.on("event:trackPlaybackEnded", function () {
+      // TODO Play from playlist
+    });
   }
 
   render() {

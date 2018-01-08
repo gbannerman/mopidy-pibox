@@ -9,16 +9,19 @@ export default class Search extends React.Component {
 
 		const TEST_TRACKLIST = [
       {
+        uri: "spotify:nxsisiwi1",
         title: "Grown Up",
         artists: ["Danny Brown"],
         album: "Grown Up"
       },
       {
+        uri: "spotify:nxsisiwi2",
         title: "After Light",
         artists: ["Rustie"],
         album: "Glass Swords"
       },
       {
+        uri: "spotify:nxsisiwi3",
         title: "Janene",
         artists: ["Edwin Organ"],
         album: "Janene"
@@ -32,7 +35,9 @@ export default class Search extends React.Component {
 				<SearchBox />
 				<div className="results">
 					<table>
-						{ searchResults }
+            <tbody>
+						  { searchResults }
+            </tbody>
 					</table>
 				</div>
 			</div>
