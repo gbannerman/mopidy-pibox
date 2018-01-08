@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 var Mopidy = require("mopidy");
 var mopidy;
-var loading = false;
+var loading = true;
 
 export class App extends Component {
 
