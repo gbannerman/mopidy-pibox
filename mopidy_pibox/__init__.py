@@ -15,20 +15,9 @@ logger = logging.getLogger(__name__)
 
 def my_app_factory(config, core):
 
-    path = os.path.join( os.path.dirname(__file__), 'static')
+    path = os.path.join( os.path.dirname(__file__), 'build/static')
     
     return [
-        (r"/images/(.*)", tornado.web.StaticFileHandler, {
-            'path': config['local-images']['image_dir']
-        }),
-        (r'/http/([^/]*)', handlers.HttpHandler, {
-            'core': core,
-            'config': config
-        }),
-        (r'/ws/?', handlers.WebsocketHandler, { 
-            'core': core,
-            'config': config
-        }),
         (r'/(.*)', tornado.web.StaticFileHandler, {
             'path': path,
             'default_filename': 'index.html'
