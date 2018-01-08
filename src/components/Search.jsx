@@ -5,8 +5,16 @@ import '../style/Search.css';
 
 export default class Search extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      tracks: null,
+    };
+  }
+
   search(results) {
-    console.log(results);
+    console.log(results)[0].tracks;
+    this.setState({tracks: results[0].tracks});
   }
 
 	render() {
