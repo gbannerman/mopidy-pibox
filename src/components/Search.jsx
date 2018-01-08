@@ -5,6 +5,10 @@ import '../style/Search.css';
 
 export default class Search extends React.Component {
 
+  search(results) {
+    console.log(results);
+  }
+
 	render() {
 
 		const TEST_TRACKLIST = [
@@ -32,7 +36,7 @@ export default class Search extends React.Component {
 
 		return (
 			<div>
-				<SearchBox />
+				<SearchBox handleSubmit={ this.search } />
 				<div className="results">
 					<table>
             <tbody>

@@ -4,14 +4,9 @@ import { getMopidy } from '../App.js';
 
 export default class SearchBox extends React.Component {
 
-	logResults(results) {
-		console.log(results);
-	}
-
 	processData(e) {
 		e.preventDefault();
-		console.log(e.target.query.value);
-		getMopidy().library.search({'any': [e.target.query.value]}, ['spotify:'], false).done(this.logResults);
+		getMopidy().library.search({'any': [e.target.query.value]}, ['spotify:'], false).done(this.props.handleSubmit);
 	}
 
 	render() {
