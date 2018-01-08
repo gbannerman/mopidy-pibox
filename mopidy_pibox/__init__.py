@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def my_app_factory(config, core):
 
-    path = os.path.join( os.path.dirname(__file__), 'static')
+    path = os.path.join( os.path.dirname(__file__), 'public')
     
     return [
         (r'/(.*)', tornado.web.StaticFileHandler, {
