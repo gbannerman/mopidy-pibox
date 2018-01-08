@@ -13,7 +13,7 @@ export default class SearchBox extends React.Component {
 
 		return (
 
-			<form onSubmit={this.processData} method="POST">
+			<form onSubmit={this.processData.bind(this)} method="POST">
         <input name="query" type="text" id="searchField" placeholder="search songs, artists, etc..." autoComplete="off"/>
         <input type="submit" name="submit" />
       </form>

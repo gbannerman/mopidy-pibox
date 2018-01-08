@@ -13,7 +13,7 @@ export default class Search extends React.Component {
   }
 
   search(results) {
-    console.log(results)[0].tracks;
+    console.log(results[0].tracks);
     this.setState({tracks: results[0].tracks});
   }
 
@@ -44,7 +44,7 @@ export default class Search extends React.Component {
 
 		return (
 			<div>
-				<SearchBox handleSubmit={ this.search } />
+				<SearchBox handleSubmit={ this.search.bind(this) } />
 				<div className="results">
 					<table>
             <tbody>

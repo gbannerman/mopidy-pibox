@@ -9,13 +9,16 @@ import {
 } from 'react-router-dom';
 var Mopidy = require("mopidy");
 var mopidy;
-var loading = true;
+var loading = false;
+
+// TODO Make this state^
 
 export class App extends Component {
 
   componentDidMount() {
     mopidy = new Mopidy();
     mopidy.on("state:online", function () {
+    console.debug("Mopidy: CONNECTED");
       loading = false;
     });
     mopidy.on("event:trackPlaybackEnded", function () {
