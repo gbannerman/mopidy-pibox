@@ -26,7 +26,7 @@ export default class PlaybackControls extends React.Component {
 
 		return (
 
-			<button onClick={this.toggle.bind(this)}>{ playing ? "PAUSE" : "PLAY" }</button>
+			<button onClick={this.toggle.bind(this)}>{ this.state.playing ? "PAUSE" : "PLAY" }</button>
 		);
 	}
 }
