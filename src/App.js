@@ -15,17 +15,29 @@ var loading = false;
 
 export class App extends Component {
 
-    constructor(props) {
-      super(props);
-      this.state = {
-        nowPlaying: {
-          name: "Test Title",
-          artists: [{name: "Test Artist"}],
-          album: {name: "Test Album"}
-        },
-        tracklist: []
-      };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      nowPlaying: {
+        name: "Test Title",
+        artists: [{name: "Test Artist"}],
+        album: {name: "Test Album"}
+      },
+      tracklist: []
+    };
+  }
+
+  updateTracklist() {
+    mopidy.tracklist.getTracks().done((tracklist) => {
+      this.setState({tracklist: tracklist});
+    });
+  }
+
+  updateNowPlaying() {
+    mopidy.playback.getCurrentTrack().done((track) => {
+      this.setState({nowPlaying: track});
+    });
+  }
 
   componentDidMount() {
     mopidy = new Mopidy();
@@ -36,27 +48,19 @@ export class App extends Component {
     mopidy.on("event:trackPlaybackEnded",() => {
       // TODO Play from playlist
     });
-    mopidy.on("event:streamTitleChanged", (title) => {
+    mopidy.on("event:streamTitleChanged", () => {
       console.log("TITLE CHANGED");
-      mopidy.playback.getCurrentTrack().done((track) => {
-        this.setState({nowPlaying: track});
-      });
+      this.updateNowPlaying();
+      this.updateTracklist();
     });
     mopidy.on("event:playbackStateChanged", () => {
       console.log("PLAYBACK STATE CHANGED");
-      mopidy.playback.getCurrentTrack().done((track) => {
-        this.setState({nowPlaying: track});
-      });
-    });
-    mopidy.on("event:trackPlaybackStarted", (tlTrack) => {
-      console.log("PLAYBACK STARTED");
-      this.setState({nowPlaying: tlTrack.track});
+      this.updateNowPlaying();
+      this.updateTracklist();
     });
     mopidy.on("event:tracklistChanged", () => {
       console.log("TRACKLIST CHANGED");
-      mopidy.tracklist.getTracks().done((tracklist) => {
-        this.setState({tracklist: tracklist});
-      });
+      this.updateTracklist();
     });
   }
 
