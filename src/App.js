@@ -38,7 +38,6 @@ export class App extends Component {
     mopidy.playback.getCurrentTrack().done((track) => {
       this.setState({nowPlaying: track});
       mopidy.library.getImages([track.uri]).done((result) => {
-        console.log(track.uri);
         this.setState({imageUrl: result[track.uri][0].uri});
       });
     });
@@ -79,20 +78,20 @@ export class App extends Component {
         <Router>
           <div>
             <ul>
-              <li><Link className="Link" to="/">Home</Link></li>
-              <li><Link className="Link" to="/search">Search</Link></li>
+              <li><Link className="Link" to="./">Home</Link></li>
+              <li><Link className="Link" to="./search">Search</Link></li>
             </ul>
 
             <Route 
               exact 
-              path="/" 
+              path="./" 
               render={ () => 
                 <Home 
                   nowPlaying={this.state.nowPlaying}  
                   tracklist={this.state.tracklist} 
                   image={this.state.imageUrl} /> 
               } />
-            <Route path="/search" component={Search}/>
+            <Route path="./search" component={Search}/>
           </div>
         </Router>
       }
