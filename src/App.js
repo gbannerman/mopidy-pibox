@@ -18,7 +18,11 @@ export class App extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        nowPlaying: null,
+        nowPlaying: {
+          name: "Test Title",
+          artists: [{name: "Test Artist"}],
+          album: {name: "Test Album"}
+        },
         tracklist: []
       };
     }
