@@ -40,8 +40,8 @@ export class App extends Component {
       console.log("TRACKLIST CHANGED");
       mopidy.tracklist.getTracks().done((tracklist) => {
         console.log(tracklist);
-      })
-      this.setState({tracklist: tracklist});
+        this.setState({tracklist: tracklist});
+      });
     });
   }
 
