@@ -38,7 +38,8 @@ export class App extends Component {
     mopidy.playback.getCurrentTrack().done((track) => {
       this.setState({nowPlaying: track});
       mopidy.library.getImages([track.uri]).done((result) => {
-        console.log(result);
+        console.log(track.uri);
+        this.setState({imageUrl: result[track.uri][0].uri});
       });
     });
   }
