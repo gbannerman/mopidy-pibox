@@ -14,7 +14,7 @@ export default class NowPlaying extends React.Component {
 
 	render() {
 
-		if (!track) {
+		if (!this.state.track) {
 			return(
 				<div className="now-playing">
 					<h2>Add a song to the queue</h2>
@@ -26,9 +26,9 @@ export default class NowPlaying extends React.Component {
 			<div className="now-playing">
 				<Thumbnail />
         <div className="info">
-  				<h2 className="title">{ this.props.track.name }</h2>
-  				<h3 className="artist">{ this.props.track ? <ArtistSentence artists={ this.props.track.artists } /> : <ArtistSentence /> }</h3>
-          <h3 className="album">{ this.props.track.album.name }</h3>
+  				<h2 className="title">{ this.state.track.name }</h2>
+  				<h3 className="artist">{ this.state.track ? <ArtistSentence artists={ this.state.track.artists } /> : <ArtistSentence /> }</h3>
+          <h3 className="album">{ this.state.track.album.name }</h3>
         </div>
 			</div>
 		);
