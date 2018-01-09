@@ -15,6 +15,14 @@ var loading = false;
 
 export class App extends Component {
 
+    constructor(props) {
+      super(props);
+      this.state = {
+        nowPlaying: null,
+        tracklist: []
+      };
+    }
+
   componentDidMount() {
     mopidy = new Mopidy();
     mopidy.on("state:online", function () {
@@ -23,6 +31,17 @@ export class App extends Component {
     });
     mopidy.on("event:trackPlaybackEnded", function () {
       // TODO Play from playlist
+    });
+    mopidy.on("event:trackPlaybackStarted", function (tlTrack) {
+      console.log("PLAYBACK STARTED");
+      this.setState({nowPlaying: tlTrack.track});
+    });
+    mopidy.on("event:tracklistChanged", function () {
+      console.log("TRACKLIST CHANGED");
+      mopidy.tracklist.getTracks().done((tracklist) => {
+        console.log(tracklist);
+      })
+      this.setState({tracklist: tracklist});
     });
   }
 
@@ -38,7 +57,14 @@ export class App extends Component {
               <li><Link className="Link" to="/search">Search</Link></li>
             </ul>
 
-            <Route exact path="/" component={Home}/>
+            <Route 
+              exact 
+              path="/" 
+              render={ () => 
+                <Home 
+                  nowPlaying={this.state.nowPlaying}  
+                  tracklist={this.state.tracklist} /> 
+              } />
             <Route path="/search" component={Search}/>
           </div>
         </Router>

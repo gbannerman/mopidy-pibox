@@ -34,8 +34,8 @@ export default class Home extends React.Component {
 		return (
 			<div>
 	      <h3>Now Playing</h3>
-	      <NowPlaying current_track={TEST_TRACK}/>
-	      <Tracklist tracks={TEST_TRACKLIST} />
+	      <NowPlaying track={this.props.nowPlaying} />
+	      <Tracklist tracks={this.props.tracklist} />
 				<PlaybackControls />
 			</div>
 		);
