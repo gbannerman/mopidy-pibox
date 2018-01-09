@@ -25,18 +25,18 @@ export class App extends Component {
 
   componentDidMount() {
     mopidy = new Mopidy();
-    mopidy.on("state:online", function () {
+    mopidy.on("state:online", () => {
     console.debug("Mopidy: CONNECTED");
       loading = false;
     });
-    mopidy.on("event:trackPlaybackEnded", function () {
+    mopidy.on("event:trackPlaybackEnded",() => {
       // TODO Play from playlist
     });
-    mopidy.on("event:trackPlaybackStarted", function (tlTrack) {
+    mopidy.on("event:trackPlaybackStarted", (tlTrack) => {
       console.log("PLAYBACK STARTED");
       this.setState({nowPlaying: tlTrack.track});
     });
-    mopidy.on("event:tracklistChanged", function () {
+    mopidy.on("event:tracklistChanged", () => {
       console.log("TRACKLIST CHANGED");
       mopidy.tracklist.getTracks().done((tracklist) => {
         console.log(tracklist);
