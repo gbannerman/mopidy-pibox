@@ -17,7 +17,7 @@ export default class PlaybackControls extends React.Component {
 				console.log("PAUSED");
 			});
 		} else {
-			getMopidy().playback.pause().done(() => {
+			getMopidy().playback.play().done(() => {
 				this.setState({playing: true});
 				console.log("PLAYING");
 			});
