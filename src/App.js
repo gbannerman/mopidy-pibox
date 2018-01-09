@@ -48,8 +48,8 @@ export class App extends Component {
     mopidy = new Mopidy();
     mopidy.on("state:online", () => {
     console.debug("Mopidy: CONNECTED");
-      updateTracklist();
-      updateNowPlaying();
+      this.updateTracklist();
+      this.updateNowPlaying();
       loading = false;
     });
     mopidy.on("event:trackPlaybackEnded",() => {
