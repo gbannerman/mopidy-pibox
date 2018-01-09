@@ -20,7 +20,7 @@ export default class PlaybackControls extends React.Component {
 
 		return (
 
-			<button onClick={this.start}>START / STOP</button>
+			<button onClick={this.start.bind(this)}>START / STOP</button>
 		);
 	}
 }
