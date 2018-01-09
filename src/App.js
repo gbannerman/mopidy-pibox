@@ -24,7 +24,7 @@ export class App extends Component {
         album: {name: "Test Album"}
       },
       imageUrl: "https://i.scdn.co/image/cc8f153161d0a16761db976882614563d2f9e988",
-      tracklist: []
+      tracklist: [],
     };
   }
 
@@ -48,6 +48,8 @@ export class App extends Component {
     mopidy = new Mopidy();
     mopidy.on("state:online", () => {
     console.debug("Mopidy: CONNECTED");
+      updateTracklist();
+      updateNowPlaying();
       loading = false;
     });
     mopidy.on("event:trackPlaybackEnded",() => {
