@@ -38,10 +38,10 @@ export class App extends Component {
         this.setState({nowPlaying: track});
       });
     });
-    // mopidy.on("event:trackPlaybackStarted", (tlTrack) => {
-    //   console.log("PLAYBACK STARTED");
-    //   this.setState({nowPlaying: tlTrack.track});
-    // });
+    mopidy.on("event:trackPlaybackStarted", (tlTrack) => {
+      console.log("PLAYBACK STARTED");
+      this.setState({nowPlaying: tlTrack.track});
+    });
     mopidy.on("event:tracklistChanged", () => {
       console.log("TRACKLIST CHANGED");
       mopidy.tracklist.getTracks().done((tracklist) => {
