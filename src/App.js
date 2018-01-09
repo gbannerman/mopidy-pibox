@@ -23,6 +23,7 @@ export class App extends Component {
         artists: [{name: "Test Artist"}],
         album: {name: "Test Album"}
       },
+      imageUrl: "https://i.scdn.co/image/cc8f153161d0a16761db976882614563d2f9e988",
       tracklist: []
     };
   }
@@ -36,6 +37,9 @@ export class App extends Component {
   updateNowPlaying() {
     mopidy.playback.getCurrentTrack().done((track) => {
       this.setState({nowPlaying: track});
+      mopidy.library.getImages([track.uri]).done((result) => {
+        console.log(result);
+      });
     });
   }
 
@@ -82,7 +86,8 @@ export class App extends Component {
               render={ () => 
                 <Home 
                   nowPlaying={this.state.nowPlaying}  
-                  tracklist={this.state.tracklist} /> 
+                  tracklist={this.state.tracklist} 
+                  image={this.state.imageUrl} /> 
               } />
             <Route path="/search" component={Search}/>
           </div>
