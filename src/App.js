@@ -38,6 +38,12 @@ export class App extends Component {
         this.setState({nowPlaying: track});
       });
     });
+    mopidy.on("event:playbackStateChanged", () => {
+      console.log("PLAYBACK STATE CHANGED");
+      mopidy.playback.getCurrentTrack().done((track) => {
+        this.setState({nowPlaying: track});
+      });
+    });
     mopidy.on("event:trackPlaybackStarted", (tlTrack) => {
       console.log("PLAYBACK STARTED");
       this.setState({nowPlaying: tlTrack.track});
