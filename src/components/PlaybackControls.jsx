@@ -4,6 +4,10 @@ import { getMopidy } from '../App.js';
 export default class PlaybackControls extends React.Component {
 
 	togglePlayback(playbackState) {
+		console.log(playbackState);
+		getMopidy().tracklist.getConsume().done((consume) => {
+			console.log(consume);
+		});
 		if (playbackState == "PLAYING") {
 			getMopidy().playback.pause();
 		} else {
