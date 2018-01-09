@@ -7,11 +7,13 @@ export default class Home extends React.Component {
 
 	render() {
 
+    const display = 5;
+
 		return (
 			<div>
 	      <h3>Now Playing</h3>
 	      <NowPlaying track={this.props.nowPlaying} />
-	      <Tracklist tracks={this.props.tracklist} display="5" />
+	      <Tracklist tracks={this.props.tracklist} display={5} />
 				<PlaybackControls />
 			</div>
 		);

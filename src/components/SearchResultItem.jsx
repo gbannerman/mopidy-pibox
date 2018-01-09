@@ -16,7 +16,7 @@ export default class SearchResultItem extends React.Component {
 
 		return (
 
-			<tr className="clickable-row" onClick={this.handleClick.bind(this)} data-url="/pibox/add/?uri={{ track.uri }}">
+			<tr className="clickable-row" onClick={this.handleClick.bind(this)} >
         <td>{ this.props.track.name }</td>
         <td><ArtistSentence artists={ this.props.track.artists }/></td>
         <td>{ this.props.track.album.name }</td>
