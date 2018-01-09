@@ -3,28 +3,32 @@ import { getMopidy } from '../App.js';
 
 export default class PlaybackControls extends React.Component {
 
-	togglePlayback(playbackState) {
-		console.log(playbackState);
-		getMopidy().tracklist.getConsume().done((consume) => {
-			console.log(consume);
-		});
-		if (playbackState == "PLAYING") {
-			getMopidy().playback.pause();
-		} else {
-			getMopidy().tracklist.setConsume(true);
-			getMopidy().playback.play();
-		}
+	constructor(props) {
+		super(props);
+		this.state = {
+			playing: false
+		};
 	}
 
-	start() {
-			getMopidy().playback.getState().done(this.togglePlayback);
+	toggle() {
+		if (this.state.playing) {
+			getMopidy().playback.pause().done(() => {
+				this.setState({playing: false});
+				console.log("PAUSED");
+			});
+		} else {
+			getMopidy().playback.pause().done(() => {
+				this.setState({playing: true});
+				console.log("PLAYING");
+			});
 		}
+	}
 
 	render() {
 
 		return (
 
-			<button onClick={this.start.bind(this)}>START / STOP</button>
+			<button onClick={this.toggle.bind(this)}>START / STOP</button>
 		);
 	}
 }
