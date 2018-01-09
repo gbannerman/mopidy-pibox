@@ -32,14 +32,19 @@ export class App extends Component {
     mopidy.on("event:trackPlaybackEnded",() => {
       // TODO Play from playlist
     });
-    mopidy.on("event:trackPlaybackStarted", (tlTrack) => {
-      console.log("PLAYBACK STARTED");
-      this.setState({nowPlaying: tlTrack.track});
+    mopidy.on("event:streamTitleChanged", (title) => {
+      console.log("TITLE CHANGED");
+      mopidy.playback.getCurrentTrack().done((track) => {
+        this.setState({nowPlaying: track});
+      });
     });
+    // mopidy.on("event:trackPlaybackStarted", (tlTrack) => {
+    //   console.log("PLAYBACK STARTED");
+    //   this.setState({nowPlaying: tlTrack.track});
+    // });
     mopidy.on("event:tracklistChanged", () => {
       console.log("TRACKLIST CHANGED");
       mopidy.tracklist.getTracks().done((tracklist) => {
-        console.log(tracklist);
         this.setState({tracklist: tracklist});
       });
     });
