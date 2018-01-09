@@ -14,12 +14,10 @@ export default class PlaybackControls extends React.Component {
 		if (this.state.playing) {
 			getMopidy().playback.pause().done(() => {
 				this.setState({playing: false});
-				console.log("PAUSED");
 			});
 		} else {
 			getMopidy().playback.play().done(() => {
 				this.setState({playing: true});
-				console.log("PLAYING");
 			});
 		}
 	}
