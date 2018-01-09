@@ -6,9 +6,10 @@ import { getMopidy } from '../App.js';
 export default class SearchResultItem extends React.Component {
 
 	handleClick() {
-		console.log("Queued " + this.props.track.uri);
 		// TODO Check if played already
-		getMopidy().tracklist.add([this.props.track.uri]);
+		getMopidy().tracklist.add([this.props.track], null, null, null).done(() => {
+			console.log("Track queued");
+		});
 	}
 
 	render() {
