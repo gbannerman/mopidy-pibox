@@ -27,8 +27,8 @@ export default class ArtistSentence extends React.Component {
 
 						if (!artist){							
 							var content = <span>-</span>
-						} else if (!artist.uri || this.props.nolinks){
-							var content = <span>{ artist }</span>
+						} else {
+							var content = <span>{ artist.name }</span>
 						}
 
 						return (
