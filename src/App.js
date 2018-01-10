@@ -44,12 +44,23 @@ export class App extends Component {
     });
   }
 
+  updatePlaybackState() {
+    mopidy.playback.getState().done((playbackState) => {
+      if (playbackState === "playing") {
+        this.setState({playing: true});
+      } else {
+        this.setState({playing: false});
+      }
+    });
+  }
+
   componentDidMount() {
     mopidy = new Mopidy();
     mopidy.on("state:online", () => {
     console.debug("Mopidy: CONNECTED");
       this.updateTracklist();
       this.updateNowPlaying();
+      this.updatePlaybackState();
       loading = false;
     });
     mopidy.on("event:trackPlaybackEnded",() => {
@@ -62,7 +73,11 @@ export class App extends Component {
     });
     mopidy.on("event:playbackStateChanged", (playbackState) => {
       console.log("PLAYBACK STATE CHANGED");
-      console.log(playbackState);
+      if (playbackState.new_state === "playing") {
+        this.setState({playing: true});
+      } else {
+        this.setState({playing: false});
+      }
       this.updateNowPlaying();
       this.updateTracklist();
     });
