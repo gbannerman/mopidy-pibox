@@ -54,6 +54,15 @@ export class App extends Component {
     });
   }
 
+  queueFromPlaylist() {
+    mopidy.playlists.getItems('spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL').done((playlist) => {
+      let trackReference = playlist[0];
+      mopidy.tracklist.add([trackReference.uri], null, null, null).done(() => {
+        console.log("Track auto-queued");
+      });
+    });
+  }
+
   componentDidMount() {
     mopidy = new Mopidy();
     mopidy.on("state:online", () => {
