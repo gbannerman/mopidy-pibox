@@ -55,9 +55,10 @@ export class App extends Component {
   }
 
   queueFromPlaylist() {
+    console.log("Attempting to queue from playlist");
     mopidy.playlists.getItems('spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL').done((playlist) => {
       let trackReference = playlist[0];
-      mopidy.tracklist.add([trackReference.uri], null, null, null).done(() => {
+      mopidy.tracklist.add(null, null, null, [trackReference.uri]).done(() => {
         console.log("Track auto-queued");
       });
     });
@@ -74,7 +75,7 @@ export class App extends Component {
       loading = false;
     });
     mopidy.on("event:trackPlaybackEnded",() => {
-      // TODO Play from playlist
+      this.queueFromPlaylist();
     });
     mopidy.on("event:streamTitleChanged", () => {
       console.log("TITLE CHANGED");
