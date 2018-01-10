@@ -6,7 +6,8 @@ export default class SearchBox extends React.Component {
 
 	processData(e) {
 		e.preventDefault();
-		getMopidy().library.search({'any': [e.target.query.value]}, ['spotify:'], false).done(this.props.handleSubmit);
+		let queryParameters = e.target.query.value.split(" ");
+		getMopidy().library.search({'any': queryParameters}, ['spotify:'], false).done(this.props.handleSubmit);
 	}
 
 	render() {
