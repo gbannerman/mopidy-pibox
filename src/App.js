@@ -24,7 +24,7 @@ export class App extends Component {
         album: {name: "Test Album"}
       },
       playing: false,
-      imageUrl: "https://i.scdn.co/image/cc8f153161d0a16761db976882614563d2f9e988",
+      imageUrl: null,
       tracklist: [],
     };
   }
@@ -38,9 +38,13 @@ export class App extends Component {
   updateNowPlaying() {
     mopidy.playback.getCurrentTrack().done((track) => {
       this.setState({nowPlaying: track});
-      mopidy.library.getImages([track.uri]).done((result) => {
-        this.setState({imageUrl: result[track.uri][0].uri});
-      });
+      if (track) {
+        mopidy.library.getImages([track.uri]).done((result) => {
+          this.setState({imageUrl: result[track.uri][0].uri});
+        });
+      } else {
+        this.setState({imageUrl: null);
+      }
     });
   }
 

@@ -24,7 +24,9 @@ export default class NowPlaying extends React.Component {
 
 		return (
 			<div className="now-playing">
-				<Thumbnail url ={this.props.image} />
+				{ this.props.image &&
+					<Thumbnail url ={this.props.image} />
+				}
         <div className="info">
   				<h2 className="title">{ this.props.track.name }</h2>
   				<h3 className="artist">{ this.props.track ? <ArtistSentence artists={ this.props.track.artists } /> : <ArtistSentence /> }</h3>
