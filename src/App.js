@@ -58,6 +58,7 @@ export class App extends Component {
     mopidy = new Mopidy();
     mopidy.on("state:online", () => {
     console.debug("Mopidy: CONNECTED");
+      mopidy.tracklist.setConsume(true);
       this.updateTracklist();
       this.updateNowPlaying();
       this.updatePlaybackState();
