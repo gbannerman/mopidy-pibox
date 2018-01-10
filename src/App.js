@@ -43,7 +43,7 @@ export class App extends Component {
           this.setState({imageUrl: result[track.uri][0].uri});
         });
       } else {
-        this.setState({imageUrl: null);
+        this.setState({imageUrl: null});
       }
     });
   }
