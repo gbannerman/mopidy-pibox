@@ -8,8 +8,8 @@ import {
   Link
 } from 'react-router-dom';
 var Mopidy = require("mopidy");
+var Spinner = require('react-spinkit');
 var mopidy;
-var loading = false;
 
 // TODO Make this state^
 
@@ -26,6 +26,7 @@ export class App extends Component {
       playing: false,
       imageUrl: null,
       tracklist: [],
+      loading: true
     };
   }
 
@@ -76,7 +77,7 @@ export class App extends Component {
       this.updateTracklist();
       this.updateNowPlaying();
       this.updatePlaybackState();
-      loading = false;
+      this.setState({loading: false});
     });
     // mopidy.on("event:trackPlaybackEnded",() => {
     //   this.queueFromPlaylist();
@@ -104,9 +105,19 @@ export class App extends Component {
 
   render() {
 
+    if (this.state.loading) {
+      return(
+        <div className="App">
+          <div className="loading">
+            <h1>pibox</h1>
+            <Spinner name="double-bounce" />
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="App">
-        { !loading && 
         <Router>
           <div>
             <ul>
@@ -127,7 +138,6 @@ export class App extends Component {
             <Route path="/pibox/search" component={Search}/>
           </div>
         </Router>
-      }
       </div>
     );
   }
