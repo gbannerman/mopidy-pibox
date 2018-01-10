@@ -42,6 +42,9 @@ class Extension(ext.Extension):
 
     def setup(self, registry):
 
+        from .frontend import PiboxFrontend
+        registry.add('frontend', PiboxFrontend)
+
         registry.add('http:app', {
             'name': self.ext_name,
             'factory': my_app_factory,

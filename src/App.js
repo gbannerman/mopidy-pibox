@@ -78,9 +78,9 @@ export class App extends Component {
       this.updatePlaybackState();
       loading = false;
     });
-    mopidy.on("event:trackPlaybackEnded",() => {
-      this.queueFromPlaylist();
-    });
+    // mopidy.on("event:trackPlaybackEnded",() => {
+    //   this.queueFromPlaylist();
+    // });
     mopidy.on("event:streamTitleChanged", () => {
       console.log("TITLE CHANGED");
       this.updateNowPlaying();
