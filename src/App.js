@@ -23,6 +23,7 @@ export class App extends Component {
         artists: [{name: "Test Artist"}],
         album: {name: "Test Album"}
       },
+      playing: false,
       imageUrl: "https://i.scdn.co/image/cc8f153161d0a16761db976882614563d2f9e988",
       tracklist: [],
     };
@@ -59,8 +60,9 @@ export class App extends Component {
       this.updateNowPlaying();
       this.updateTracklist();
     });
-    mopidy.on("event:playbackStateChanged", () => {
+    mopidy.on("event:playbackStateChanged", (playbackState) => {
       console.log("PLAYBACK STATE CHANGED");
+      console.log(playbackState);
       this.updateNowPlaying();
       this.updateTracklist();
     });
@@ -87,9 +89,10 @@ export class App extends Component {
               path="/pibox/" 
               render={ () => 
                 <Home 
-                  nowPlaying={this.state.nowPlaying}  
+                  nowPlaying={this.state.nowPlaying} 
                   tracklist={this.state.tracklist} 
-                  image={this.state.imageUrl} /> 
+                  image={this.state.imageUrl} 
+                  playing={this.state.playing} /> 
               } />
             <Route path="/pibox/search" component={Search}/>
           </div>

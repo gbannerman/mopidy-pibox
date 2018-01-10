@@ -12,7 +12,7 @@ export default class Home extends React.Component {
 	      <h3>Now Playing</h3>
 	      <NowPlaying image={this.props.image} track={this.props.nowPlaying} />
 	      <Tracklist tracks={this.props.tracklist} display={5} />
-				<PlaybackControls />
+				<PlaybackControls playing={this.props.playing} />
 			</div>
 		);
 	}

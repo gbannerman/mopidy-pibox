@@ -3,22 +3,11 @@ import { getMopidy } from '../App.js';
 
 export default class PlaybackControls extends React.Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			playing: false
-		};
-	}
-
 	toggle() {
-		if (this.state.playing) {
-			getMopidy().playback.pause().done(() => {
-				this.setState({playing: false});
-			});
+		if (this.props.playing) {
+			getMopidy().playback.pause();
 		} else {
-			getMopidy().playback.play().done(() => {
-				this.setState({playing: true});
-			});
+			getMopidy().playback.play();
 		}
 	}
 
@@ -26,7 +15,7 @@ export default class PlaybackControls extends React.Component {
 
 		return (
 
-			<button onClick={this.toggle.bind(this)}>{ this.state.playing ? "PAUSE" : "PLAY" }</button>
+			<button onClick={this.toggle.bind(this)}>{ this.props.playing ? "PAUSE" : "PLAY" }</button>
 		);
 	}
 }
