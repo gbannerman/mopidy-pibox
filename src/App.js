@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Notifications from 'react-notify-toast';
 import './style/App.css';
 import Search from './components/Search.jsx';
 import Home from './components/Home.jsx'
@@ -10,8 +11,6 @@ import {
 var Mopidy = require("mopidy");
 var Spinner = require('react-spinkit');
 var mopidy;
-
-// TODO Make this state^
 
 export class App extends Component {
 
@@ -26,7 +25,7 @@ export class App extends Component {
       playing: false,
       imageUrl: null,
       tracklist: [],
-      loading: true
+      loading: false
     };
   }
 
@@ -98,6 +97,7 @@ export class App extends Component {
 
     return (
       <div className="App">
+        <Notifications />
         <Router>
           <div>
             <ul>
