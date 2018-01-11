@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Notifications from 'react-notify-toast';
+import { ToastContainer } from 'react-toastify';
 import './style/App.css';
 import Search from './components/Search.jsx';
 import Home from './components/Home.jsx'
@@ -97,7 +97,7 @@ export class App extends Component {
 
     return (
       <div className="App">
-        <Notifications />
+        <ToastContainer autoClose={2000} />
         <Router>
           <div>
             <ul>
