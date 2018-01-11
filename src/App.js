@@ -97,7 +97,7 @@ export class App extends Component {
 
     return (
       <div className="App">
-        <ToastContainer autoClose={2000} />
+        <ToastContainer autoClose={3000} hideProgressBar={true} pauseOnHover={false}/>
         <Router>
           <div>
             <ul>

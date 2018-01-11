@@ -9,10 +9,10 @@ export default class SearchResultItem extends React.Component {
 	handleClick() {
 		// TODO Check if played already
 		let message = this.props.track.name + " was added to the queue"
-		toast.info(message, {
-			position: toast.POSITION.BOTTOM_CENTER
-		});
 		getMopidy().tracklist.add([this.props.track], null, null, null).done(() => {
+			toast.info(message, {
+				position: toast.POSITION.BOTTOM_CENTER
+			});
 		});
 	}
 

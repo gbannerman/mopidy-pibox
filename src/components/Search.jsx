@@ -13,7 +13,11 @@ export default class Search extends React.Component {
   }
 
   search(results) {
-    this.setState({tracks: results[0].tracks});
+  	if (results[0]) {
+    	this.setState({tracks: results[0].tracks});
+    } else {
+    	this.setState({tracks: []});
+    }
   }
 
 	render() {
