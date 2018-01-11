@@ -8,7 +8,6 @@ export default class SearchResultItem extends React.Component {
 	handleClick() {
 		// TODO Check if played already
 		getMopidy().tracklist.add([this.props.track], null, null, null).done(() => {
-			console.log("Track queued");
 		});
 	}
 

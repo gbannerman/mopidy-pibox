@@ -59,16 +59,6 @@ export class App extends Component {
     });
   }
 
-  queueFromPlaylist() {
-    console.log("Attempting to queue from playlist");
-    mopidy.playlists.getItems('spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL').done((playlist) => {
-      let trackReference = playlist[0];
-      mopidy.tracklist.add(null, null, null, [trackReference.uri]).done(() => {
-        console.log("Track auto-queued");
-      });
-    });
-  }
-
   componentDidMount() {
     mopidy = new Mopidy();
     mopidy.on("state:online", () => {
@@ -79,16 +69,7 @@ export class App extends Component {
       this.updatePlaybackState();
       this.setState({loading: false});
     });
-    // mopidy.on("event:trackPlaybackEnded",() => {
-    //   this.queueFromPlaylist();
-    // });
-    mopidy.on("event:streamTitleChanged", () => {
-      console.log("TITLE CHANGED");
-      this.updateNowPlaying();
-      this.updateTracklist();
-    });
     mopidy.on("event:playbackStateChanged", (playbackState) => {
-      console.log("PLAYBACK STATE CHANGED");
       if (playbackState.new_state === "playing") {
         this.setState({playing: true});
       } else {
@@ -98,7 +79,6 @@ export class App extends Component {
       this.updateTracklist();
     });
     mopidy.on("event:tracklistChanged", () => {
-      console.log("TRACKLIST CHANGED");
       this.updateTracklist();
     });
   }
