@@ -6,34 +6,20 @@ import tornado.web
 
 from mopidy import config, ext
 
-from pibox_web import web, session
-
-__version__ = '0.1.1'
+__version__ = '0.2.0'
 
 # TODO: If you need to log, use loggers named after the current Python module
 logger = logging.getLogger(__name__)
 
 def my_app_factory(config, core):
 
-    path = os.path.join(os.path.dirname(__file__), 'pibox_web/style')
-    this_session = session.PiboxSession()
-    settings = {
-    "cookie_secret": "__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
-    "login_url": "/login",
-}
-
+    path = os.path.join( os.path.dirname(__file__), 'static')
+    
     return [
-        (r'/', web.MainHandler, {'core': core}),
-        (r'/results/?', web.SearchHandler, {'core': core}),
-        (r'/add/?', web.AddTrackHandler, {'core': core, 'session': this_session}),
-        (r"/style/(.*)", tornado.web.StaticFileHandler, {"path": path}),
-        (r"/start/?", web.StartHandler, {'core': core, 'config': config}),
-        (r"/history/?", web.HistoryHandler, {'core': core, 'session': this_session}),
-        (r"/vote/?", web.VoteHandler, {'core': core, 'session': this_session}),
-        (r"/invalid/?", web.PageHandler, {'page': 'invalid.html'}),
-        (r"/playlists/?", web.PlaylistHandler, {'core': core, 'session': this_session}),
-        (r"/playlists/change/?", web.ChangePlaylistHandler, {'core': core}),
-
+        (r'/(.*)', tornado.web.StaticFileHandler, {
+            'path': path,
+            'default_filename': 'index.html'
+        }),
     ]
 
 

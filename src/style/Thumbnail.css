@@ -1,0 +1,7 @@
+img {
+  flex-basis: auto;
+  width: 50%;
+  height: auto;
+  max-width: 220px;
+  margin: 10px;
+}

@@ -1,0 +1,10 @@
+td {
+    padding: 20px 8px 20px 8px;
+    margin: 0;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tr.clickable-row { 
+	cursor: pointer; 
+}

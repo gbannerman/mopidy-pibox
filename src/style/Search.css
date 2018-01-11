@@ -1,0 +1,10 @@
+table {
+	margin: 0 auto;
+	border-collapse: collapse;
+	text-align: center;
+	min-width: 80%;
+}
+
+.results {
+	width: 100%;
+}
