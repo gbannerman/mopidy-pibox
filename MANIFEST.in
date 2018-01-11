@@ -3,6 +3,7 @@ include LICENSE
 include MANIFEST.in
 include README.rst
 include mopidy_pibox/ext.conf
+graft mopidy_pibox/static
 include tox.ini
 
 recursive-include tests *.py
