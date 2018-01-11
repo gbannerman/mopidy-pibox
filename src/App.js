@@ -25,7 +25,7 @@ export class App extends Component {
       playing: false,
       imageUrl: null,
       tracklist: [],
-      loading: false
+      loading: true
     };
   }
 
