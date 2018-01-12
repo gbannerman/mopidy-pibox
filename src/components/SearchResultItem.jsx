@@ -8,11 +8,21 @@ export default class SearchResultItem extends React.Component {
 
 	handleClick() {
 		// TODO Check if played already
-		let message = this.props.track.name + " was added to the queue"
-		getMopidy().tracklist.add([this.props.track], null, null, null).done(() => {
-			toast.info(message, {
-				position: toast.POSITION.BOTTOM_CENTER
-			});
+		getMopidy().history.getHistory().done((history) => {
+			if (history.filter(trackRef => (trackRef.uri === this.props.track.uri)).length > 0) {
+				let message = "This track has already been played";
+				toast.warn(message, {
+					position: toast.POSITION.BOTTOM_CENTER,
+					autoClose: 3500
+				});
+			} else {
+				let message = this.props.track.name + " was added to the queue";
+				getMopidy().tracklist.add([this.props.track], null, null, null).done(() => {
+					toast.info(message, {
+						position: toast.POSITION.BOTTOM_CENTER
+					});
+				});
+			}
 		});
 	}
 
