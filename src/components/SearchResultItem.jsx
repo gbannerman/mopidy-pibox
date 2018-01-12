@@ -26,7 +26,7 @@ export default class SearchResultItem extends React.Component {
 					toast.info(message, {
 						position: toast.POSITION.BOTTOM_CENTER
 					});
-					if (this.props.tracklist.length >= 1 && this.props.tracklist[0].uri === this.props.track.uri) {
+					if ((this.props.tracklist.length >= 1 && this.props.tracklist[0].uri === this.props.track.uri) || this.props.tracklist.length === 0) {
 						getMopidy().playback.play();
 					}
 				});
