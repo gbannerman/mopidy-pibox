@@ -12,7 +12,7 @@ export default class Search extends React.Component {
     super(props);
     this.state = {
       tracks: [],
-      loading: true
+      loading: false
     };
   }
 
@@ -39,8 +39,7 @@ export default class Search extends React.Component {
     if (this.state.loading) {
       results = (
         <div className="loading">
-            <h3>searching...</h3>
-            <Spinner fadeIn="quarter" name="double-bounce" />
+          <Spinner fadeIn="none" name="double-bounce" />
         </div>
       );
     } else {
