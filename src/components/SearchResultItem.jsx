@@ -6,6 +6,10 @@ import { toast } from 'react-toastify';
 
 export default class SearchResultItem extends React.Component {
 
+	static contextTypes = {
+    router: () => true, // replace with PropTypes.object if you use them
+  }
+
 	handleClick() {
 		getMopidy().history.getHistory().done((history) => {
 			if (history.filter(tuple => (tuple[1].uri === this.props.track.uri)).length > 0) {
@@ -29,6 +33,7 @@ export default class SearchResultItem extends React.Component {
 					if ((this.props.tracklist.length >= 1 && this.props.tracklist[0].uri === this.props.track.uri) || this.props.tracklist.length === 0) {
 						getMopidy().playback.play();
 					}
+					this.context.router.history.goBack();
 				});
 			}
 		});

@@ -25,7 +25,7 @@ export class App extends Component {
       playing: false,
       imageUrl: null,
       tracklist: [],
-      loading: true
+      loading: false
     };
   }
 
@@ -112,10 +112,6 @@ export class App extends Component {
         <ToastContainer autoClose={3000} hideProgressBar={true} pauseOnHover={false} closeButton={false} />
         <Router>
           <div>
-            <ul>
-              <li><Link className="Link" to="/pibox/">Home</Link></li>
-              <li><Link className="Link" to="/pibox/search">Search</Link></li>
-            </ul>
 
             <Route 
               exact 
