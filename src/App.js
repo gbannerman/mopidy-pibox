@@ -89,7 +89,7 @@ export class App extends Component {
         <div className="App">
           <div className="loading">
             <h1>pibox</h1>
-            <Spinner name="double-bounce" />
+            <Spinner fadeIn="quarter" name="double-bounce" />
           </div>
         </div>
       );
@@ -115,7 +115,12 @@ export class App extends Component {
                   image={this.state.imageUrl} 
                   playing={this.state.playing} /> 
               } />
-            <Route path="/pibox/search" component={Search}/>
+            <Route 
+              path="/pibox/search" 
+              render={ () =>
+                <Search
+                  tracklist={this.state.tracklist} />
+              } />
           </div>
         </Router>
       </div>

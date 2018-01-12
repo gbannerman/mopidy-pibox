@@ -7,12 +7,15 @@ import { toast } from 'react-toastify';
 export default class SearchResultItem extends React.Component {
 
 	handleClick() {
-		// TODO Check if played already
-		console.log("Selected a track");
 		getMopidy().history.getHistory().done((history) => {
-			console.log(history);
 			if (history.filter(tuple => (tuple[1].uri === this.props.track.uri)).length > 0) {
 				let message = "This track has already been played";
+				toast.warn(message, {
+					position: toast.POSITION.BOTTOM_CENTER,
+					autoClose: 3500
+				});
+			} else if (this.props.tracklist.filter(track => (track.uri === this.props.track.uri)).length > 0) {
+				let message = "This track has already been queued";
 				toast.warn(message, {
 					position: toast.POSITION.BOTTOM_CENTER,
 					autoClose: 3500
