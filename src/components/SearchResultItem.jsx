@@ -8,7 +8,9 @@ export default class SearchResultItem extends React.Component {
 
 	handleClick() {
 		// TODO Check if played already
+		console.log("Selected a track");
 		getMopidy().history.getHistory().done((history) => {
+			console.log(history);
 			if (history.filter(trackRef => (trackRef.uri === this.props.track.uri)).length > 0) {
 				let message = "This track has already been played";
 				toast.warn(message, {
