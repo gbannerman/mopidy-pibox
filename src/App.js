@@ -61,12 +61,24 @@ export class App extends Component {
   componentDidMount() {
     mopidy = new Mopidy();
     mopidy.on("state:online", () => {
-    console.debug("Mopidy: CONNECTED");
+      console.debug("Mopidy: CONNECTED");
       mopidy.tracklist.setConsume(true);
       this.updateTracklist();
       this.updateNowPlaying();
       this.updatePlaybackState();
       this.setState({loading: false});
+    });
+    mopidy.on("state:offline", () => {
+      console.debug("Mopidy: DISCONNECTED");
+      this.setState({loading: true});
+    });
+    mopidy.on("reconnectionPending", () => {
+      console.debug("Mopidy: RECONNECTION PENDING");
+      this.setState({loading: true});
+    });
+    mopidy.on("reconnecting", () => {
+      console.debug("Mopidy: RECONNECTING");
+      this.setState({loading: true});
     });
     mopidy.on("event:playbackStateChanged", (playbackState) => {
       if (playbackState.new_state === "playing") {
