@@ -3,6 +3,7 @@
   "version": "0.2.5",
   "private": true,
   "dependencies": {
+    "material-ui": "^0.20.0",
     "mopidy": "^0.5.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
