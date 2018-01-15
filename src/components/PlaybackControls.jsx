@@ -1,6 +1,7 @@
 import React from 'react';
 import { getMopidy } from '../App.js';
 import RaisedButton from 'material-ui/RaisedButton';
+import '../style/PlaybackControls.css';
 
 export default class PlaybackControls extends React.Component {
 
@@ -15,8 +16,9 @@ export default class PlaybackControls extends React.Component {
 	render() {
 
 		return (
-
-			<RaisedButton primary={true} onClick={this.toggle.bind(this)}>{ this.props.playing ? "PAUSE" : "PLAY" }</RaisedButton>
+			<div className="playback-controls">
+				<RaisedButton primary={true} onClick={this.toggle.bind(this)}>{ this.props.playing ? "PAUSE" : "PLAY" }</RaisedButton>
+			</div>
 		);
 	}
 }

@@ -6,8 +6,7 @@ import Search from './components/Search.jsx';
 import Home from './components/Home.jsx'
 import {
   BrowserRouter as Router,
-  Route,
-  Link
+  Route
 } from 'react-router-dom';
 var Mopidy = require("mopidy");
 var Spinner = require('react-spinkit');
@@ -25,7 +24,21 @@ export class App extends Component {
       },
       playing: false,
       imageUrl: null,
-      tracklist: [],
+      tracklist: [{
+        name: "Summertime",
+        artists: [{name: "Vince Staples"}],
+        album: {name: "Test Album"}
+      },
+      {
+        name: "Money Trees",
+        artists: [{name: "Kendrick Lamar"}, {name: "Jay Rock"}],
+        album: {name: "Test Album"}
+      },
+      {
+        name: "Real Friends",
+        artists: [{name: "Kanye West"}],
+        album: {name: "Test Album"}
+      }],
       loading: false
     };
   }

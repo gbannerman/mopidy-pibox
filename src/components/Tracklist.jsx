@@ -1,5 +1,6 @@
 import React from 'react';
-import TracklistItem from './TracklistItem.jsx'
+import TracklistItem from './TracklistItem.jsx';
+import '../style/Tracklist.css';
 
 export default class Tracklist extends React.Component {
 
