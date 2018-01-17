@@ -3,14 +3,17 @@
   "version": "0.2.5",
   "private": true,
   "dependencies": {
+    "bisu-react-search-modal": "^1.0.8",
     "material-ui": "^0.20.0",
     "mopidy": "^0.5.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-redux-form": "^1.16.3",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17",
     "react-spinkit": "^3.0.0",
-    "react-toastify": "^3.2.2"
+    "react-toastify": "^3.2.2",
+    "react-transition-group": "^2.2.1"
   },
   "scripts": {
     "start": "react-scripts start",

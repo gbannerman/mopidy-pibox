@@ -3,6 +3,7 @@ import SearchBox from './SearchBox.jsx';
 import SearchResultItem from './SearchResultItem.jsx';
 import '../style/Search.css';
 import { getMopidy } from '../App.js';
+import { Transition } from 'react-transition-group'
 
 var Spinner = require('react-spinkit');
 
@@ -12,7 +13,8 @@ export default class Search extends React.Component {
     super(props);
     this.state = {
       tracks: [],
-      loading: false
+      loading: false,
+      in: false
     };
   }
 
@@ -30,9 +32,24 @@ export default class Search extends React.Component {
     });
   }
 
+  componentDidMount() {
+    this.setState({in: true});
+  }
+
 	render() {
 
 		const searchResults = this.state.tracks.map((track, index) => <SearchResultItem key={index} track={track} tracklist={this.props.tracklist}/>);
+
+    const defaultStyle = {
+      margin: '0 auto',
+      maxWidth: '800px',
+      transition: 'width 150ms ease-in-out',
+    }
+
+    const transitionStyles = {
+      entering: { width: '0%' },
+      entered: { width: '100%' },
+    };
 
     let results;
 
@@ -55,8 +72,17 @@ export default class Search extends React.Component {
     }
 
 		return (
-			<div>
-				<SearchBox handleSubmit={ this.search.bind(this) } />
+			<div className="search">
+        <Transition appear={true} in={this.state.in} timeout={150}>
+          {(state) => (
+            <div style={{
+              ...defaultStyle,
+              ...transitionStyles[state]
+            }}>
+              <SearchBox handleSubmit={ this.search.bind(this) } />
+            </div>
+          )}
+        </Transition>
         { results }
 			</div>
 		);

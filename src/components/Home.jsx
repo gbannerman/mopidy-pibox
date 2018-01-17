@@ -1,19 +1,36 @@
 import React from 'react';
 import NowPlaying from './NowPlaying.jsx';
 import Tracklist from './Tracklist.jsx';
+import SearchOverlay from './SearchOverlay.jsx';
 import PlaybackControls from './PlaybackControls.jsx';
 import '../style/Home.css';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 export default class Home extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			overlay: false
+		};
+	}
+
+	showOverlay() {
+		this.setState({overlay: true});
+	}
+
 	render() {
+
+		if (this.state.overlay) {
+			var overlay =	(<SearchOverlay in={this.state.overlay}/>);
+		}
 
 		return (
 			<div>
+				{overlay}
         <ul>
         	<li className="nav-item-title"><h2 className="nav-title">pibox</h2></li>
-        	<li className="nav-item-search"><Link className="Link" to="/pibox/search"><img className="icon" alt="search icon" src="https://d30y9cdsu7xlg0.cloudfront.net/png/14173-200.png" /></Link></li>
+        	<li className="nav-item-search"><img className="icon" alt="search icon" onClick={this.showOverlay.bind(this)} src="https://d30y9cdsu7xlg0.cloudfront.net/png/14173-200.png" /></li>
         </ul>
 	      <NowPlaying image={this.props.image} track={this.props.nowPlaying} />
 	      <Tracklist tracks={this.props.tracklist} display={5} />
