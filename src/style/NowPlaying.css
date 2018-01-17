@@ -6,6 +6,17 @@
   align-items: center;
 }
 
+.now-playing-heading {
+	font-size: 14px;
+	font-weight: 400;
+	color: #757575;
+}
+
+.artist, .album {
+	font-weight: 500;
+	color: #757575;
+}
+
 .info {
   flex-grow: 2;
   text-align: center;
