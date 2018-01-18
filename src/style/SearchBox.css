@@ -1,9 +1,9 @@
 input {
   display: block;
-  margin: 5px;
+  margin: 10px;
   font-size: 20px;
   font-family: 'Roboto', sans-serif;
-  padding: 2px 5px 2px 5px;
+  padding: 5px;
   border-radius: 3px;
   border-top: none;
   border-bottom: 1px solid #DDD;

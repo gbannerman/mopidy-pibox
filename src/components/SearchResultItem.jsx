@@ -50,14 +50,14 @@ export default class SearchResultItem extends React.Component {
 		  margin: 10
 		};
 
-		const artistSentence = (<ArtistSentence artists={ this.props.track.artists } />);
+		const artistAndAlbum = (<span><ArtistSentence artists={ this.props.track.artists } /> - {this.props.track.album.name}</span>);
 
 		return (
 
 			<Card style={style} onClick={this.handleClick.bind(this)}>
 				<CardHeader 
 					title={ this.props.track.name }
-					subtitle={artistSentence + " - " + this.props.track.album.name}
+					subtitle={artistAndAlbum}
 					textStyle={textStyle}
 				/>
 			</Card>
