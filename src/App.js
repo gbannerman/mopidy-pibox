@@ -17,28 +17,10 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nowPlaying: {
-        name: "Test Title",
-        artists: [{name: "Test Artist"}],
-        album: {name: "Test Album"}
-      },
+      nowPlaying: null,
       playing: false,
       imageUrl: null,
-      tracklist: [{
-        name: "Summertime",
-        artists: [{name: "Vince Staples"}],
-        album: {name: "Test Album"}
-      },
-      {
-        name: "Money Trees",
-        artists: [{name: "Kendrick Lamar"}, {name: "Jay Rock"}],
-        album: {name: "Test Album"}
-      },
-      {
-        name: "Real Friends",
-        artists: [{name: "Kanye West"}],
-        album: {name: "Test Album"}
-      }],
+      tracklist: [],
       loading: true
     };
   }

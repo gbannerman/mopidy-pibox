@@ -7,6 +7,10 @@ import {Card, CardHeader} from 'material-ui/Card';
 
 export default class SearchResultItem extends React.Component {
 
+	static contextTypes = {
+    router: () => true, // replace with PropTypes.object if you use them
+  }
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -50,7 +54,8 @@ export default class SearchResultItem extends React.Component {
 		};
 
 		const style = {
-		  margin: 10
+		  margin: 10,
+		  cursor: 'pointer'
 		};
 
 		const artistAndAlbum = (<span><ArtistSentence artists={ this.props.track.artists } /> - {this.props.track.album.name}</span>);
