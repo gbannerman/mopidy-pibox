@@ -3,6 +3,7 @@ import ArtistSentence from './ArtistSentence.jsx'
 import '../style/SearchResultItem.css';
 import { getMopidy } from '../App.js';
 import { toast } from 'react-toastify';
+import {Card, CardHeader} from 'material-ui/Card';
 
 export default class SearchResultItem extends React.Component {
 
@@ -41,13 +42,25 @@ export default class SearchResultItem extends React.Component {
 
 	render() {
 
+		const textStyle = {
+		  padding: 5,
+		};
+
+		const style = {
+		  margin: 10
+		};
+
+		const artistSentence = (<ArtistSentence artists={ this.props.track.artists } />);
+
 		return (
 
-			<tr className="clickable-row" onClick={this.handleClick.bind(this)} >
-        <td>{ this.props.track.name }</td>
-        <td><ArtistSentence artists={ this.props.track.artists }/></td>
-        <td>{ this.props.track.album.name }</td>
-      </tr>
+			<Card style={style} onClick={this.handleClick.bind(this)}>
+				<CardHeader 
+					title={ this.props.track.name }
+					subtitle={artistSentence + " - " + this.props.track.album.name}
+					textStyle={textStyle}
+				/>
+			</Card>
 		);
 	}
 }

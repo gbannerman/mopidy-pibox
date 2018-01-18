@@ -39,3 +39,6 @@ export default class Home extends React.Component {
 		);
 	}
 }
+
+// TODO Change search results to cards
+// TODO Change selecting a track so that rather than redirecting, it closes the overlay

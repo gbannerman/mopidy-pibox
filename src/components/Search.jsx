@@ -62,11 +62,7 @@ export default class Search extends React.Component {
     } else {
       results = (
         <div className="results">
-          <table>
-            <tbody>
-              { searchResults }
-            </tbody>
-          </table>
+          { searchResults }
         </div>
       );
     }
