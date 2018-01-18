@@ -23,15 +23,18 @@ export default class NowPlaying extends React.Component {
 		}
 
 		return (
-			<div className="now-playing">
-				{ this.props.image &&
-					<Thumbnail url ={this.props.image} />
-				}
-        <div className="info">
-  				<h2 className="title">{ this.props.track.name }</h2>
-  				<h3 className="artist">{ this.props.track ? <ArtistSentence artists={ this.props.track.artists } /> : <ArtistSentence /> }</h3>
-          <h3 className="album">{ this.props.track.album.name }</h3>
-        </div>
+			<div>
+	      <h3 className="now-playing-heading">Now Playing</h3>
+				<div className="now-playing">
+					{ this.props.image &&
+						<Thumbnail url ={this.props.image} />
+					}
+				  <div className="info">
+						<h2 className="title">{ this.props.track.name }</h2>
+						<h3 className="artist">{ this.props.track ? <ArtistSentence artists={ this.props.track.artists } /> : <ArtistSentence /> }</h3>
+				    <h3 className="album">{ this.props.track.album.name }</h3>
+				  </div>
+				</div>
 			</div>
 		);
 	}

@@ -25,10 +25,10 @@ export default class ArtistSentence extends React.Component {
 							separator = ', ';
 						}
 
-						if (!artist){							
-							var content = <span>-</span>
-						} else {
-							var content = <span>{ artist.name }</span>
+						let content = <span>-</span>;
+
+						if (artist){							
+							content = <span>{ artist.name }</span>;
 						}
 
 						return (

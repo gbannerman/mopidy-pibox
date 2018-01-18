@@ -1,0 +1,49 @@
+ul {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+	list-style-type: none;
+	margin: 0;
+	padding: 5px;
+}
+
+li {
+
+}
+
+.icon {
+	width: 25px;
+	height: auto;
+}
+
+.nav-item-title {
+	flex: 1 1 auto;
+}
+
+.nav-title {
+	text-align: start;
+	margin-left: 10px;
+}
+
+.nav-item-search {
+	flex: 0 1 auto;
+}
+
+.dim-enter {
+  opacity: 0.01;
+}
+
+.dim-enter.dim-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.dim-leave {
+  opacity: 1;
+}
+
+.dim-leave.dim-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
