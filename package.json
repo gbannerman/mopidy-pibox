@@ -1,6 +1,6 @@
 {
   "name": "mopidy-pibox",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "bisu-react-search-modal": "^1.0.8",
