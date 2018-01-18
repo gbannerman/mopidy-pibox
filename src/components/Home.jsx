@@ -22,5 +22,3 @@ export default class Home extends React.Component {
 		);
 	}
 }
-
-// TODO Change selecting a track so that rather than redirecting, it closes the overlay
