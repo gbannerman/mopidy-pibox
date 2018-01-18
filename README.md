@@ -1,35 +1,26 @@
-****************************
-Mopidy-Pibox
-****************************
+# pibox
+[![badge](https://img.shields.io/pypi/v/Mopidy-Pibox.svg?style=flat)
 
-.. image:: https://img.shields.io/pypi/v/Mopidy-Pibox.svg?style=flat
-    :target: https://pypi.python.org/pypi/Mopidy-Pibox/
-    :alt: Latest PyPI version
+**pibox** is a Mopidy HTTP client that allows multiple users to search spotify and queue songs, via a clean and simple interface.
 
-.. image:: https://img.shields.io/travis/gavinbannerman/mopidy-pibox/master.svg?style=flat
-    :target: https://travis-ci.org/gavinbannerman/mopidy-pibox
-    :alt: Travis CI build status
+## Installation
 
-.. image:: https://img.shields.io/coveralls/gavinbannerman/mopidy-pibox/master.svg?style=flat
-   :target: https://coveralls.io/r/gavinbannerman/mopidy-pibox
-   :alt: Test coverage
+### Requirements
+- [Mopidy](https://docs.mopidy.com/en/latest/installation/)
+- [Mopidy-Spotify](https://github.com/mopidy/mopidy-spotify)
 
-Mopidy extension for jukebox client
+### Installation
+1. Install pibox
+```
+sudo pip install Mopidy-Pibox
+```
+2. Start Mopidy
+```
+mopidy
+```
+3. Open your Mopidy URL (e.g. `http://localhost:6680`) and click *Pibox*
 
-
-Installation
-============
-
-Install by running::
-
-    pip install Mopidy-Pibox
-
-Or, if available, install the Debian/Ubuntu package from `apt.mopidy.com
-<http://apt.mopidy.com/>`_.
-
-
-Configuration
-=============
+## Configuration
 
 Before starting Mopidy, you must add configuration for
 Mopidy-Pibox to your Mopidy configuration file::
@@ -38,25 +29,14 @@ Mopidy-Pibox to your Mopidy configuration file::
     # TODO: Add example of extension config
 
 
-Project resources
-=================
+## Project Resources
 
-- `Source code <https://github.com/gavinbannerman/mopidy-pibox>`_
-- `Issue tracker <https://github.com/gavinbannerman/mopidy-pibox/issues>`_
+- [Issue tracker](https://github.com/gavinbannerman/mopidy-pibox/issues)
+- [Changelog](https://github.com/gbannerman/mopidy-pibox/releases)
 
 
 Credits
 =======
 
-- Original author: `Gavin Bannerman <https://github.com/gavinbannerman`__
-- Current maintainer: `Gavin Bannerman <https://github.com/gavinbannerman`__
-- `Contributors <https://github.com/gavinbannerman/mopidy-pibox/graphs/contributors>`_
-
-
-Changelog
-=========
-
-v0.1.0 (UNRELEASED)
-----------------------------------------
-
-- Initial release.
+- [Original author](Gavin Bannerman <https://github.com/gavinbannerman)
+- [Contributors](https://github.com/gavinbannerman/mopidy-pibox/graphs/contributors)
