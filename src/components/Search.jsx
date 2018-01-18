@@ -43,7 +43,7 @@ export default class Search extends React.Component {
     const defaultStyle = {
       margin: '0 auto',
       maxWidth: '800px',
-      transition: 'width 150ms ease-in-out',
+      transition: 'width 100ms ease-in-out',
     }
 
     const transitionStyles = {
@@ -69,7 +69,7 @@ export default class Search extends React.Component {
 
 		return (
 			<div className="search">
-        <Transition appear={true} in={this.state.in} timeout={150}>
+        <Transition appear={true} in={this.state.in} timeout={100}>
           {(state) => (
             <div style={{
               ...defaultStyle,

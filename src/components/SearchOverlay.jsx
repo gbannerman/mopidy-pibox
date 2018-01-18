@@ -15,7 +15,7 @@ export default class SearchOverlay extends React.Component {
 			background: 'rgba(0, 0, 0, 0)',
 			overflowY: 'scroll',
 			zIndex: 5,
-			transition: 'background 150ms ease-in-out'
+			transition: 'background 100ms ease-in-out'
 		}
 
 		const transitionStyles = {
@@ -24,7 +24,7 @@ export default class SearchOverlay extends React.Component {
 		};
 
 		return (
-			<Transition appear={true} in={this.props.in} timeout={150}>
+			<Transition appear={true} in={this.props.in} timeout={100}>
 		    {(state) => (
 		      <div style={{
 		        ...defaultStyle,

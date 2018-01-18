@@ -39,7 +39,7 @@ export class App extends Component {
         artists: [{name: "Kanye West"}],
         album: {name: "Test Album"}
       }],
-      loading: false
+      loading: true
     };
   }
 
@@ -137,8 +137,8 @@ export class App extends Component {
                   render={ () =>
                     <SearchOverlay 
                       in={true} 
-                      playing={this.props.playing} 
-                      tracklist={this.props.tracklist} />
+                      playing={this.state.playing} 
+                      tracklist={this.state.tracklist} />
                   } />
               </div>
           </div>
