@@ -1,5 +1,5 @@
 # pibox
-[![badge](https://img.shields.io/pypi/v/Mopidy-Pibox.svg?style=flat)
+![badge](https://img.shields.io/pypi/v/Mopidy-Pibox.svg?style=flat)
 
 **pibox** is a Mopidy HTTP client that allows multiple users to search spotify and queue songs, via a clean and simple interface.
 
@@ -38,5 +38,5 @@ Mopidy-Pibox to your Mopidy configuration file::
 Credits
 =======
 
-- [Original author](Gavin Bannerman <https://github.com/gavinbannerman)
+- Original author: [Gavin Bannerman](https://github.com/gavinbannerman)
 - [Contributors](https://github.com/gavinbannerman/mopidy-pibox/graphs/contributors)
