@@ -4,7 +4,6 @@ import Tracklist from './Tracklist.jsx';
 import SearchOverlay from './SearchOverlay.jsx';
 import PlaybackControls from './PlaybackControls.jsx';
 import '../style/Home.css';
-// import { Link } from 'react-router-dom';
 
 export default class Home extends React.Component {
 
@@ -19,10 +18,14 @@ export default class Home extends React.Component {
 		this.setState({overlay: true});
 	}
 
+	onSearchResultSelect() {
+		this.setState({overlay: false});
+	}
+
 	render() {
 
 		if (this.state.overlay) {
-			var overlay =	(<SearchOverlay in={this.state.overlay}/>);
+			var overlay =	(<SearchOverlay in={this.state.overlay} playing={this.props.playing} tracklist={this.props.tracklist} onSelect={this.onSearchResultSelect.bind(this)}/>);
 		}
 
 		return (
@@ -40,5 +43,4 @@ export default class Home extends React.Component {
 	}
 }
 
-// TODO Change search results to cards
 // TODO Change selecting a track so that rather than redirecting, it closes the overlay

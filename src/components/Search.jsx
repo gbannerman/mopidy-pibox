@@ -38,7 +38,7 @@ export default class Search extends React.Component {
 
 	render() {
 
-		const searchResults = this.state.tracks.map((track, index) => <SearchResultItem key={index} track={track} tracklist={this.props.tracklist}/>);
+		const searchResults = this.state.tracks.map((track, index) => <SearchResultItem key={index} track={track} tracklist={this.props.tracklist} playing={this.props.playing} onSelect={this.props.onSelect}/>);
 
     const defaultStyle = {
       margin: '0 auto',

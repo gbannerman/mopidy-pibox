@@ -2,12 +2,7 @@ import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './style/App.css';
-import Search from './components/Search.jsx';
-import Home from './components/Home.jsx'
-import {
-  BrowserRouter as Router,
-  Route
-} from 'react-router-dom';
+import Home from './components/Home.jsx';
 var Mopidy = require("mopidy");
 var Spinner = require('react-spinkit');
 var mopidy;
@@ -125,27 +120,11 @@ export class App extends Component {
       <MuiThemeProvider>
         <div className="App">
           <ToastContainer autoClose={3000} hideProgressBar={true} pauseOnHover={false} closeButton={false} />
-          <Router>
-            <div>
-
-              <Route 
-                exact 
-                path="/pibox/" 
-                render={ () => 
-                  <Home 
-                    nowPlaying={this.state.nowPlaying} 
-                    tracklist={this.state.tracklist} 
-                    image={this.state.imageUrl} 
-                    playing={this.state.playing} /> 
-                } />
-              <Route 
-                path="/pibox/search" 
-                render={ () =>
-                  <Search
-                    tracklist={this.state.tracklist} />
-                } />
-            </div>
-          </Router>
+            <Home 
+              nowPlaying={this.state.nowPlaying} 
+              tracklist={this.state.tracklist} 
+              image={this.state.imageUrl} 
+              playing={this.state.playing} />
         </div>
       </MuiThemeProvider>
     );

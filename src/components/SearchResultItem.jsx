@@ -7,9 +7,12 @@ import {Card, CardHeader} from 'material-ui/Card';
 
 export default class SearchResultItem extends React.Component {
 
-	static contextTypes = {
-    router: () => true, // replace with PropTypes.object if you use them
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			overlay: false
+		};
+	}
 
 	handleClick() {
 		getMopidy().history.getHistory().done((history) => {
@@ -31,10 +34,10 @@ export default class SearchResultItem extends React.Component {
 					toast.info(message, {
 						position: toast.POSITION.BOTTOM_CENTER
 					});
-					if ((this.props.tracklist.length >= 1 && this.props.tracklist[0].uri === this.props.track.uri) || this.props.tracklist.length === 0) {
+					if (((this.props.tracklist.length >= 1 && this.props.tracklist[0].uri === this.props.track.uri) || this.props.tracklist.length === 0) && !this.props.playing) {
 						getMopidy().playback.play();
 					}
-					this.context.router.history.goBack();
+					this.props.onSelect();
 				});
 			}
 		});

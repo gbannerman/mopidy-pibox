@@ -4,6 +4,7 @@
 	overflow:auto;
 	position: fixed;
 	background-color: black;
+	overflow-y: scroll;
 	z-index: 5;
 	transition: opacity 3000ms ease-in-out;
 }
