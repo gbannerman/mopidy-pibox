@@ -56,7 +56,7 @@ export default class Search extends React.Component {
     if (this.state.loading) {
       results = (
         <div className="loading">
-          <Spinner fadeIn="none" name="double-bounce" />
+          <Spinner fadeIn="none" name="double-bounce" color="white" />
         </div>
       );
     } else {

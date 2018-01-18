@@ -1,6 +1,5 @@
 import React from 'react';
 import Search from './Search.jsx';
-import '../style/SearchOverlay.css';
 import { Transition } from 'react-transition-group';
 
 export default class SearchOverlay extends React.Component {
@@ -12,6 +11,7 @@ export default class SearchOverlay extends React.Component {
 			height: '100%',
 			position: 'fixed',
 			background: 'rgba(0, 0, 0, 0)',
+			overflowY: 'scroll',
 			zIndex: 5,
 			transition: 'background 150ms ease-in-out'
 		}
