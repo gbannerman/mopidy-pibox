@@ -37,4 +37,4 @@ Project resources
 Credits
 =======
 
-- Original author: `Gavin Bannerman <https://github.com/gavinbannerman`__
+- Original author: `Gavin Bannerman <https://github.com/gavinbannerman>`_
