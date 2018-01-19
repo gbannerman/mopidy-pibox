@@ -77,6 +77,7 @@ export class App extends Component {
       this.setState({loading: true});
     });
     mopidy.on("event:playbackStateChanged", (playbackState) => {
+      console.debug("Mopidy: PLAYBACK STATE CHANGED");
       if (playbackState.new_state === "playing") {
         this.setState({playing: true});
       } else {
