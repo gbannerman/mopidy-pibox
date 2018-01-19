@@ -7,16 +7,22 @@ import {Card, CardHeader} from 'material-ui/Card';
 
 export default class SearchResultItem extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      image: null
+    };
+  }
+
 	static contextTypes = {
     router: () => true, // replace with PropTypes.object if you use them
   }
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			overlay: false
-		};
-	}
+  componentDidMount() {
+  	getMopidy().library.getImages([this.props.track.uri]).done((result) => {
+  		this.setState({image: result[this.props.track.uri][0].uri});
+  	});
+  }
 
 	handleClick() {
 		getMopidy().history.getHistory().done((history) => {
@@ -67,6 +73,7 @@ export default class SearchResultItem extends React.Component {
 					title={ this.props.track.name }
 					subtitle={artistAndAlbum}
 					textStyle={textStyle}
+					avatar={this.state.image}
 				/>
 			</Card>
 		);
