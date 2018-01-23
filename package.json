@@ -15,7 +15,8 @@
     "react-spinkit": "^3.0.0",
     "react-toastify": "^3.2.2",
     "react-transition-group": "^2.2.1",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
