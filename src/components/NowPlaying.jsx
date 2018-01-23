@@ -25,7 +25,6 @@ export default class NowPlaying extends React.Component {
 				  <div className="info">
 						<h2 className="title">{ this.props.track.name }</h2>
 						<h3 className="artist">{ this.props.track ? <ArtistSentence artists={ this.props.track.artists } /> : <ArtistSentence /> }</h3>
-				    // <h3 className="album">{ this.props.track.album.name }</h3>
 				  </div>
 				</div>
 			</div>
