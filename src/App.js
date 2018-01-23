@@ -41,7 +41,7 @@ export class App extends Component {
 
   updatePlaybackState() {
     mopidyService.playback.getState().done((playbackState) => {
-      this.props.updatePlaybackState(playbackState);
+      this.props.updatePlaybackState(playbackState['new_state']);
     });
   }
 
