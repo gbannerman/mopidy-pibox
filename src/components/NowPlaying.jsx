@@ -5,13 +5,6 @@ import '../style/NowPlaying.css';
 
 export default class NowPlaying extends React.Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			track: null
-		};
-	}
-
 	render() {
 
 		if (!this.props.track) {
