@@ -69,8 +69,6 @@ export class App extends Component {
     });
     mopidyService.on("event:playbackStateChanged", (playbackState) => {
       console.debug("Mopidy: PLAYBACK STATE CHANGED");
-      console.log(playbackState);
-      console.log(playbackState.new_state);
       this.props.updatePlaybackState(playbackState.new_state);
       this.updateNowPlaying();
       this.updateTracklist();
