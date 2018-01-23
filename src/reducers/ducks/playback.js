@@ -2,7 +2,7 @@ export const UPDATE_TRACK = 'playback/UPDATE_TRACK';
 export const UPDATE_IMAGE = 'playback/UPDATE_IMAGE';
 export const UPDATE_STATE = 'playback/UPDATE_STATE';
 
-export function reducer(state = {state: 'stopped'}, action = {}) {
+export function reducer(state = {}, action = {}) {
 	switch (action.type) {
 		case UPDATE_TRACK:
 			return Object.assign({}, state, { track: action.payload });

@@ -41,6 +41,7 @@ export class App extends Component {
 
   updatePlaybackState() {
     mopidyService.playback.getState().done((playbackState) => {
+      console.log(playbackState['new_state']);
       this.props.updatePlaybackState(playbackState['new_state']);
     });
   }
@@ -79,6 +80,8 @@ export class App extends Component {
   }
 
   render() {
+
+    console.log("render state: " + this.props.playback.state);
 
     if (!this.props.mopidy.connected) {
       return(
