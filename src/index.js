@@ -13,7 +13,7 @@ const store = configureStore({
 		connected: false
 	},
 	playback: {
-		track: {},
+		track: null,
 		image: null,
 		state: 'stopped'
 	},
