@@ -2,7 +2,6 @@ import React from 'react';
 import SearchBox from './SearchBox.jsx';
 import SearchResultItem from './SearchResultItem.jsx';
 import '../style/Search.css';
-import { getMopidy } from '../App.js';
 import { Transition } from 'react-transition-group'
 
 var Spinner = require('react-spinkit');
@@ -12,7 +11,6 @@ export default class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tracks: [],
       loading: false,
       in: false
     };
@@ -22,14 +20,7 @@ export default class Search extends React.Component {
     this.setState({loading: true});
     e.preventDefault();
     let queryParameters = e.target.query.value.split(" ");
-    getMopidy().library.search({'any': queryParameters}, ['spotify:'], false).done((results) => {
-      if (results[0]) {
-        this.setState({tracks: results[0].tracks});
-      } else {
-        this.setState({tracks: []});
-      }
-      this.setState({loading: false});
-    });
+    this.props.onSearch(queryParameters);
   }
 
   componentDidMount() {
@@ -38,7 +29,7 @@ export default class Search extends React.Component {
 
 	render() {
 
-		const searchResults = this.state.tracks.map((track, index) => <SearchResultItem key={index} track={track} tracklist={this.props.tracklist} playing={this.props.playing} onSelect={this.props.onSelect}/>);
+		const searchResults = this.props.search.results.map((track, index) => <SearchResultItem key={index} track={track} tracklist={this.props.tracklist} playing={this.props.playback === 'playing'} onSelect={this.props.onSelect}/>);
 
     const defaultStyle = {
       margin: '0 auto',
@@ -53,7 +44,7 @@ export default class Search extends React.Component {
 
     let results;
 
-    if (this.state.loading) {
+    if (this.props.search.fetching) {
       results = (
         <div className="loading">
           <Spinner fadeIn="none" name="double-bounce" color="white" />
