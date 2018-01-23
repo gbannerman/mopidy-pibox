@@ -46,6 +46,9 @@ export class App extends Component {
   }
 
   componentDidMount() {
+    console.log(mopidy.updateMopidyConnected);
+    console.log(this.props);
+
     mopidyService = new Mopidy();
     mopidyService.on("state:online", () => {
       console.debug("Mopidy: CONNECTED");
@@ -80,7 +83,7 @@ export class App extends Component {
 
   render() {
 
-    if (!this.props.connected) {
+    if (!this.props.mopidy.connected) {
       return(
         <div className="App">
           <div className="loading">
@@ -121,10 +124,9 @@ export class App extends Component {
 }
 
 function mapStateToProps(state) {
-  console.debug(state);
     return {
       playback: state.playback,
-      connected: state.mopidy.connected,
+      mopidy: state.mopidy,
       tracklist: state.tracklist,
       search: state.search
     };
