@@ -46,9 +46,6 @@ export class App extends Component {
   }
 
   componentDidMount() {
-    console.log(mopidy.updateMopidyConnected);
-    console.log(this.props);
-
     mopidyService = new Mopidy();
     mopidyService.on("state:online", () => {
       console.debug("Mopidy: CONNECTED");
