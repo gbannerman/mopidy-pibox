@@ -13,15 +13,9 @@ const store = configureStore({
 		connected: false
 	},
 	playback: {
-		track: {
-			name: null,
-			artists: [],
-			album: {
-				name: null
-			}
-		},
+		track: {},
 		image: null,
-		state: 'STOPPED'
+		state: 'stopped'
 	},
 	search: {
 		fetching: false,

@@ -98,10 +98,8 @@ export class App extends Component {
             <ToastContainer autoClose={3000} hideProgressBar={true} pauseOnHover={false} closeButton={false} />
               <div>
                 <Home 
-                  nowPlaying={this.props.playback.state} 
-                  tracklist={this.props.tracklist} 
-                  image={this.props.playback.image} 
-                  playing={this.props.playback.track} /> 
+                  nowPlaying={this.props.playback} 
+                  tracklist={this.props.tracklist} /> 
                 <Route 
                   path="/pibox/search" 
                   render={ () =>
