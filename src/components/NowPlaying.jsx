@@ -15,6 +15,8 @@ export default class NowPlaying extends React.Component {
 			);
 		}
 
+		console.debug(this.props.track);
+
 		return (
 			<div>
 	      <h3 className="now-playing-heading">Now Playing</h3>
