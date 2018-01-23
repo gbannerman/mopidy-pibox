@@ -16,8 +16,8 @@ export default class Home extends React.Component {
         	<li className="nav-item-search"><Link className="Link" to="/pibox/search"><img className="icon" alt="search icon" src="https://d30y9cdsu7xlg0.cloudfront.net/png/14173-200.png" /></Link></li>
         </ul>
 	      <NowPlaying image={this.props.playback.image} track={this.props.playback.track} />
-	      <Tracklist tracks={this.props.tracklist} display={5} />
-				<PlaybackControls playing={this.props.playing === "playing"} />
+	      <Tracklist tracks={this.props.tracklist} display={3} />
+				<PlaybackControls playing={this.props.playback.state === "playing"} />
 			</div>
 		);
 	}
