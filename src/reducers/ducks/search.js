@@ -1,4 +1,5 @@
 import { getMopidy } from '../../App.js';
+import { toast } from 'react-toastify';
 
 export const UPDATE_SEARCH_TERM = 'search/UPDATE_SEARCH_TERM';
 export const REQUEST_RESULTS = 'search/REQUEST_RESULTS';
@@ -58,5 +59,38 @@ export function search(searchTerms) {
       }
     })
     .catch((err) => dispatch(failureSearchResults(err)));
+	}
+}
+
+export function queueTrack(selectedTrack) {
+	return function (dispatch, getState) {
+		getMopidy().history.getHistory().done((history) => {
+			if (history.filter(tuple => (tuple[1].uri === selectedTrack.uri)).length > 0) {
+				// SEND WARNING
+				let message = "This track has already been played";
+				toast.warn(message, {
+					position: toast.POSITION.BOTTOM_CENTER,
+					autoClose: 3500
+				});
+			} else if (getState().tracklist.filter(track => (track.uri === selectedTrack.uri)).length > 0) {
+				// SEND WARNING
+				let message = "This track has already been queued";
+				toast.warn(message, {
+					position: toast.POSITION.BOTTOM_CENTER,
+					autoClose: 3500
+				});
+			} else {
+				getMopidy().tracklist.add([selectedTrack], null, null, null).done(() => {
+					// SEND INFO
+					let message = selectedTrack.name + " was added to the queue";
+					toast.info(message, {
+						position: toast.POSITION.BOTTOM_CENTER
+					});
+					if (getState().playback.state === 'stopped') {
+						getMopidy().playback.play();
+					}
+				});
+			}
+		});
 	}
 }
