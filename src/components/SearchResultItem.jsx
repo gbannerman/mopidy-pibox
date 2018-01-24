@@ -31,7 +31,7 @@ export default class SearchResultItem extends React.Component {
 					toast.info(message, {
 						position: toast.POSITION.BOTTOM_CENTER
 					});
-					if (!this.props.playbackState === 'stopped') {
+					if (this.props.playbackState === 'stopped') {
 						getMopidy().playback.play();
 					}
 				});
