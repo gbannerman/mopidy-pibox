@@ -34,7 +34,8 @@ export default class SearchOverlay extends React.Component {
 		      		tracklist={this.props.tracklist} 
 		      		playbackState={this.props.playbackState} 
 		      		search={this.props.search} 
-		      		onSearch={this.props.onSearch}/>
+		      		onSearch={this.props.onSearch}
+		      		queueTrack={this.props.queueTrack} />
 		      </div>
 		    )}
 		  </Transition>

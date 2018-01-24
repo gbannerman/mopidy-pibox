@@ -108,7 +108,8 @@ export class App extends Component {
                       search={this.props.search}
                       playbackState={this.props.playback.state} 
                       tracklist={this.props.tracklist} 
-                      onSearch={this.props.performSearch}/>
+                      onSearch={this.props.performSearch}
+                      queueTrack={this.props.queueTrack}/>
                   } />
               </div>
           </div>
@@ -134,7 +135,8 @@ const mapDispatchToProps = function (dispatch) {
     updateNowPlayingImage: playback.updateNowPlayingImage,
     updatePlaybackState: playback.updatePlaybackState,
     updateMopidyConnected: mopidy.updateMopidyConnected,
-    performSearch: search.search
+    performSearch: search.search,
+    queueTrack: search.queueTrack
   }, dispatch)
 }
 

@@ -34,7 +34,8 @@ export default class Search extends React.Component {
       key={index} 
       track={track} 
       tracklist={this.props.tracklist} 
-      playbackState={this.props.playbackState} />
+      playbackState={this.props.playbackState} 
+      queueTrack={this.props.queueTrack} />
     );
 
     const defaultStyle = {
