@@ -8,3 +8,16 @@ table {
 .results {
 	width: 100%;
 }
+
+.error {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.error-info {
+	text-align: center;
+	font-weight: 400;
+	margin: 10px;
+	color: #FFFFFF;
+	margin-top: 30%;
+}

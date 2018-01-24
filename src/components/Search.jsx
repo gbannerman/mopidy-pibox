@@ -55,7 +55,7 @@ export default class Search extends React.Component {
     } else if (this.props.search.error) {
       results = (
         <div className="error">
-          <h4>{this.props.search.error}</h4>
+          <h4 className="error-info">{this.props.search.error}</h4>
         </div>
       );
     } else {
