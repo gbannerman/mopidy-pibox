@@ -63,25 +63,21 @@ export function search(searchTerms) {
 }
 
 export function queueTrack(selectedTrack, validCallback) {
+
+	let warningToast = (message) => {
+		toast.warn(message, {
+			position: toast.POSITION.BOTTOM_CENTER,
+			autoClose: 3500
+		});
+	}
 	return function (dispatch, getState) {
 		getMopidy().history.getHistory().done((history) => {
 			if (history.filter(tuple => (tuple[1].uri === selectedTrack.uri)).length > 0) {
-				// SEND WARNING
-				let message = "This track has already been played";
-				toast.warn(message, {
-					position: toast.POSITION.BOTTOM_CENTER,
-					autoClose: 3500
-				});
+				warningToast("This track has already been played");
 			} else if (getState().tracklist.filter(track => (track.uri === selectedTrack.uri)).length > 0) {
-				// SEND WARNING
-				let message = "This track has already been queued";
-				toast.warn(message, {
-					position: toast.POSITION.BOTTOM_CENTER,
-					autoClose: 3500
-				});
+				warningToast("This track has already been queued");
 			} else {
 				getMopidy().tracklist.add([selectedTrack], null, null, null).done(() => {
-					// SEND INFO
 					let message = selectedTrack.name + " was added to the queue";
 					toast.info(message, {
 						position: toast.POSITION.BOTTOM_CENTER

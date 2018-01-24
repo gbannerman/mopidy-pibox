@@ -24,7 +24,7 @@ export default class SearchOverlay extends React.Component {
 		};
 
 		return (
-			<Transition appear={true} in={this.props.in} timeout={100}>
+			<Transition appear={true} in={true} timeout={100}>
 		    {(state) => (
 		      <div style={{
 		        ...defaultStyle,

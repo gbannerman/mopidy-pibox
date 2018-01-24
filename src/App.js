@@ -104,7 +104,6 @@ export class App extends Component {
                   path="/pibox/search" 
                   render={ () =>
                     <SearchOverlay 
-                      in={true} 
                       search={this.props.search}
                       playbackState={this.props.playback.state} 
                       tracklist={this.props.tracklist} 

@@ -8,23 +8,10 @@ var Spinner = require('react-spinkit');
 
 export default class Search extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-      in: false
-    };
-  }
-
   search(values) {
-
     console.log(values);
     let queryParameters = values.query.split(" ");
     this.props.onSearch(queryParameters);
-  }
-
-  componentDidMount() {
-    this.setState({in: true});
   }
 
 	render() {
@@ -67,17 +54,17 @@ export default class Search extends React.Component {
 
 		return (
 			<div className="search">
-        <Transition appear={true} in={this.state.in} timeout={100}>
+        <Transition appear={true} in={true} timeout={100}>
           {(state) => (
             <div style={{
               ...defaultStyle,
               ...transitionStyles[state]
             }}>
               <SearchBox onSubmit={ this.search.bind(this) } term={ this.props.search.term }/>
+              { results }
             </div>
           )}
         </Transition>
-        { results }
 			</div>
 		);
 	}
