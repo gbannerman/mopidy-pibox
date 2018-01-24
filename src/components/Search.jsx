@@ -9,7 +9,6 @@ var Spinner = require('react-spinkit');
 export default class Search extends React.Component {
 
   search(values) {
-    console.log(values);
     let queryParameters = values.query.split(" ");
     this.props.onSearch(queryParameters);
   }
@@ -25,15 +24,24 @@ export default class Search extends React.Component {
       queueTrack={this.props.queueTrack} />
     );
 
-    const defaultStyle = {
+    const defaultStyleBar = {
       margin: '0 auto',
       maxWidth: '800px',
       transition: 'width 100ms ease-in-out',
-    }
+    };
 
-    const transitionStyles = {
+    const transitionStylesBar = {
       entering: { width: '0%' },
       entered: { width: '100%' },
+    };
+
+    const defaultStyleResults = {
+      transition: 'opacity 100ms ease-in-out'
+    };
+
+    const transitionStylesResults = {
+      entering: { opacity: 0 },
+      entered: { opacity: 100 },
     };
 
     let results;
@@ -56,12 +64,19 @@ export default class Search extends React.Component {
 			<div className="search">
         <Transition appear={true} in={true} timeout={100}>
           {(state) => (
-            <div style={{
-              ...defaultStyle,
-              ...transitionStyles[state]
-            }}>
-              <SearchBox onSubmit={ this.search.bind(this) } term={ this.props.search.term }/>
-              { results }
+            <div>
+              <div style={{
+                ...defaultStyleBar,
+                ...transitionStylesBar[state]
+              }}>
+                <SearchBox onSubmit={ this.search.bind(this) } term={ this.props.search.term }/>
+              </div>
+              <div style={{
+                ...defaultStyleResults,
+                ...transitionStylesResults[state]
+              }}>
+                { results }
+              </div>
             </div>
           )}
         </Transition>
