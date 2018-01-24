@@ -62,7 +62,7 @@ export function search(searchTerms) {
 	}
 }
 
-export function queueTrack(selectedTrack) {
+export function queueTrack(selectedTrack, validCallback) {
 	return function (dispatch, getState) {
 		getMopidy().history.getHistory().done((history) => {
 			if (history.filter(tuple => (tuple[1].uri === selectedTrack.uri)).length > 0) {
@@ -89,6 +89,7 @@ export function queueTrack(selectedTrack) {
 					if (getState().playback.state === 'stopped') {
 						getMopidy().playback.play();
 					}
+					validCallback();
 				});
 			}
 		});

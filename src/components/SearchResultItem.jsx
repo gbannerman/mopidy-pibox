@@ -10,8 +10,7 @@ export default class SearchResultItem extends React.Component {
   }
 
 	handleClick() {
-		this.props.queueTrack(this.props.track);
-		this.context.router.history.goBack();
+		this.props.queueTrack(this.props.track, this.context.router.history.goBack);
 	}
 
 	render() {
