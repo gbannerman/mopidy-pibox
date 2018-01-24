@@ -43,6 +43,7 @@ export function search(searchTerms) {
 		getMopidy().library.search({'any': searchTerms}, ['spotify:'], false)
 		.then((results) => {
       if (results[0]) {
+      	dispatch(updateSearchTerm(searchTerms.join(' ')));
         dispatch(receiveSearchResults(results[0].tracks));
       } else {
         dispatch(failureSearchResults("No results"));

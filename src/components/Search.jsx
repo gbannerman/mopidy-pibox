@@ -72,7 +72,7 @@ export default class Search extends React.Component {
               ...defaultStyle,
               ...transitionStyles[state]
             }}>
-              <SearchBox handleSubmit={ this.search.bind(this) } />
+              <SearchBox handleSubmit={ this.search.bind(this) } term={ this.props.search.term }/>
             </div>
           )}
         </Transition>
