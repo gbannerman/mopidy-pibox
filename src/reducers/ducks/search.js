@@ -40,17 +40,17 @@ export function failureSearchResults(error) {
 	return {type: FAILURE_RESULTS, payload: error};
 }
 
-export function clearSearchResults(error) {
+export function clearSearchResults() {
 	return {type: CLEAR_RESULTS};
 }
 
 export function search(searchTerms) {
 	return function (dispatch, getState) {
-		console.log(getState());
 		dispatch(requestSearchResults());
 
 		getMopidy().library.search({'any': searchTerms}, ['spotify:'], false)
 		.then((results) => {
+			console.error(results);
       if (results[0]) {
       	dispatch(updateSearchTerm(searchTerms.join(' ')));
         dispatch(receiveSearchResults(results[0].tracks));
@@ -85,6 +85,7 @@ export function queueTrack(selectedTrack, validCallback) {
 					if (getState().playback.state === 'stopped') {
 						getMopidy().playback.play();
 					}
+					dispatch(clearSearchResults());
 					validCallback();
 				});
 			}
