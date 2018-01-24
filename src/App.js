@@ -106,7 +106,7 @@ export class App extends Component {
                     <SearchOverlay 
                       in={true} 
                       search={this.props.search}
-                      playback={this.props.playback.state} 
+                      playbackState={this.props.playback.state} 
                       tracklist={this.props.tracklist} 
                       onSearch={this.props.performSearch}/>
                   } />
