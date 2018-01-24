@@ -4,6 +4,7 @@ export const UPDATE_SEARCH_TERM = 'search/UPDATE_SEARCH_TERM';
 export const REQUEST_RESULTS = 'search/REQUEST_RESULTS';
 export const RECEIVE_RESULTS = 'search/RECEIVE_RESULTS';
 export const FAILURE_RESULTS = 'search/FAILURE_RESULTS';
+export const CLEAR_RESULTS = 'search/CLEAR_RESULTS';
 
 export function reducer(state = {fetching: false}, action = {}) {
 	switch (action.type) {
@@ -15,6 +16,8 @@ export function reducer(state = {fetching: false}, action = {}) {
 			return Object.assign({}, state, { fetching: false, results: action.payload });
 		case FAILURE_RESULTS:
 			return Object.assign({}, state, { fetching: false, error: action.payload });
+		case 	CLEAR_RESULTS:
+			return Object.assign({}, state, { results: [] });
 		default:
 			return state;
 	}
@@ -36,8 +39,13 @@ export function failureSearchResults(error) {
 	return {type: FAILURE_RESULTS, payload: error};
 }
 
+export function clearSearchResults(error) {
+	return {type: CLEAR_RESULTS};
+}
+
 export function search(searchTerms) {
-	return function (dispatch) {
+	return function (dispatch, getState) {
+		console.log(getState());
 		dispatch(requestSearchResults());
 
 		getMopidy().library.search({'any': searchTerms}, ['spotify:'], false)

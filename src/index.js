@@ -19,7 +19,6 @@ const store = configureStore({
 	},
 	search: {
 		fetching: false,
-		term: '',
 		results: [],
 		error: null
 	},
