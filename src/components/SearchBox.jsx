@@ -1,14 +1,27 @@
 import React from 'react';
+import { Field, reduxForm } from 'redux-form'
 import '../style/SearchBox.css';
 
-export default class SearchBox extends React.Component {
+let SearchBox = props => {
 
-	render() {
-
-		return (
-			<form className="search-box-form" onSubmit={this.props.handleSubmit} method="POST">
-        <input name="query" type="text" value={ this.props.term } id="searchField" placeholder="search" autoComplete="off" autofocus="true"/>
-      </form>
-		);
-	}
+	return (
+		<form className="search-box-form" onSubmit={props.handleSubmit}>
+			<Field 
+				component="input" 
+				name="query" 
+				type="text" 
+				autoComplete="off" 
+				autoCorrect="off" 
+				autoCapitalize="off" 
+				spellCheck="false" 
+				autofocus="true" 
+				id="searchField" />
+    </form>
+	);
 }
+
+SearchBox = reduxForm({
+  form: 'search'
+})(SearchBox)
+
+export default SearchBox;

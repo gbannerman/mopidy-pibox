@@ -16,10 +16,9 @@ export default class Search extends React.Component {
     };
   }
 
-  search(e) {
-    this.setState({loading: true});
-    e.preventDefault();
-    let queryParameters = e.target.query.value.split(" ");
+  search(values) {
+    console.log(values);
+    let queryParameters = values.query.split(" ");
     this.props.onSearch(queryParameters);
   }
 

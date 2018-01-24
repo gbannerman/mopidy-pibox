@@ -16,6 +16,7 @@
     "react-toastify": "^3.2.2",
     "react-transition-group": "^2.2.1",
     "redux": "^3.7.2",
+    "redux-form": "^7.2.1",
     "redux-thunk": "^2.2.0"
   },
   "scripts": {
