@@ -17,6 +17,7 @@ export default class Search extends React.Component {
   }
 
   search(values) {
+
     console.log(values);
     let queryParameters = values.query.split(" ");
     this.props.onSearch(queryParameters);
@@ -71,7 +72,7 @@ export default class Search extends React.Component {
               ...defaultStyle,
               ...transitionStyles[state]
             }}>
-              <SearchBox handleSubmit={ this.search.bind(this) } term={ this.props.search.term }/>
+              <SearchBox onSubmit={ this.search.bind(this) } term={ this.props.search.term }/>
             </div>
           )}
         </Transition>
