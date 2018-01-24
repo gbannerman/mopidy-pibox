@@ -12,11 +12,11 @@ export function reducer(state = {fetching: false}, action = {}) {
 		case UPDATE_SEARCH_TERM:
 			return Object.assign({}, state, { term: action.payload });
 		case REQUEST_RESULTS:
-			return Object.assign({}, state, { fetching: true });
+			return Object.assign({}, state, { fetching: true, error: null});
 		case 	RECEIVE_RESULTS:
 			return Object.assign({}, state, { fetching: false, results: action.payload });
 		case FAILURE_RESULTS:
-			return Object.assign({}, state, { fetching: false, error: action.payload });
+			return Object.assign({}, state, { fetching: false, results: [], error: action.payload });
 		case 	CLEAR_RESULTS:
 			return Object.assign({}, state, { results: [] });
 		default:
@@ -50,12 +50,11 @@ export function search(searchTerms) {
 
 		getMopidy().library.search({'any': searchTerms}, ['spotify:'], false)
 		.then((results) => {
-			console.error(results);
-      if (results[0]) {
+      if (results[0].tracks) {
       	dispatch(updateSearchTerm(searchTerms.join(' ')));
         dispatch(receiveSearchResults(results[0].tracks));
       } else {
-        dispatch(failureSearchResults("No results"));
+        dispatch(failureSearchResults("No Results Found"));
       }
     })
     .catch((err) => dispatch(failureSearchResults(err)));

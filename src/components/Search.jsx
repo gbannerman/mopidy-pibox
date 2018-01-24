@@ -52,6 +52,12 @@ export default class Search extends React.Component {
           <Spinner fadeIn="none" name="double-bounce" color="white" />
         </div>
       );
+    } else if (this.props.search.error) {
+      results = (
+        <div className="error">
+          <h4>{this.props.search.error}</h4>
+        </div>
+      );
     } else {
       results = (
         <div className="results">
