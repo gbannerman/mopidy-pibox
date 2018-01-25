@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { css } from 'glamor';
 import { ToastContainer, toast } from 'react-toastify';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { bindActionCreators } from 'redux';
@@ -100,7 +101,13 @@ export class App extends Component {
               autoClose={3000} 
               hideProgressBar={true} 
               pauseOnHover={false} 
-              closeButton={false} />
+              closeButton={false} 
+              toastClassName={
+                css({
+                  backgroundColor: "#009688",
+                  color: "#FFFFFF"
+                })
+              } />
               <div>
                 <Home 
                   playback={this.props.playback} 
