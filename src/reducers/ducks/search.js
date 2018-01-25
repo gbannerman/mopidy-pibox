@@ -66,9 +66,9 @@ export function search(searchTerms) {
 export function queueTrack(selectedTrack, validCallback) {
 
 	let warningToast = (message) => {
-		toast.warn(message, {
+		toast(message, {
 			autoClose: 3500,
-			toastClassName: css({
+			warningClassName: css({
         background: "#FF9800",
         color: "#FFFFFF"
       })
@@ -84,7 +84,7 @@ export function queueTrack(selectedTrack, validCallback) {
 				getMopidy().tracklist.add([selectedTrack], null, null, null).done(() => {
 					let message = selectedTrack.name + " was added to the queue";
 					toast(message, {
-						toastClassName: css({
+						defaultClassName: css({
 			        background: "#009688",
 			        color: "#FFFFFF"
 			      })
