@@ -83,7 +83,12 @@ export function queueTrack(selectedTrack, validCallback) {
 			} else {
 				getMopidy().tracklist.add([selectedTrack], null, null, null).done(() => {
 					let message = selectedTrack.name + " was added to the queue";
-					toast(message);
+					toast(message, {
+						toastClassName: css({
+			        background: "#009688",
+			        color: "#FFFFFF"
+			      })
+					});
 					if (getState().playback.state === 'stopped') {
 						getMopidy().playback.play();
 					}
