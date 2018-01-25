@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { css } from 'glamor';
 import { ToastContainer, toast } from 'react-toastify';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { bindActionCreators } from 'redux';
@@ -108,7 +107,7 @@ export class App extends Component {
                   tracklist={this.props.tracklist} /> 
                 <Route 
                   path="/pibox/search" 
-                  exact={true}
+                  exact={false}
                   strict={false}
                   render={ () =>
                     <SearchOverlay 
