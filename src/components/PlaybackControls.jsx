@@ -21,7 +21,11 @@ export default class PlaybackControls extends React.Component {
 
 		return (
 			<div className="playback-controls">
-				<RaisedButton primary={true} onClick={this.toggle.bind(this)}>{ this.props.playbackState === 'playing' ? "PAUSE" : "PLAY" }</RaisedButton>
+				<RaisedButton 
+					backgroundColor="#009688"
+					onClick={this.toggle.bind(this)}>
+						{ this.props.playbackState === 'playing' ? "PAUSE" : "PLAY" }
+					</RaisedButton>
 			</div>
 		);
 	}
