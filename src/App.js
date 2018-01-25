@@ -103,7 +103,8 @@ export class App extends Component {
               pauseOnHover={false} 
               closeButton={false} 
               toastClassName={css({
-                background: "#009688"
+                background: "#009688",
+                color: "#B2DFDB"
               })}/>
               <div>
                 <Home 
