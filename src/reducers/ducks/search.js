@@ -66,7 +66,6 @@ export function queueTrack(selectedTrack, validCallback) {
 
 	let warningToast = (message) => {
 		toast.warn(message, {
-			position: toast.POSITION.BOTTOM_CENTER,
 			autoClose: 3500
 		});
 	}
@@ -79,9 +78,7 @@ export function queueTrack(selectedTrack, validCallback) {
 			} else {
 				getMopidy().tracklist.add([selectedTrack], null, null, null).done(() => {
 					let message = selectedTrack.name + " was added to the queue";
-					toast.info(message, {
-						position: toast.POSITION.BOTTOM_CENTER
-					});
+					toast(message);
 					if (getState().playback.state === 'stopped') {
 						getMopidy().playback.play();
 					}

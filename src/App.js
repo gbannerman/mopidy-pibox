@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
@@ -91,11 +91,21 @@ export class App extends Component {
       );
     }
 
+    const toastStyle = {
+      background: '#009688',
+    }
+
     return (
       <Router>
         <MuiThemeProvider>
           <div className="App">
-            <ToastContainer autoClose={3000} hideProgressBar={true} pauseOnHover={false} closeButton={false} />
+            <ToastContainer 
+              position={toast.POSITION.BOTTOM_CENTER}
+              autoClose={3000} 
+              hideProgressBar={true} 
+              pauseOnHover={false} 
+              closeButton={false} 
+              style={toastStyle}/>
               <div>
                 <Home 
                   playback={this.props.playback} 
