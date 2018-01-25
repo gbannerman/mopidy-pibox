@@ -17,7 +17,7 @@ export default class Home extends React.Component {
         </ul>
 	      <NowPlaying image={this.props.playback.image} track={this.props.playback.track} />
 	      <Tracklist tracks={this.props.tracklist} display={3} />
-				<PlaybackControls playing={this.props.playback.state === "playing"} />
+				<PlaybackControls playbackState={this.props.playback.state} />
 			</div>
 		);
 	}

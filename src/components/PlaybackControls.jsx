@@ -6,7 +6,7 @@ import '../style/PlaybackControls.css';
 export default class PlaybackControls extends React.Component {
 
 	toggle() {
-		if (this.props.playing) {
+		if (this.props.playbackState === 'playing') {
 			getMopidy().playback.pause();
 		} else {
 			getMopidy().playback.play();
@@ -14,6 +14,10 @@ export default class PlaybackControls extends React.Component {
 	}
 
 	render() {
+
+		if (this.props.playbackState === 'stopped') {
+			return null;
+		}
 
 		return (
 			<div className="playback-controls">

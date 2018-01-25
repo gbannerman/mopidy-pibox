@@ -10,7 +10,7 @@ const app = document.getElementById('root');
 
 const store = configureStore({
 	mopidy: {
-		connected: false
+		connected: true
 	},
 	playback: {
 		track: null,
