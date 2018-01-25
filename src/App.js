@@ -104,7 +104,7 @@ export class App extends Component {
               closeButton={false} 
               toastClassName={css({
                 background: "#009688",
-                color: "#B2DFDB"
+                color: "#FFFFFF"
               })}/>
               <div>
                 <Home 
