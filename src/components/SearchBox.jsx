@@ -21,7 +21,8 @@ let SearchBox = props => {
 }
 
 SearchBox = reduxForm({
-  form: 'search'
+  form: 'search',
+  destroyOnUnmount: false
 })(SearchBox)
 
 export default SearchBox;
