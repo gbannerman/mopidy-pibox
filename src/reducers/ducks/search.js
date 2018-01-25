@@ -1,5 +1,6 @@
 import { getMopidy } from '../../App.js';
 import { toast } from 'react-toastify';
+import {reset} from 'redux-form';
 
 export const UPDATE_SEARCH_TERM = 'search/UPDATE_SEARCH_TERM';
 export const REQUEST_RESULTS = 'search/REQUEST_RESULTS';
@@ -85,6 +86,7 @@ export function queueTrack(selectedTrack, validCallback) {
 						getMopidy().playback.play();
 					}
 					dispatch(clearSearchResults());
+					dispatch(reset('search'));
 					validCallback();
 				});
 			}
