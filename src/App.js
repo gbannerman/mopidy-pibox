@@ -108,6 +108,8 @@ export class App extends Component {
                   tracklist={this.props.tracklist} /> 
                 <Route 
                   path="/pibox/search" 
+                  exact={true}
+                  strict={false}
                   render={ () =>
                     <SearchOverlay 
                       search={this.props.search}
