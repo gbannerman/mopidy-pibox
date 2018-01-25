@@ -69,7 +69,7 @@ export function queueTrack(selectedTrack, validCallback) {
 		toast(message, {
 			autoClose: 3500,
 			warningClassName: css({
-        background: "#FF9800",
+        backgroundColor: "#FF9800",
         color: "#FFFFFF"
       })
 		});
@@ -85,7 +85,7 @@ export function queueTrack(selectedTrack, validCallback) {
 					let message = selectedTrack.name + " was added to the queue";
 					toast(message, {
 						defaultClassName: css({
-			        background: "#009688",
+			        backgroundColor: "#009688",
 			        color: "#FFFFFF"
 			      })
 					});
