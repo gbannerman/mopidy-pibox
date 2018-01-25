@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { css } from 'glamor';
 import { ToastContainer, toast } from 'react-toastify';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { bindActionCreators } from 'redux';
@@ -91,10 +92,6 @@ export class App extends Component {
       );
     }
 
-    const toastStyle = {
-      background: '#009688',
-    }
-
     return (
       <Router>
         <MuiThemeProvider>
@@ -105,7 +102,9 @@ export class App extends Component {
               hideProgressBar={true} 
               pauseOnHover={false} 
               closeButton={false} 
-              style={toastStyle}/>
+              toastClassName={css({
+                background: "#009688"
+              })}/>
               <div>
                 <Home 
                   playback={this.props.playback} 
