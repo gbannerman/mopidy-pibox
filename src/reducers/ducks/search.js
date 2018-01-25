@@ -1,6 +1,7 @@
 import { getMopidy } from '../../App.js';
 import { toast } from 'react-toastify';
 import {reset} from 'redux-form';
+import { css } from 'glamor';
 
 export const UPDATE_SEARCH_TERM = 'search/UPDATE_SEARCH_TERM';
 export const REQUEST_RESULTS = 'search/REQUEST_RESULTS';
@@ -66,7 +67,11 @@ export function queueTrack(selectedTrack, validCallback) {
 
 	let warningToast = (message) => {
 		toast.warn(message, {
-			autoClose: 3500
+			autoClose: 3500,
+			toastClassName: css({
+        background: "#FF9800",
+        color: "#FFFFFF"
+      })
 		});
 	}
 	return function (dispatch, getState) {
