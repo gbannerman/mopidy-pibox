@@ -14,7 +14,7 @@ let SearchBox = props => {
 				autoCorrect="off" 
 				autoCapitalize="off" 
 				spellCheck="false" 
-				autofocus="true" 
+				autofocus="on" 
 				id="searchField" />
     </form>
 	);
