@@ -1,5 +1,5 @@
 class PiboxSession(object):
 
-	def __init__(self):
+    def __init__(self):
         self.blacklist = ['spotify:track:0afhq8XCExXpqazXczTSve']
-		self.votes = {}
+        self.votes = {}
