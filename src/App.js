@@ -106,7 +106,7 @@ export class App extends Component {
                   playback={this.props.playback} 
                   tracklist={this.props.tracklist} /> 
                 <Route 
-                  path="/search/"
+                  path="/pibox/search/"
                   render={ () =>
                     <SearchOverlay 
                       search={this.props.search}
