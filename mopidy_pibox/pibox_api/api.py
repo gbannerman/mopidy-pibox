@@ -23,7 +23,7 @@ class VoteHandler(tornado.web.RequestHandler):
 
         if fingerprint in usersWhoVoted:
             self.set_status(400)
-            response = { 'fingerprint': fingerprint, 'uri': uri }
+            response = { 'message': "User has already voted to skip this track" }
         else:
             usersWhoVoted.append(fingerprint)
             self.session.has_voted[uri] = usersWhoVoted
@@ -32,9 +32,9 @@ class VoteHandler(tornado.web.RequestHandler):
             if vote_count >= 2:
                 self.core.tracklist.remove({'uri': [uri]})
                 self.session.blacklist.append(uri)
-            response = { 'fingerprint': fingerprint, 'uri': uri, 'votes': vote_count }
-            self.write(response)
+            response = { 'uri': uri, 'votes': vote_count }
             self.set_status(200)
+        self.write(response)
 
 # class MainHandler(tornado.web.RequestHandler):
 #     def initialize(self, core):
