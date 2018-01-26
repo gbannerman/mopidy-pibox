@@ -5,6 +5,7 @@ import os
 import tornado.web
 
 from mopidy import config, ext
+from pibox_api import api
 
 __version__ = '0.4.0'
 
@@ -13,9 +14,12 @@ logger = logging.getLogger(__name__)
 
 def my_app_factory(config, core):
 
+    this_session = session.PiboxSession()
+
     path = os.path.join( os.path.dirname(__file__), 'static')
     
     return [
+        (r'/api/vote/?', api.VoteHandler, {'core': core, 'session': this_session}),
         (r'/(.*)', tornado.web.StaticFileHandler, {
             'path': path,
             'default_filename': 'index.html'
