@@ -106,9 +106,7 @@ export class App extends Component {
                   playback={this.props.playback} 
                   tracklist={this.props.tracklist} /> 
                 <Route 
-                  path="/search" 
-                  exact={false}
-                  strict={false}
+                  path="/search/"
                   render={ () =>
                     <SearchOverlay 
                       search={this.props.search}
