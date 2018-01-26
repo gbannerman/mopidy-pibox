@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
-import Fingerprint2 from 'material-ui/styles/MuiThemeProvider';
+import Fingerprint2 from 'fingerprintjs2';
 import './style/App.css';
 import SearchOverlay from './components/SearchOverlay.jsx';
 import Home from './components/Home.jsx'
@@ -49,9 +49,9 @@ export class App extends Component {
   componentDidMount() {
     mopidyService = new Mopidy();
     mopidyService.on("state:online", () => {
-      new Fingerprint2().get(function(result, components){
-        console.log(result); //a hash, representing your device fingerprint
-        mopidy.updateFingerprint(result);
+      new Fingerprint2().get((fingerprint) => {
+        console.log(fingerprint); //a hash, representing your device fingerprint
+        mopidy.updateFingerprint(fingerprint);
       });
       console.debug("Mopidy: CONNECTED");
       mopidyService.tracklist.setConsume(true);
