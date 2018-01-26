@@ -1,19 +1,24 @@
 {
   "name": "mopidy-pibox",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "dependencies": {
     "bisu-react-search-modal": "^1.0.8",
+    "glamor": "^2.20.40",
     "material-ui": "^0.20.0",
     "mopidy": "^0.5.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
     "react-redux-form": "^1.16.3",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17",
     "react-spinkit": "^3.0.0",
     "react-toastify": "^3.2.2",
-    "react-transition-group": "^2.2.1"
+    "react-transition-group": "^2.2.1",
+    "redux": "^3.7.2",
+    "redux-form": "^7.2.1",
+    "redux-thunk": "^2.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -21,5 +26,9 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "homepage": "."
+  "homepage": "/pibox",
+  "devDependencies": {
+    "redux-devtools": "^3.4.1",
+    "redux-logger": "^3.0.6"
+  }
 }

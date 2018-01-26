@@ -5,19 +5,18 @@ import '../style/NowPlaying.css';
 
 export default class NowPlaying extends React.Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			track: null
-		};
-	}
-
 	render() {
 
 		if (!this.props.track) {
 			return(
-				<div className="now-playing">
-					<h2>Add a song to the queue</h2>
+				<div className="no-song">
+					<h2 className="no-song-heading">Welcome to pibox!</h2>
+					<ol className="no-song-list" type="1">
+					  <li className="no-song-list-item">Tap the search icon at the top right</li>
+					  <li className="no-song-list-item">Search for an artist, song or album</li>
+					  <li className="no-song-list-item">Tap on the song you want to queue</li>
+					  <li className="no-song-list-item">Enjoy! <span role="img" aria-label="Music Note">&#127925;</span></li>
+					</ol>
 				</div>
 			);
 		}

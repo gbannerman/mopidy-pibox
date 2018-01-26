@@ -24,13 +24,18 @@ export default class SearchOverlay extends React.Component {
 		};
 
 		return (
-			<Transition appear={true} in={this.props.in} timeout={100}>
+			<Transition appear={true} in={true} timeout={100}>
 		    {(state) => (
 		      <div style={{
 		        ...defaultStyle,
 		        ...transitionStyles[state]
 		      }}>
-		      	<Search tracklist={this.props.tracklist} playing={this.props.playing} onSelect={this.props.onSelect}/>
+		      	<Search 
+		      		tracklist={this.props.tracklist} 
+		      		playbackState={this.props.playbackState} 
+		      		search={this.props.search} 
+		      		onSearch={this.props.onSearch}
+		      		queueTrack={this.props.queueTrack} />
 		      </div>
 		    )}
 		  </Transition>

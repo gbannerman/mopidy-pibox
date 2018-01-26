@@ -6,7 +6,7 @@ import '../style/PlaybackControls.css';
 export default class PlaybackControls extends React.Component {
 
 	toggle() {
-		if (this.props.playing) {
+		if (this.props.playbackState === 'playing') {
 			getMopidy().playback.pause();
 		} else {
 			getMopidy().playback.play();
@@ -15,9 +15,17 @@ export default class PlaybackControls extends React.Component {
 
 	render() {
 
+		if (this.props.playbackState === 'stopped') {
+			return null;
+		}
+
 		return (
 			<div className="playback-controls">
-				<RaisedButton primary={true} onClick={this.toggle.bind(this)}>{ this.props.playing ? "PAUSE" : "PLAY" }</RaisedButton>
+				<RaisedButton 
+					backgroundColor="#009688"
+					onClick={this.toggle.bind(this)}>
+						{ this.props.playbackState === 'playing' ? "PAUSE" : "PLAY" }
+					</RaisedButton>
 			</div>
 		);
 	}

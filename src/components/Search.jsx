@@ -2,61 +2,60 @@ import React from 'react';
 import SearchBox from './SearchBox.jsx';
 import SearchResultItem from './SearchResultItem.jsx';
 import '../style/Search.css';
-import { getMopidy } from '../App.js';
 import { Transition } from 'react-transition-group'
 
 var Spinner = require('react-spinkit');
 
 export default class Search extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      tracks: [],
-      loading: false,
-      in: false
-    };
-  }
-
-  search(e) {
-    this.setState({loading: true});
-    e.preventDefault();
-    let queryParameters = e.target.query.value.split(" ");
-    getMopidy().library.search({'any': queryParameters}, ['spotify:'], false).done((results) => {
-      if (results[0]) {
-        this.setState({tracks: results[0].tracks});
-      } else {
-        this.setState({tracks: []});
-      }
-      this.setState({loading: false});
-    });
-  }
-
-  componentDidMount() {
-    this.setState({in: true});
+  search(values) {
+    let queryParameters = values.query.split(" ");
+    this.props.onSearch(queryParameters);
   }
 
 	render() {
 
-		const searchResults = this.state.tracks.map((track, index) => <SearchResultItem key={index} track={track} tracklist={this.props.tracklist} playing={this.props.playing} onSelect={this.props.onSelect}/>);
+		const searchResults = this.props.search.results.map((track, index) => 
+      <SearchResultItem 
+      key={index} 
+      track={track} 
+      tracklist={this.props.tracklist} 
+      playbackState={this.props.playbackState} 
+      queueTrack={this.props.queueTrack} />
+    );
 
-    const defaultStyle = {
+    const defaultStyleBar = {
       margin: '0 auto',
       maxWidth: '800px',
       transition: 'width 100ms ease-in-out',
-    }
+    };
 
-    const transitionStyles = {
+    const transitionStylesBar = {
       entering: { width: '0%' },
       entered: { width: '100%' },
     };
 
+    const defaultStyleResults = {
+      transition: 'opacity 100ms ease-in-out'
+    };
+
+    const transitionStylesResults = {
+      entering: { opacity: 0 },
+      entered: { opacity: 100 },
+    };
+
     let results;
 
-    if (this.state.loading) {
+    if (this.props.search.fetching) {
       results = (
         <div className="loading">
           <Spinner fadeIn="none" name="double-bounce" color="white" />
+        </div>
+      );
+    } else if (this.props.search.error) {
+      results = (
+        <div className="error">
+          <h4 className="error-info">{this.props.search.error}</h4>
         </div>
       );
     } else {
@@ -69,17 +68,24 @@ export default class Search extends React.Component {
 
 		return (
 			<div className="search">
-        <Transition appear={true} in={this.state.in} timeout={100}>
+        <Transition appear={true} in={true} timeout={100}>
           {(state) => (
-            <div style={{
-              ...defaultStyle,
-              ...transitionStyles[state]
-            }}>
-              <SearchBox handleSubmit={ this.search.bind(this) } />
+            <div>
+              <div style={{
+                ...defaultStyleBar,
+                ...transitionStylesBar[state]
+              }}>
+                <SearchBox onSubmit={ this.search.bind(this) } term={ this.props.search.term }/>
+              </div>
+              <div style={{
+                ...defaultStyleResults,
+                ...transitionStylesResults[state]
+              }}>
+                { results }
+              </div>
             </div>
           )}
         </Transition>
-        { results }
 			</div>
 		);
 	}

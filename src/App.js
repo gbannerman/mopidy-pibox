@@ -1,98 +1,86 @@
 import React, { Component } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { bindActionCreators } from 'redux';
+import {connect} from 'react-redux';
 import './style/App.css';
 import SearchOverlay from './components/SearchOverlay.jsx';
 import Home from './components/Home.jsx'
+import * as mopidy from './reducers/ducks/mopidy';
+import * as playback from './reducers/ducks/playback';
+import * as search from './reducers/ducks/search';
+import * as tracklist from './reducers/ducks/tracklist';
 import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom';
 var Mopidy = require("mopidy");
 var Spinner = require('react-spinkit');
-var mopidy;
+var mopidyService;
 
 export class App extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      nowPlaying: null,
-      playing: false,
-      imageUrl: null,
-      tracklist: [],
-      loading: true
-    };
-  }
-
   updateTracklist() {
-    mopidy.tracklist.getTracks().done((tracklist) => {
-      this.setState({tracklist: tracklist});
+    mopidyService.tracklist.getTracks().done((tracklist) => {
+      this.props.updateTracklist(tracklist);
     });
   }
 
   updateNowPlaying() {
-    mopidy.playback.getCurrentTrack().done((track) => {
-      this.setState({nowPlaying: track});
+    mopidyService.playback.getCurrentTrack().done((track) => {
+      this.props.updateNowPlayingTrack(track);
       if (track) {
-        mopidy.library.getImages([track.uri]).done((result) => {
-          this.setState({imageUrl: result[track.uri][0].uri});
+        mopidyService.library.getImages([track.uri]).done((result) => {
+          this.props.updateNowPlayingImage(result[track.uri][0].uri);
         });
       } else {
-        this.setState({imageUrl: null});
+        this.props.updateNowPlayingImage(null);
       }
     });
   }
 
   updatePlaybackState() {
-    mopidy.playback.getState().done((playbackState) => {
-      if (playbackState === "playing") {
-        this.setState({playing: true});
-      } else {
-        this.setState({playing: false});
-      }
+    mopidyService.playback.getState().done((playbackState) => {
+      this.props.updatePlaybackState(playbackState);
     });
   }
 
   componentDidMount() {
-    mopidy = new Mopidy();
-    mopidy.on("state:online", () => {
+    mopidyService = new Mopidy();
+    mopidyService.on("state:online", () => {
       console.debug("Mopidy: CONNECTED");
-      mopidy.tracklist.setConsume(true);
+      mopidyService.tracklist.setConsume(true);
       this.updateTracklist();
       this.updateNowPlaying();
       this.updatePlaybackState();
-      this.setState({loading: false});
+      this.props.updateMopidyConnected(true);
     });
-    mopidy.on("state:offline", () => {
+    mopidyService.on("state:offline", () => {
       console.debug("Mopidy: DISCONNECTED");
-      this.setState({loading: true});
+      this.props.updateMopidyConnected(false);
     });
-    mopidy.on("reconnectionPending", () => {
+    mopidyService.on("reconnectionPending", () => {
       console.debug("Mopidy: RECONNECTION PENDING");
-      this.setState({loading: true});
+      this.props.updateMopidyConnected(false);
     });
-    mopidy.on("reconnecting", () => {
+    mopidyService.on("reconnecting", () => {
       console.debug("Mopidy: RECONNECTING");
-      this.setState({loading: true});
+      this.props.updateMopidyConnected(false);
     });
-    mopidy.on("event:playbackStateChanged", (playbackState) => {
-      if (playbackState.new_state === "playing") {
-        this.setState({playing: true});
-      } else {
-        this.setState({playing: false});
-      }
+    mopidyService.on("event:playbackStateChanged", (playbackState) => {
+      console.debug("Mopidy: PLAYBACK STATE CHANGED");
+      this.props.updatePlaybackState(playbackState.new_state);
       this.updateNowPlaying();
       this.updateTracklist();
     });
-    mopidy.on("event:tracklistChanged", () => {
+    mopidyService.on("event:tracklistChanged", () => {
       this.updateTracklist();
     });
   }
 
   render() {
 
-    if (this.state.loading) {
+    if (!this.props.mopidy.connected) {
       return(
         <div className="App">
           <div className="loading">
@@ -107,20 +95,25 @@ export class App extends Component {
       <Router>
         <MuiThemeProvider>
           <div className="App">
-            <ToastContainer autoClose={3000} hideProgressBar={true} pauseOnHover={false} closeButton={false} />
+            <ToastContainer 
+              position={toast.POSITION.BOTTOM_CENTER}
+              autoClose={3000} 
+              hideProgressBar={true} 
+              pauseOnHover={false} 
+              closeButton={false} />
               <div>
                 <Home 
-                  nowPlaying={this.state.nowPlaying} 
-                  tracklist={this.state.tracklist} 
-                  image={this.state.imageUrl} 
-                  playing={this.state.playing} /> 
+                  playback={this.props.playback} 
+                  tracklist={this.props.tracklist} /> 
                 <Route 
-                  path="/pibox/search" 
+                  path="/pibox/search/"
                   render={ () =>
                     <SearchOverlay 
-                      in={true} 
-                      playing={this.state.playing} 
-                      tracklist={this.state.tracklist} />
+                      search={this.props.search}
+                      playbackState={this.props.playback.state} 
+                      tracklist={this.props.tracklist} 
+                      onSearch={this.props.performSearch}
+                      queueTrack={this.props.queueTrack}/>
                   } />
               </div>
           </div>
@@ -130,8 +123,31 @@ export class App extends Component {
   }
 }
 
+function mapStateToProps(state) {
+    return {
+      playback: state.playback,
+      mopidy: state.mopidy,
+      tracklist: state.tracklist,
+      search: state.search
+    };
+}
+
+const mapDispatchToProps = function (dispatch) {
+  return bindActionCreators({
+    updateTracklist: tracklist.updateTracklist,
+    updateNowPlayingTrack: playback.updateNowPlayingTrack,
+    updateNowPlayingImage: playback.updateNowPlayingImage,
+    updatePlaybackState: playback.updatePlaybackState,
+    updateMopidyConnected: mopidy.updateMopidyConnected,
+    performSearch: search.search,
+    queueTrack: search.queueTrack
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+
 export function getMopidy() {
-  return mopidy;
+  return mopidyService;
 }
 
 
