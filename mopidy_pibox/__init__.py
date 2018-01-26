@@ -5,7 +5,7 @@ import os
 import tornado.web
 
 from mopidy import config, ext
-from pibox_api import api
+from pibox_api import api, session
 
 __version__ = '0.4.0'
 
