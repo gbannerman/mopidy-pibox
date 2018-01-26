@@ -23,7 +23,9 @@ class VoteHandler(tornado.web.RequestHandler):
 
         if fingerprint in usersWhoVoted:
             self.set_status(400)
+            response = { 'fingerprint': fingerprint, 'uri': uri }
         else:
+            response = { 'fingerprint': fingerprint, 'uri': uri, 'votes': vote_count }
             usersWhoVoted.append(fingerprint)
             self.session.has_voted[uri] = usersWhoVoted
             vote_count = self.session.votes.get(uri, 0) + 1
@@ -31,6 +33,7 @@ class VoteHandler(tornado.web.RequestHandler):
             if vote_count >= 2:
                 self.core.tracklist.remove({'uri': [uri]})
                 self.session.blacklist.append(uri)
+            response = { 'fingerprint': fingerprint, 'uri': uri, 'votes': vote_count }
             self.set_status(200)
 
 # class MainHandler(tornado.web.RequestHandler):
