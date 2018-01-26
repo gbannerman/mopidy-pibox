@@ -16,10 +16,10 @@ class VoteHandler(tornado.web.RequestHandler):
         self.session = session
 
     def post(self):
-        uri = self.get_body_argument("uri", None)
+        uri = self.get_body_argument("uri")
         usersWhoVoted = self.session.has_voted.get(uri, [])
 
-        fingerprint = self.get_body_argument("fingerprint", None)
+        fingerprint = self.get_body_argument("fingerprint")
 
         if fingerprint in usersWhoVoted:
             self.set_status(400)
