@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bisu-react-search-modal": "^1.0.8",
+    "fingerprintjs2": "^1.6.1",
     "glamor": "^2.20.40",
     "material-ui": "^0.20.0",
     "mopidy": "^0.5.0",

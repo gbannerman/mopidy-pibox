@@ -17,12 +17,21 @@ class VoteHandler(tornado.web.RequestHandler):
 
     def post(self):
         uri = self.get_body_argument("uri", None)
-        vote_count = self.session.votes.get(uri, 0) + 1
-        self.session.votes[uri] = vote_count
-        if vote_count >= 2:
-            self.core.tracklist.remove({'uri': [uri]})
-            self.session.blacklist.append(uri)
-        self.set_status(200)
+        usersWhoVoted = self.session.has_voted.get(uri, [])
+
+        fingerprint = self.get_body_argument("fingerprint", None)
+
+        if fingerprint in usersWhoVoted:
+            self.set_status(400)
+        else:
+            usersWhoVoted.append(fingerprint)
+            self.session.has_voted[uri] = usersWhoVoted
+            vote_count = self.session.votes.get(uri, 0) + 1
+            self.session.votes[uri] = vote_count
+            if vote_count >= 2:
+                self.core.tracklist.remove({'uri': [uri]})
+                self.session.blacklist.append(uri)
+            self.set_status(200)
 
 # class MainHandler(tornado.web.RequestHandler):
 #     def initialize(self, core):
