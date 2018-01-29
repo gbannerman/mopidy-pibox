@@ -38,7 +38,8 @@ const app = document.getElementById('root');
 
 const store = configureStore({
 	mopidy: {
-		connected: developmentBuild
+		connected: developmentBuild,
+		fingerprint: null
 	},
 	playback: {
 		track: mockNowPlayingTrack,

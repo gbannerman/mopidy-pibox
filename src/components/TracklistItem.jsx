@@ -31,6 +31,7 @@ const styles = theme => ({
 class TracklistItem extends React.Component {
 
   vote() {
+    console.log(this.props.mopidy.fingerprint);
     axios.post('/pibox/api/vote', {
         uri: this.props.track.uri,
         fingerprint: this.props.mopidy.fingerprint
