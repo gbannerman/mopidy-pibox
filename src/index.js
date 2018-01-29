@@ -6,25 +6,51 @@ import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux';
 import configureStore from './configure-store';
 
-const mockMopidyConnection = process.env.NODE_ENV === 'development';
+const developmentBuild = process.env.NODE_ENV === 'development';
+
+if (developmentBuild) {
+	var mockTracklist = [
+		{
+			name: 'Break It',
+			artists: [{name: 'Danny Brown'}, {name: 'Purity Ring'}],
+			album: {name: 'Old'}
+		},
+		{
+			name: 'Neighbors',
+			artists: [{name: 'J. Cole'}],
+			album: {name: '4 Your Eyez Only'}
+		},
+		{
+			name: 'Ttktv',
+			artists: [{name: 'Injury Reserve'}],
+			album: {name: 'Live from the Dentist Office'}
+		}
+	];
+	var mockNowPlayingTrack = {
+		name: '25 Bucks',
+		artists: [{name: 'Danny Brown'}, {name: 'Purity Ring'}],
+		album: {name: 'Old'}
+	};
+	var mockNowPlayingImage = "https://i.scdn.co/image/8d625b3c2e7bbbcc3d4275d4ece08093556b362a";
+}
 
 const app = document.getElementById('root');
 
 const store = configureStore({
 	mopidy: {
-		connected: mockMopidyConnection
+		connected: developmentBuild
 	},
 	playback: {
-		track: null,
-		image: null,
-		state: 'stopped'
+		track: mockNowPlayingTrack,
+		image: mockNowPlayingImage,
+		state: developmentBuild ? 'paused' : 'stopped'
 	},
 	search: {
 		fetching: false,
 		results: [],
 		error: null
 	},
-	tracklist: []
+	tracklist: mockTracklist
 });
 
 ReactDOM.render(

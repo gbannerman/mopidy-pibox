@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { createMuiTheme, MuiThemeProvider } from 'material-ui/styles';
+import teal from 'material-ui/colors/teal';
+import orange from 'material-ui/colors/orange';
+import red from 'material-ui/colors/red';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import Fingerprint2 from 'fingerprintjs2';
@@ -18,6 +21,14 @@ import {
 var Mopidy = require("mopidy");
 var Spinner = require('react-spinkit');
 var mopidyService;
+
+const theme = createMuiTheme({
+  palette: {
+    primary: teal,
+    secondary: orange,
+    error: red
+  }
+});
 
 export class App extends Component {
 
@@ -98,7 +109,7 @@ export class App extends Component {
 
     return (
       <Router>
-        <MuiThemeProvider>
+        <MuiThemeProvider theme={theme}>
           <div className="App">
             <ToastContainer 
               position={toast.POSITION.BOTTOM_CENTER}
@@ -108,6 +119,7 @@ export class App extends Component {
               closeButton={false} />
               <div>
                 <Home 
+                mopidy = {this.props.mopidy}
                   playback={this.props.playback} 
                   tracklist={this.props.tracklist} /> 
                 <Route 

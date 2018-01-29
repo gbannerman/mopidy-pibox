@@ -1,6 +1,6 @@
 import React from 'react';
 import { getMopidy } from '../App.js';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from 'material-ui/Button';
 import '../style/PlaybackControls.css';
 
 export default class PlaybackControls extends React.Component {
@@ -21,11 +21,12 @@ export default class PlaybackControls extends React.Component {
 
 		return (
 			<div className="playback-controls">
-				<RaisedButton 
-					backgroundColor="#009688"
+				<Button 
+					raised
+					color="primary"
 					onClick={this.toggle.bind(this)}>
 						{ this.props.playbackState === 'playing' ? "PAUSE" : "PLAY" }
-					</RaisedButton>
+					</Button>
 			</div>
 		);
 	}
