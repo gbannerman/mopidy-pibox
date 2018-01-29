@@ -57,7 +57,7 @@ class TracklistItem extends React.Component {
 					<Typography type="body2" component="h2">{artistSentence}</Typography>
 				</CardContent>
 				<CardActions className={classes.actions}>
-          <Button dense onClick={this.vote} color="primary">
+          <Button dense onClick={this.vote.bind(this)} color="primary">
             Vote
             <SkipNext className={classes.rightIcon}/>
           </Button>
