@@ -54,11 +54,11 @@ class TracklistItem extends React.Component {
         uri: this.props.track.uri,
         fingerprint: this.props.mopidy.fingerprint
       })
-      .then(function (response) {
+      .then((response) => {
         this.setState({voted: true});
         console.log(response);
       })
-      .catch(function (error) {
+      .catch((error) => {
         this.setState({fetching: false});
         if (error.code === '15') {
           this.setState({voted: true});
