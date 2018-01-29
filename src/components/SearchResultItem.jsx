@@ -1,7 +1,7 @@
 import React from 'react';
 import ArtistSentence from './ArtistSentence.jsx'
 import '../style/SearchResultItem.css';
-import {Card, CardHeader} from 'material-ui/Card';
+import Card, { CardHeader} from 'material-ui/Card';
 
 export default class SearchResultItem extends React.Component {
 
