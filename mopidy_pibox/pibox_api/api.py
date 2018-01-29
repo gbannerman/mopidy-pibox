@@ -20,7 +20,7 @@ class VoteHandler(tornado.web.RequestHandler):
     def post(self):
         logger = logging.getLogger(__name__)
         logger.info("Hit endpoint")
-        logger.info(self.request)
+        logger.info(self.request.arguments)
         logger.info(self.request.body)
         uri = self.get_argument("uri")
         logger.info("got uri")
