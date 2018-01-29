@@ -1,7 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
-import json
 import pykka
 
 import tornado.web
@@ -19,12 +18,12 @@ class VoteHandler(tornado.web.RequestHandler):
         self.logger = logging.getLogger(__name__)
 
     def post(self):
-        data = json.loads(self.request.body.decode('utf-8'))
+        data = tornado.escape.json_decode(self.request.body)
         self.logger.info(data)
         fingerprint = data["fingerprint"]
         uri = data["uri"]
-        usersWhoVoted = self.session.has_voted.get(data[uri], [])
-        self.logger.info("uri: " + data[uri] + " , fingerprint: " + data[fingerprint])
+        usersWhoVoted = self.session.has_voted.get(uri, [])
+        self.logger.info("uri: " + uri + " , fingerprint: " + fingerprint)
 
         if fingerprint in usersWhoVoted:
             self.set_status(400)
