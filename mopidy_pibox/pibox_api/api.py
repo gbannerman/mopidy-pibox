@@ -26,9 +26,9 @@ class VoteHandler(tornado.web.RequestHandler):
         if fingerprint in usersWhoVoted:
             self.set_status(400)
             response = { 
-                'code': "15"
-                'title': "Voted Already"
-                'message': "User has already used their 1 vote to skip on this track"
+                'code': '15',
+                'title': 'Voted Already',
+                'message': 'User has already used their 1 vote to skip on this track'
             }
         else:
             usersWhoVoted.append(fingerprint)
