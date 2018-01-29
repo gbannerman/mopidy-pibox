@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
-
+import json
 import pykka
 
 import tornado.web
@@ -16,21 +16,16 @@ class VoteHandler(tornado.web.RequestHandler):
     def initialize(self, core, session):
         self.core = core
         self.session = session
+        self.logger = logging.getLogger(__name__)
 
     def post(self):
-        logger = logging.getLogger(__name__)
-        logger.info("Hit endpoint")
-        logger.info(self.request.arguments)
-        logger.info(self.request.body)
-        uri = self.get_argument("uri")
-        logger.info("got uri")
-        usersWhoVoted = self.session.has_voted.get(uri, [])
-        logger.info("got users who voted")
+        data = json.loads(self.request.body.decode('utf-8'))
+        usersWhoVoted = self.session.has_voted.get(data[uri], [])
+        self.logger.info(data)
+        self.logger.info("uri: " + data[uri] + " , fingerprint: " + data[fingerprint])
 
-        fingerprint = self.get_argument("fingerprint")
-
-        logger.info("uri: " + uri + " , fingerprint: " + fingerprint)
-
+        fingerprint = data[fingerprint]
+        uri = data[uri]
         if fingerprint in usersWhoVoted:
             self.set_status(400)
             response = { 'message': "User has already voted to skip this track" }
