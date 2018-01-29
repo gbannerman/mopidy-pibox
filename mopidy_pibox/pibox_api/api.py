@@ -20,12 +20,12 @@ class VoteHandler(tornado.web.RequestHandler):
 
     def post(self):
         data = json.loads(self.request.body.decode('utf-8'))
-        usersWhoVoted = self.session.has_voted.get(data[uri], [])
         self.logger.info(data)
+        fingerprint = data["fingerprint"]
+        uri = data["uri"]
+        usersWhoVoted = self.session.has_voted.get(data[uri], [])
         self.logger.info("uri: " + data[uri] + " , fingerprint: " + data[fingerprint])
 
-        fingerprint = data[fingerprint]
-        uri = data[uri]
         if fingerprint in usersWhoVoted:
             self.set_status(400)
             response = { 'message': "User has already voted to skip this track" }
