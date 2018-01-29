@@ -61,8 +61,7 @@ export class App extends Component {
     mopidyService = new Mopidy();
     mopidyService.on("state:online", () => {
       new Fingerprint2().get((fingerprint) => {
-        console.log(fingerprint); //a hash, representing your device fingerprint
-        mopidy.updateFingerprint(fingerprint);
+        this.props.updateFingerprint(fingerprint);
       });
       console.debug("Mopidy: CONNECTED");
       mopidyService.tracklist.setConsume(true);
@@ -156,6 +155,7 @@ const mapDispatchToProps = function (dispatch) {
     updateNowPlayingImage: playback.updateNowPlayingImage,
     updatePlaybackState: playback.updatePlaybackState,
     updateMopidyConnected: mopidy.updateMopidyConnected,
+    updateFingerprint: mopidy.updateFingerprint,
     performSearch: search.search,
     queueTrack: search.queueTrack
   }, dispatch)
