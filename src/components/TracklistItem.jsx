@@ -31,7 +31,7 @@ const styles = theme => ({
 class TracklistItem extends React.Component {
 
   vote() {
-    axios.post('/api/vote', {
+    axios.post('/pibox/api/vote', {
         uri: this.props.track.uri,
         fingerprint: this.props.mopidy.fingerprint
       })
@@ -57,7 +57,7 @@ class TracklistItem extends React.Component {
 					<Typography type="body2" component="h2">{artistSentence}</Typography>
 				</CardContent>
 				<CardActions className={classes.actions}>
-          <Button dense onClick={this.vote()} color="primary">
+          <Button dense onClick={this.vote} color="primary">
             Vote
             <SkipNext className={classes.rightIcon}/>
           </Button>
