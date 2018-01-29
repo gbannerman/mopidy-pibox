@@ -6,6 +6,8 @@ import pykka
 
 import tornado.web
 
+import logging
+
 from mopidy.core import PlaybackState
 from mopidy_pibox import frontend
 
@@ -20,6 +22,9 @@ class VoteHandler(tornado.web.RequestHandler):
         usersWhoVoted = self.session.has_voted.get(uri, [])
 
         fingerprint = self.get_body_argument("fingerprint")
+
+        logger = logging.getLogger(__name__)
+        logger.info("uri: " + uri + " , fingerprint: " + fingerprint)
 
         if fingerprint in usersWhoVoted:
             self.set_status(400)
