@@ -23,7 +23,7 @@ export default class SearchResultItem extends React.Component {
 			<Card onClick={this.handleClick.bind(this)}>
 				<CardHeader 
 					title={ this.props.track.name }
-					subtitle={artistAndAlbum}
+					subheader={artistAndAlbum}
 				/>
 			</Card>
 		);
