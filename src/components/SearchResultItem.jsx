@@ -15,24 +15,15 @@ export default class SearchResultItem extends React.Component {
 
 	render() {
 
-		const textStyle = {
-		  padding: 5,
-		};
-
-		const style = {
-		  margin: 10,
-		  cursor: 'pointer'
-		};
 
 		const artistAndAlbum = (<span><ArtistSentence artists={ this.props.track.artists } /> - {this.props.track.album.name}</span>);
 
 		return (
 
-			<Card style={style} onClick={this.handleClick.bind(this)}>
+			<Card onClick={this.handleClick.bind(this)}>
 				<CardHeader 
 					title={ this.props.track.name }
 					subtitle={artistAndAlbum}
-					textStyle={textStyle}
 				/>
 			</Card>
 		);
