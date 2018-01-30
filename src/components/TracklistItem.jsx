@@ -8,6 +8,7 @@ import SkipNext from 'material-ui-icons/SkipNext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { css } from 'glamor';
+import * as tracklist from '../reducers/ducks/tracklist';
 
 const styles = theme => ({
   card: {
@@ -42,24 +43,19 @@ let warningToast = (message) => {
 
 class TracklistItem extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {voted: false, fetching: false};
-  }
-
   vote() {
-    this.setState({fetching: true});
+    tracklist.toggleTracklistFetching(this.props.track.uri);
     axios.post('/pibox/api/vote', {
         uri: this.props.track.uri,
         fingerprint: this.props.mopidy.fingerprint
       })
       .then((response) => {
-        this.setState({voted: true});
+        tracklist.toggleTracklistVoted(this.props.track.uri);
       })
       .catch((error) => {
-        this.setState({fetching: false});
+        tracklist.toggleTracklistFetching(this.props.track.uri);
         if (error.response.data.code === '15') {
-          this.setState({voted: true});
+          tracklist.toggleTracklistVoted(this.props.track.uri);
           warningToast("You have already voted to skip this track");
         } else {
           console.error(error.response);
@@ -74,7 +70,7 @@ class TracklistItem extends React.Component {
 
 		const artistSentence = (<ArtistSentence artists={ this.props.track.artists } />);
 
-    const buttonIcon = this.state.voted ? null : <SkipNext className={classes.rightIcon}/> 
+    const buttonIcon = this.props.track.voted ? null : <SkipNext className={classes.rightIcon}/> 
 
 		return (
 
@@ -84,8 +80,8 @@ class TracklistItem extends React.Component {
 					<Typography type="body2" component="h2">{artistSentence}</Typography>
 				</CardContent>
 				<CardActions className={classes.actions}>
-          <Button disabled={ (this.state.fetching || this.state.voted) } dense onClick={this.vote.bind(this)} color="primary">
-            { this.state.voted ? 'Voted' : 'Vote' }
+          <Button disabled={ (this.props.track.fetching || this.props.track.voted) } dense onClick={this.vote.bind(this)} color="primary">
+            { this.props.track.voted ? 'Voted' : 'Vote' }
             { buttonIcon }
           </Button>
         </CardActions>

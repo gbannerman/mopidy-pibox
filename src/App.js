@@ -34,6 +34,11 @@ export class App extends Component {
 
   updateTracklist() {
     mopidyService.tracklist.getTracks().done((tracklist) => {
+      tracklist.map((track) => {
+        track.fetching = false;
+        track.voted = false;
+        return track;
+      });
       this.props.updateTracklist(tracklist);
     });
   }
