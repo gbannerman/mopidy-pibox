@@ -9,6 +9,9 @@ const styles = theme => ({
   card: {
     margin: 10,
   },
+  content: {
+  	padding: 8 
+  }
 });
 
 class SearchResultItem extends React.Component {
@@ -31,8 +34,8 @@ class SearchResultItem extends React.Component {
 
 			<Card className={classes.card} onClick={this.handleClick.bind(this)}>
 				<CardContent className={classes.content}>
-					<Typography type="body1" component="h2">{ this.props.track.name }</Typography>
-					<Typography type="body2" component="h2">{artistAndAlbum}</Typography>
+					<Typography type="body2" component="h2">{ this.props.track.name }</Typography>
+					<Typography type="body1" component="h2">{artistAndAlbum}</Typography>
 				</CardContent>
 			</Card>
 		);
