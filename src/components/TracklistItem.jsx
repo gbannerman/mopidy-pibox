@@ -5,10 +5,6 @@ import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import SkipNext from 'material-ui-icons/SkipNext';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { css } from 'glamor';
-import * as tracklist from '../reducers/ducks/tracklist';
 
 const styles = theme => ({
   card: {
@@ -31,37 +27,10 @@ const styles = theme => ({
   }
 });
 
-let warningToast = (message) => {
-  toast(message, {
-    autoClose: 3500,
-    className: css({
-      backgroundColor: "#FF9800",
-      color: "#FFFFFF"
-    })
-  });
-};
-
 class TracklistItem extends React.Component {
 
-  vote() {
-    tracklist.toggleTracklistFetching(this.props.track.uri);
-    axios.post('/pibox/api/vote', {
-        uri: this.props.track.uri,
-        fingerprint: this.props.mopidy.fingerprint
-      })
-      .then((response) => {
-        tracklist.toggleTracklistVoted(this.props.track.uri);
-      })
-      .catch((error) => {
-        tracklist.toggleTracklistFetching(this.props.track.uri);
-        if (error.response.data.code === '15') {
-          tracklist.toggleTracklistVoted(this.props.track.uri);
-          warningToast("You have already voted to skip this track");
-        } else {
-          console.error(error.response);
-          warningToast("An error occurred, please try again");
-        }
-      });
+  handleClick() {
+    this.props.handleClick(this.props.track, this.props.mopidy.fingerprint);
   }
 
 	render() {
@@ -80,7 +49,7 @@ class TracklistItem extends React.Component {
 					<Typography type="body2" component="h2">{artistSentence}</Typography>
 				</CardContent>
 				<CardActions className={classes.actions}>
-          <Button disabled={ (this.props.track.fetching || this.props.track.voted) } dense onClick={this.vote.bind(this)} color="primary">
+          <Button disabled={ (this.props.track.fetching || this.props.track.voted) } dense onClick={this.handleClick.bind(this)} color="primary">
             { this.props.track.voted ? 'Voted' : 'Vote' }
             { buttonIcon }
           </Button>

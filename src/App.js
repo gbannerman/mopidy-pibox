@@ -122,8 +122,9 @@ export class App extends Component {
               pauseOnHover={false} 
               closeButton={false} />
               <div>
-                <Home 
-                mopidy = {this.props.mopidy}
+                <Home
+                  voteToSkip={this.props.voteToSkip}
+                  mopidy={this.props.mopidy}
                   playback={this.props.playback} 
                   tracklist={this.props.tracklist} /> 
                 <Route 
@@ -162,7 +163,8 @@ const mapDispatchToProps = function (dispatch) {
     updateMopidyConnected: mopidy.updateMopidyConnected,
     updateFingerprint: mopidy.updateFingerprint,
     performSearch: search.search,
-    queueTrack: search.queueTrack
+    queueTrack: search.queueTrack,
+    voteToSkip: tracklist.voteToSkip
   }, dispatch)
 }
 
