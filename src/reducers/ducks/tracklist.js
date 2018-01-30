@@ -11,7 +11,6 @@ export function reducer(state = [], action = {}) {
 		case UPDATE:
 			return action.payload;
 		case TOGGLE_VOTE:
-		console.log(action);
 			return state.map(track =>
         (track.uri === action.payload) 
           ? {...track, voted: !track.voted}
@@ -57,7 +56,7 @@ export function voteToSkip(track, fingerprint) {
 
 		axios.post('/pibox/api/vote', {
       uri: track.uri,
-      fingerprint: fingerprint
+      fingerprint:fingerprint
     })
     .then((response) => {
       dispatch(toggleTracklistVoted(track.uri));
