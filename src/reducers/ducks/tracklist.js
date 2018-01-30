@@ -7,17 +7,19 @@ export function reducer(state = [], action = {}) {
 		case UPDATE:
 			return action.payload;
 		case TOGGLE_VOTE:
+		console.log("GOT A VOTE: " + action.payload);
 			return state.map(track =>
         (track.uri === action.payload) 
           ? {...track, voted: !track.voted}
           : track
       )
     case TOGGLE_FETCHING:
-		return state.map(track =>
-      (track.uri === action.payload) 
-        ? {...track, fetching: !track.fetching}
-        : track
-    )
+    	console.log("GOT A FETCHING: " + action.payload);
+			return state.map(track =>
+	      (track.uri === action.payload) 
+	        ? {...track, fetching: !track.fetching}
+	        : track
+	    );
 		default:
 			return state;
 	}
