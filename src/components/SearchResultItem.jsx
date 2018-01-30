@@ -1,8 +1,7 @@
 import React from 'react';
 import ArtistSentence from './ArtistSentence.jsx'
 import '../style/SearchResultItem.css';
-import Card, { CardContent, CardActions } from 'material-ui/Card';
-import Button from 'material-ui/Button';
+import Card, { CardContent } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
@@ -35,8 +34,8 @@ class SearchResultItem extends React.Component {
 
 			<Card className={classes.card} onClick={this.handleClick.bind(this)}>
 				<CardContent className={classes.content}>
-					<Typography type="body2" component="h2">{ this.props.track.name }</Typography>
-					<Typography type="body1" component="h2">{artistAndAlbum}</Typography>
+					<Typography noWrap type="body2" component="h2">{ this.props.track.name }</Typography>
+					<Typography noWrap type="body1" component="h2">{artistAndAlbum}</Typography>
 				</CardContent>
 				<div></div>
 			</Card>
