@@ -1,5 +1,4 @@
-import { toast } from 'react-toastify';
-import { css } from 'glamor';
+import * as toast from 'services/toast';
 import * as pibox from 'services/pibox';
 
 export const UPDATE = 'tracklist/UPDATE';
@@ -41,16 +40,6 @@ export function toggleTracklistFetching(uri) {
 
 export function voteToSkip(track, fingerprint) {
 
-	let warningToast = (message) => {
-	  toast(message, {
-	    autoClose: 3500,
-	    className: css({
-	      backgroundColor: "#FF9800",
-	      color: "#FFFFFF"
-	    })
-	  });
-	};
-
 	return function (dispatch, getState) {
 		dispatch(toggleTracklistFetching(track));
 
@@ -62,10 +51,10 @@ export function voteToSkip(track, fingerprint) {
       dispatch(toggleTracklistFetching(track.uri));
       if (error.response.data.code === '15') {
         dispatch(toggleTracklistVoted(track.uri));
-        warningToast("You have already voted to skip this track");
+        toast.warningToast("You have already voted to skip this track");
       } else {
         console.error(error.response);
-        warningToast("An error occurred, please try again");
+        toast.warningToast("An error occurred, please try again");
       }
     });
 	}
