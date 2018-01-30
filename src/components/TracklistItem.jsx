@@ -49,21 +49,21 @@ class TracklistItem extends React.Component {
 
   vote() {
     this.setState({fetching: true});
-    console.log(this.props.mopidy.fingerprint);
     axios.post('/pibox/api/vote', {
         uri: this.props.track.uri,
         fingerprint: this.props.mopidy.fingerprint
       })
       .then((response) => {
         this.setState({voted: true});
-        console.log(response);
       })
       .catch((error) => {
+        console.log(error);
         this.setState({fetching: false});
         if (error.code === '15') {
           this.setState({voted: true});
           warningToast("You have already voted to skip this track");
         } else {
+          console.error(error);
           warningToast("An error occurred, please try again");
         }
       });
