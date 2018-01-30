@@ -58,7 +58,7 @@ class TracklistItem extends React.Component {
       })
       .catch((error) => {
         this.setState({fetching: false});
-        if (error.response.code === '15') {
+        if (error.response.data.code === '15') {
           this.setState({voted: true});
           warningToast("You have already voted to skip this track");
         } else {
