@@ -1,7 +1,8 @@
 import React from 'react';
 import ArtistSentence from './ArtistSentence.jsx'
 import '../style/SearchResultItem.css';
-import Card, { CardHeader} from 'material-ui/Card';
+import Card, { CardContent } from 'material-ui/Card';
+import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
 const styles = theme => ({
@@ -29,10 +30,10 @@ class SearchResultItem extends React.Component {
 		return (
 
 			<Card className={classes.card} onClick={this.handleClick.bind(this)}>
-				<CardHeader 
-					title={ this.props.track.name }
-					subheader={artistAndAlbum}
-				/>
+				<CardContent className={classes.content}>
+					<Typography type="body1" component="h2">{ this.props.track.name }</Typography>
+					<Typography type="body2" component="h2">{artistAndAlbum}</Typography>
+				</CardContent>
 			</Card>
 		);
 	}
