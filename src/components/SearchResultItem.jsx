@@ -1,7 +1,8 @@
 import React from 'react';
 import ArtistSentence from './ArtistSentence.jsx'
 import '../style/SearchResultItem.css';
-import Card, { CardContent } from 'material-ui/Card';
+import Card, { CardContent, CardActions } from 'material-ui/Card';
+import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
@@ -37,6 +38,11 @@ class SearchResultItem extends React.Component {
 					<Typography type="body2" component="h2">{ this.props.track.name }</Typography>
 					<Typography type="body1" component="h2">{artistAndAlbum}</Typography>
 				</CardContent>
+				<CardActions className={classes.actions}>
+          <Button color="primary">
+          Hello
+          </Button>
+        </CardActions>
 			</Card>
 		);
 	}
