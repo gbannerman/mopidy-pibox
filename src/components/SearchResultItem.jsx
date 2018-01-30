@@ -38,11 +38,7 @@ class SearchResultItem extends React.Component {
 					<Typography type="body2" component="h2">{ this.props.track.name }</Typography>
 					<Typography type="body1" component="h2">{artistAndAlbum}</Typography>
 				</CardContent>
-				<CardActions className={classes.actions}>
-          <Button color="primary">
-          Hello
-          </Button>
-        </CardActions>
+				<div></div>
 			</Card>
 		);
 	}
