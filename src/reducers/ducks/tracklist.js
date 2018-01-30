@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { css } from 'glamor';
-import axios from 'axios';
+import * as pibox from 'services/pibox';
 
 export const UPDATE = 'tracklist/UPDATE';
 export const TOGGLE_VOTE = 'tracklist/TOGGLE_VOTE';
@@ -54,10 +54,7 @@ export function voteToSkip(track, fingerprint) {
 	return function (dispatch, getState) {
 		dispatch(toggleTracklistFetching(track));
 
-		axios.post('/pibox/api/vote', {
-      uri: track.uri,
-      fingerprint:fingerprint
-    })
+		pibox.submitSkipVote(fingerprint, track)
     .then((response) => {
       dispatch(toggleTracklistVoted(track.uri));
     })
