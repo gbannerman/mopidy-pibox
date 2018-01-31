@@ -25,7 +25,7 @@ export default class PlaybackControls extends React.Component {
 
     const buttonStyle = {
   		position: 'absolute',
-  		bottom: -40
+  		bottom: -38
     }
 
 		if (this.props.playbackState === 'stopped') {
