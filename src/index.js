@@ -20,11 +20,11 @@ if (developmentBuild) {
 			artists: [{name: 'J. Cole'}],
 			album: {name: '4 Your Eyez Only'}
 		},
-		{
-			name: 'Let Me Out (feat. Mavis Staples & Pusha T)',
-			artists: [{name: 'Gorillaz'}, {name: 'Mavis Staples'}, {name: 'Pusha T'}],
-			album: {name: 'Humanz (Deluxe)'}
-		},
+		// {
+		// 	name: 'Let Me Out (feat. Mavis Staples & Pusha T)',
+		// 	artists: [{name: 'Gorillaz'}, {name: 'Mavis Staples'}, {name: 'Pusha T'}],
+		// 	album: {name: 'Humanz (Deluxe)'}
+		// },
 		{
 			name: 'Ttktv',
 			artists: [{name: 'Injury Reserve'}],
@@ -33,7 +33,7 @@ if (developmentBuild) {
 	];
 	var mockNowPlayingTrack = {
 		name: '25 Bucks',
-		artists: [{name: 'Danny Brown'}, {name: 'Purity Ring'}],
+		artists: [{name: 'Danny Brown'}],
 		album: {name: 'Old'}
 	};
 	var mockNowPlayingImage = "https://i.scdn.co/image/8d625b3c2e7bbbcc3d4275d4ece08093556b362a";
