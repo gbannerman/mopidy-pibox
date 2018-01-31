@@ -9,7 +9,6 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		super(PiboxFrontend, self).__init__()
 		self.core = core
 		self.config = config
-		self.uri = 'spotify:user:spotify:playlist:37i9dQZEVXcGkPANjdsweu'
 
 	def on_receive(self, message):
 		self.uri = message.get('playlist')
@@ -18,7 +17,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
 		logger = logging.getLogger(__name__)
 		if self.core.tracklist.get_length().get() == 0:
-			playlist = self.core.playlists.get_items(self.uri).get()
+			playlist = self.core.playlists.get_items(self.config['mopidy']['default_playlist']).get()
 			for ref in playlist:
 				new_track_uri = ref.uri
 				if not (self.played_already(new_track_uri, self.core)):

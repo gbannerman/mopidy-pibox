@@ -39,7 +39,7 @@ class Extension(ext.Extension):
 
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
-        schema['cookie_secret'] = config.Secret()
+        schema['default_playlist'] = config.String()
         return schema
 
     def setup(self, registry):
