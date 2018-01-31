@@ -1,8 +1,7 @@
 .now-playing {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  flex-direction: row;
+  justify-content: space-evenly;
+  flex-direction: column;
   align-items: center;
 }
 
@@ -18,9 +17,10 @@
 }
 
 .info {
-  flex-grow: 2;
+  padding-top: 15px;
+  flex-basis: auto;
   text-align: center;
-  padding: 8px;
+  margin: 10px;
 }
 
 .no-song-list-item {
@@ -33,4 +33,12 @@
   justify-content: center;
   flex-direction: column;
   align-items: center;
+}
+
+.artwork-and-playback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
 }

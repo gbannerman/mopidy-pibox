@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { createMuiTheme, MuiThemeProvider } from 'material-ui/styles';
+import teal from 'material-ui/colors/teal';
+import orange from 'material-ui/colors/orange';
+import red from 'material-ui/colors/red';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
+import Fingerprint2 from 'fingerprintjs2';
 import './style/App.css';
 import SearchOverlay from './components/SearchOverlay.jsx';
 import Home from './components/Home.jsx'
@@ -10,6 +14,7 @@ import * as mopidy from './reducers/ducks/mopidy';
 import * as playback from './reducers/ducks/playback';
 import * as search from './reducers/ducks/search';
 import * as tracklist from './reducers/ducks/tracklist';
+import Reboot from 'material-ui/Reboot';
 import {
   BrowserRouter as Router,
   Route
@@ -18,10 +23,23 @@ var Mopidy = require("mopidy");
 var Spinner = require('react-spinkit');
 var mopidyService;
 
+const theme = createMuiTheme({
+  palette: {
+    primary: teal,
+    secondary: orange,
+    error: red
+  }
+});
+
 export class App extends Component {
 
   updateTracklist() {
     mopidyService.tracklist.getTracks().done((tracklist) => {
+      tracklist.map((track) => {
+        track.fetching = false;
+        track.voted = false;
+        return track;
+      });
       this.props.updateTracklist(tracklist);
     });
   }
@@ -48,6 +66,9 @@ export class App extends Component {
   componentDidMount() {
     mopidyService = new Mopidy();
     mopidyService.on("state:online", () => {
+      new Fingerprint2().get((fingerprint) => {
+        this.props.updateFingerprint(fingerprint);
+      });
       console.debug("Mopidy: CONNECTED");
       mopidyService.tracklist.setConsume(true);
       this.updateTracklist();
@@ -92,33 +113,38 @@ export class App extends Component {
     }
 
     return (
-      <Router>
-        <MuiThemeProvider>
-          <div className="App">
-            <ToastContainer 
-              position={toast.POSITION.BOTTOM_CENTER}
-              autoClose={3000} 
-              hideProgressBar={true} 
-              pauseOnHover={false} 
-              closeButton={false} />
-              <div>
-                <Home 
-                  playback={this.props.playback} 
-                  tracklist={this.props.tracklist} /> 
-                <Route 
-                  path="/pibox/search/"
-                  render={ () =>
-                    <SearchOverlay 
-                      search={this.props.search}
-                      playbackState={this.props.playback.state} 
-                      tracklist={this.props.tracklist} 
-                      onSearch={this.props.performSearch}
-                      queueTrack={this.props.queueTrack}/>
-                  } />
-              </div>
-          </div>
-        </MuiThemeProvider>
-      </Router>
+      <div>
+        <Reboot />
+        <Router>
+          <MuiThemeProvider theme={theme}>
+            <div className="App">
+              <ToastContainer 
+                position={toast.POSITION.BOTTOM_CENTER}
+                autoClose={3000} 
+                hideProgressBar={true} 
+                pauseOnHover={false} 
+                closeButton={false} />
+                <div>
+                  <Home
+                    voteToSkip={this.props.voteToSkip}
+                    mopidy={this.props.mopidy}
+                    playback={this.props.playback} 
+                    tracklist={this.props.tracklist} /> 
+                  <Route 
+                    path="/pibox/search/"
+                    render={ () =>
+                      <SearchOverlay 
+                        search={this.props.search}
+                        playbackState={this.props.playback.state} 
+                        tracklist={this.props.tracklist} 
+                        onSearch={this.props.performSearch}
+                        queueTrack={this.props.queueTrack}/>
+                    } />
+                </div>
+            </div>
+          </MuiThemeProvider>
+        </Router>
+      </div>
     );
   }
 }
@@ -139,8 +165,10 @@ const mapDispatchToProps = function (dispatch) {
     updateNowPlayingImage: playback.updateNowPlayingImage,
     updatePlaybackState: playback.updatePlaybackState,
     updateMopidyConnected: mopidy.updateMopidyConnected,
+    updateFingerprint: mopidy.updateFingerprint,
     performSearch: search.search,
-    queueTrack: search.queueTrack
+    queueTrack: search.queueTrack,
+    voteToSkip: tracklist.voteToSkip
   }, dispatch)
 }
 

@@ -1,9 +1,20 @@
 import React from 'react';
 import ArtistSentence from './ArtistSentence.jsx'
 import '../style/SearchResultItem.css';
-import {Card, CardHeader} from 'material-ui/Card';
+import Card, { CardContent } from 'material-ui/Card';
+import Typography from 'material-ui/Typography';
+import { withStyles } from 'material-ui/styles';
 
-export default class SearchResultItem extends React.Component {
+const styles = theme => ({
+  card: {
+    margin: 10,
+  },
+  content: {
+  	padding: 8 
+  }
+});
+
+class SearchResultItem extends React.Component {
 
 	static contextTypes = {
     router: () => true, // replace with PropTypes.object if you use them
@@ -15,26 +26,21 @@ export default class SearchResultItem extends React.Component {
 
 	render() {
 
-		const textStyle = {
-		  padding: 5,
-		};
-
-		const style = {
-		  margin: 10,
-		  cursor: 'pointer'
-		};
+		const { classes } = this.props;
 
 		const artistAndAlbum = (<span><ArtistSentence artists={ this.props.track.artists } /> - {this.props.track.album.name}</span>);
 
 		return (
 
-			<Card style={style} onClick={this.handleClick.bind(this)}>
-				<CardHeader 
-					title={ this.props.track.name }
-					subtitle={artistAndAlbum}
-					textStyle={textStyle}
-				/>
+			<Card className={classes.card} onClick={this.handleClick.bind(this)}>
+				<CardContent className={classes.content}>
+					<Typography noWrap type="body2" component="h2">{ this.props.track.name }</Typography>
+					<Typography noWrap type="body1" component="h2">{artistAndAlbum}</Typography>
+				</CardContent>
+				<div></div>
 			</Card>
 		);
 	}
 }
+
+export default withStyles(styles)(SearchResultItem);

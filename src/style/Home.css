@@ -14,6 +14,7 @@ li {
 
 .icon {
 	width: 25px;
+	margin: 10px;
 	height: auto;
 }
 
@@ -46,4 +47,7 @@ li {
 .dim-leave.dim-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
+}
+
+.home {
 }

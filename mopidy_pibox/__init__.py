@@ -5,17 +5,21 @@ import os
 import tornado.web
 
 from mopidy import config, ext
+from pibox_api import api, session
 
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 # TODO: If you need to log, use loggers named after the current Python module
 logger = logging.getLogger(__name__)
 
 def my_app_factory(config, core):
 
+    this_session = session.PiboxSession(2)
+
     path = os.path.join( os.path.dirname(__file__), 'static')
     
     return [
+        (r'/api/vote/?', api.VoteHandler, {'core': core, 'session': this_session}),
         (r'/(.*)', tornado.web.StaticFileHandler, {
             'path': path,
             'default_filename': 'index.html'
@@ -35,7 +39,7 @@ class Extension(ext.Extension):
 
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
-        schema['cookie_secret'] = config.Secret()
+        schema['default_playlist'] = config.String()
         return schema
 
     def setup(self, registry):

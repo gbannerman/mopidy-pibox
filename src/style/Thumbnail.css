@@ -1,7 +1,7 @@
-img {
-  flex-basis: auto;
-  width: 50%;
+.thumbnail--artwork {
+  width: 100%;
   height: auto;
   max-width: 220px;
-  margin: 10px;
+  min-width: 160px;
+  border-radius: 10px;
 }

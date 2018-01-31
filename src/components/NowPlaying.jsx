@@ -2,12 +2,13 @@ import React from 'react';
 import Thumbnail from './Thumbnail.jsx';
 import ArtistSentence from './ArtistSentence.jsx';
 import '../style/NowPlaying.css';
+import PlaybackControls from './PlaybackControls.jsx';
 
 export default class NowPlaying extends React.Component {
 
 	render() {
 
-		if (!this.props.track) {
+		if (!this.props.playback.track) {
 			return(
 				<div className="no-song">
 					<h2 className="no-song-heading">Welcome to pibox!</h2>
@@ -25,13 +26,16 @@ export default class NowPlaying extends React.Component {
 			<div>
 	      <h3 className="now-playing-heading">Now Playing</h3>
 				<div className="now-playing">
-					{ this.props.image &&
-						<Thumbnail url ={this.props.image} />
-					}
+					<div className="artwork-and-playback">
+						{ this.props.playback.image &&
+							<Thumbnail url ={this.props.playback.image} />
+						}
+						<PlaybackControls playbackState={this.props.playback.state} />
+					</div>
 				  <div className="info">
-						<h2 className="title">{ this.props.track.name }</h2>
-						<h3 className="artist">{ this.props.track ? <ArtistSentence artists={ this.props.track.artists } /> : <ArtistSentence /> }</h3>
-				    <h3 className="album">{ this.props.track.album.name }</h3>
+						<h2 className="title">{ this.props.playback.track.name }</h2>
+						<h3 className="artist">{ this.props.playback.track ? <ArtistSentence artists={ this.props.playback.track.artists } /> : <ArtistSentence /> }</h3>
+				    <h3 className="album">{ this.props.playback.track.album.name }</h3>
 				  </div>
 				</div>
 			</div>

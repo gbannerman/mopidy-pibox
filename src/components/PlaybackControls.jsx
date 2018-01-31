@@ -1,7 +1,9 @@
 import React from 'react';
 import { getMopidy } from '../App.js';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from 'material-ui/Button';
 import '../style/PlaybackControls.css';
+import PlayArrow from 'material-ui-icons/PlayArrow';
+import Pause from 'material-ui-icons/Pause';
 
 export default class PlaybackControls extends React.Component {
 
@@ -15,18 +17,30 @@ export default class PlaybackControls extends React.Component {
 
 	render() {
 
+		const iconStyle = {
+      width: 45,
+      height: 45,
+    }
+
+    const buttonStyle = {
+  		position: 'absolute',
+  		width: 65,
+  		height: 65,
+  		bottom: -30
+    }
+
 		if (this.props.playbackState === 'stopped') {
 			return null;
 		}
 
 		return (
-			<div className="playback-controls">
-				<RaisedButton 
-					backgroundColor="#009688"
-					onClick={this.toggle.bind(this)}>
-						{ this.props.playbackState === 'playing' ? "PAUSE" : "PLAY" }
-					</RaisedButton>
-			</div>
+			<Button
+				style={buttonStyle}
+				fab
+				color="primary"
+				onClick={this.toggle.bind(this)}>
+					{ this.props.playbackState === 'playing' ? <Pause style={iconStyle} /> : <PlayArrow style={iconStyle}/> }
+			</Button>
 		);
 	}
 }

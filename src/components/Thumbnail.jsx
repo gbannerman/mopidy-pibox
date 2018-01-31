@@ -7,7 +7,7 @@ export default class Thumbnail extends React.Component {
 
 		return (
 
-			<img src={this.props.url} alt="Album artwork"/>
+			<img className="thumbnail--artwork" src={this.props.url} alt="Album artwork"/>
 		);
 	}
 }
