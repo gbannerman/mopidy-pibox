@@ -9,7 +9,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		super(PiboxFrontend, self).__init__()
 		self.core = core
 		self.config = config
-		self.uri = 'spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL'
+		self.uri = 'spotify:user:spotify:playlist:37i9dQZEVXcGkPANjdsweu'
 
 	def on_receive(self, message):
 		self.uri = message.get('playlist')

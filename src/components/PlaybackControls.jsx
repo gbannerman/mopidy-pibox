@@ -19,13 +19,15 @@ export default class PlaybackControls extends React.Component {
 	render() {
 
 		const iconStyle = {
-      width: 30,
-      height: 30,
+      width: 35,
+      height: 35,
     }
 
     const buttonStyle = {
   		position: 'absolute',
-  		bottom: -38
+  		width: 50,
+  		height: 50,
+  		bottom: -35
     }
 
 		if (this.props.playbackState === 'stopped') {

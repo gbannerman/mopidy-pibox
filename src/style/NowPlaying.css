@@ -5,6 +5,7 @@
   flex-direction: row;
   align-items: center;
   position: relative;
+  padding-bottom: 20px;
 }
 
 .now-playing-heading {
