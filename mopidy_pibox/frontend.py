@@ -17,7 +17,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
 		logger = logging.getLogger(__name__)
 		if self.core.tracklist.get_length().get() == 0:
-			playlist = self.core.playlists.get_items(self.config['default_playlist']).get()
+			playlist = self.core.playlists.get_items(self.config['pibox']['default_playlist']).get()
 			for ref in playlist:
 				new_track_uri = ref.uri
 				if not (self.played_already(new_track_uri, self.core)):
