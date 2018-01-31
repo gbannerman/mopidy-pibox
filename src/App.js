@@ -14,6 +14,7 @@ import * as mopidy from './reducers/ducks/mopidy';
 import * as playback from './reducers/ducks/playback';
 import * as search from './reducers/ducks/search';
 import * as tracklist from './reducers/ducks/tracklist';
+import Reboot from 'material-ui/Reboot';
 import {
   BrowserRouter as Router,
   Route
@@ -112,35 +113,38 @@ export class App extends Component {
     }
 
     return (
-      <Router>
-        <MuiThemeProvider theme={theme}>
-          <div className="App">
-            <ToastContainer 
-              position={toast.POSITION.BOTTOM_CENTER}
-              autoClose={3000} 
-              hideProgressBar={true} 
-              pauseOnHover={false} 
-              closeButton={false} />
-              <div>
-                <Home
-                  voteToSkip={this.props.voteToSkip}
-                  mopidy={this.props.mopidy}
-                  playback={this.props.playback} 
-                  tracklist={this.props.tracklist} /> 
-                <Route 
-                  path="/pibox/search/"
-                  render={ () =>
-                    <SearchOverlay 
-                      search={this.props.search}
-                      playbackState={this.props.playback.state} 
-                      tracklist={this.props.tracklist} 
-                      onSearch={this.props.performSearch}
-                      queueTrack={this.props.queueTrack}/>
-                  } />
-              </div>
-          </div>
-        </MuiThemeProvider>
-      </Router>
+      <div>
+        <Reboot />
+        <Router>
+          <MuiThemeProvider theme={theme}>
+            <div className="App">
+              <ToastContainer 
+                position={toast.POSITION.BOTTOM_CENTER}
+                autoClose={3000} 
+                hideProgressBar={true} 
+                pauseOnHover={false} 
+                closeButton={false} />
+                <div>
+                  <Home
+                    voteToSkip={this.props.voteToSkip}
+                    mopidy={this.props.mopidy}
+                    playback={this.props.playback} 
+                    tracklist={this.props.tracklist} /> 
+                  <Route 
+                    path="/pibox/search/"
+                    render={ () =>
+                      <SearchOverlay 
+                        search={this.props.search}
+                        playbackState={this.props.playback.state} 
+                        tracklist={this.props.tracklist} 
+                        onSearch={this.props.performSearch}
+                        queueTrack={this.props.queueTrack}/>
+                    } />
+                </div>
+            </div>
+          </MuiThemeProvider>
+        </Router>
+      </div>
     );
   }
 }
