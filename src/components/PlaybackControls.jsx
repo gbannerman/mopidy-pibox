@@ -23,19 +23,12 @@ export default class PlaybackControls extends React.Component {
       height: 30,
     }
 
-    const buttonStyle = {
-  		position: 'relative',
-			bottom: 190,
-			marginBottom: -30
-    }
-
 		if (this.props.playbackState === 'stopped') {
 			return null;
 		}
 
 		return (
 			<Button
-				style={buttonStyle}
 				fab
 				color="primary"
 				onClick={this.toggle.bind(this)}>
