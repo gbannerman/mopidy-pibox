@@ -4,7 +4,6 @@ import Button from 'material-ui/Button';
 import '../style/PlaybackControls.css';
 import PlayArrow from 'material-ui-icons/PlayArrow';
 import Pause from 'material-ui-icons/Pause';
-import { withStyles } from 'material-ui/styles';
 
 export default class PlaybackControls extends React.Component {
 
