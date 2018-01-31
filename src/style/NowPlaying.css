@@ -4,6 +4,7 @@
   justify-content: space-evenly;
   flex-direction: row;
   align-items: center;
+  position: relative;
 }
 
 .now-playing-heading {
