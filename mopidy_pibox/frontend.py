@@ -1,6 +1,7 @@
 import pykka
 import random
 import logging
+from random import shuffle
 
 from mopidy import core
 
@@ -18,6 +19,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		logger = logging.getLogger(__name__)
 		if self.core.tracklist.get_length().get() == 0:
 			playlist = self.core.playlists.get_items(self.config['pibox']['default_playlist']).get()
+			shuffle(playlist)
 			for ref in playlist:
 				new_track_uri = ref.uri
 				if not (self.played_already(new_track_uri, self.core)):
@@ -33,6 +35,4 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		for tup in history:
 			played_tracks.append(tup[1].uri)
 		return uri in played_tracks
-
-		#comment
 			
