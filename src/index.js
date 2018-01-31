@@ -15,11 +15,11 @@ if (developmentBuild) {
 			artists: [{name: 'Danny Brown'}],
 			album: {name: 'Old'}
 		},
-		// {
-		// 	name: 'Neighbors',
-		// 	artists: [{name: 'J. Cole'}],
-		// 	album: {name: '4 Your Eyez Only'}
-		// },
+		{
+			name: 'Neighbors',
+			artists: [{name: 'J. Cole'}],
+			album: {name: '4 Your Eyez Only'}
+		},
 		{
 			name: 'Let Me Out (feat. Mavis Staples & Pusha T)',
 			artists: [{name: 'Gorillaz'}, {name: 'Mavis Staples'}, {name: 'Pusha T'}],
@@ -33,7 +33,7 @@ if (developmentBuild) {
 	];
 	var mockNowPlayingTrack = {
 		name: '25 Bucks',
-		artists: [{name: 'Danny Brown'}],
+		artists: [{name: 'Danny Brown'}, {name: 'Purity Ring'}],
 		album: {name: 'Old'}
 	};
 	var mockNowPlayingImage = "https://i.scdn.co/image/8d625b3c2e7bbbcc3d4275d4ece08093556b362a";

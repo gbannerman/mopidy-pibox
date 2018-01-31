@@ -9,7 +9,6 @@ import SkipNext from 'material-ui-icons/SkipNext';
 const styles = theme => ({
   card: {
     margin: 10,
-    padding: 5,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'

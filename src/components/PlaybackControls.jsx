@@ -26,7 +26,7 @@ export default class PlaybackControls extends React.Component {
   		position: 'absolute',
   		width: 50,
   		height: 50,
-  		bottom: -35
+  		bottom: -22
     }
 
 		if (this.props.playbackState === 'stopped') {
