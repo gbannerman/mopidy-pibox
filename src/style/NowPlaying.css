@@ -42,3 +42,9 @@
   justify-content: flex-end;
   position: relative;
 }
+
+.no-song-logo {
+  width: 70px;
+  height: auto;
+  margin: 5px;
+}

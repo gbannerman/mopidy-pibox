@@ -3,6 +3,7 @@ import Thumbnail from './Thumbnail.jsx';
 import ArtistSentence from './ArtistSentence.jsx';
 import '../style/NowPlaying.css';
 import PlaybackControls from './PlaybackControls.jsx';
+import logo from 'res/logo-black.png';
 
 export default class NowPlaying extends React.Component {
 
@@ -12,6 +13,7 @@ export default class NowPlaying extends React.Component {
 			return(
 				<div className="no-song">
 					<h2 className="no-song-heading">Welcome to pibox!</h2>
+					<img className="no-song-logo" alt="logo" src={logo} />
 					<ol className="no-song-list" type="1">
 					  <li className="no-song-list-item">Tap the search icon at the top right</li>
 					  <li className="no-song-list-item">Search for an artist, song or album</li>
