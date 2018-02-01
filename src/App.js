@@ -106,7 +106,7 @@ export class App extends Component {
         <div className="App">
           <div className="loading">
             <h1>pibox</h1>
-            <Spinner fadeIn="quarter" name="double-bounce" />
+            <Spinner fadeIn="quarter" name="double-bounce" color="#00796B"/>
           </div>
         </div>
       );
