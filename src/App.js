@@ -113,9 +113,9 @@ export class App extends Component {
     }
 
     return (
-      <div>
-        <Reboot />
-        <Router>
+      <Router>
+        <div>
+          <Reboot />
           <MuiThemeProvider theme={theme}>
             <div className="App">
               <ToastContainer 
@@ -143,8 +143,8 @@ export class App extends Component {
                 </div>
             </div>
           </MuiThemeProvider>
-        </Router>
-      </div>
+        </div>
+      </Router>
     );
   }
 }
