@@ -20,7 +20,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
 		logger = logging.getLogger(__name__)
 		if tl_track.track.uri in self.pussycat_list:
-			if self.pussycat_counter < 5
+			if self.pussycat_counter < 5:
 				self.core.tracklist.add(uri=self.pussycat_list[0], at_position=0).get()
 				logger.info("Meow")
 				self.pussycat_counter += 1
