@@ -26,7 +26,8 @@ Before starting Mopidy, you must add configuration for
 Mopidy-Pibox to your Mopidy configuration file::
 
     [pibox]
-    # TODO: Add example of extension config
+    enabled = true
+    default_playlist = spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL
 
 
 ## Project Resources
