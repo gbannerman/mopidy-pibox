@@ -10,6 +10,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		super(PiboxFrontend, self).__init__()
 		self.core = core
 		self.config = config
+		self.pussycat_list = ['spotify:track:0asT0RDbe4Vrf6pxLHgpkn', 'spotify:track:2HkHE4EeZyx9AncSN042q3']
 
 	def on_receive(self, message):
 		self.uri = message.get('playlist')
@@ -17,6 +18,12 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 	def track_playback_ended(self, tl_track, time_position):
 
 		logger = logging.getLogger(__name__)
+		if tl_track.track.uri in self.pussycat_list:
+			self.core.tracklist.add(uri=self.pussycat_list[0], at_position=0).get()
+			logger.info("Meow")
+			if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
+				self.core.playback.play()
+				
 		if self.core.tracklist.get_length().get() == 0:
 			playlist = self.core.playlists.get_items(self.config['pibox']['default_playlist']).get()
 			shuffle(playlist)
