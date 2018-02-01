@@ -17,7 +17,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		self.uri = message.get('playlist')
 
 	def track_playback_ended(self, tl_track, time_position):
-
+		self.core.playback.stop()
 		logger = logging.getLogger(__name__)
 		if tl_track.track.uri in self.pussycat_list:
 			if self.pussycat_counter < 5:
