@@ -31,7 +31,6 @@ export default class SearchOverlay extends React.Component {
 		        ...transitionStyles[state]
 		      }}>
 		      	<Search 
-		      		tracklist={this.props.tracklist} 
 		      		playbackState={this.props.playbackState} 
 		      		search={this.props.search} 
 		      		onSearch={this.props.onSearch}

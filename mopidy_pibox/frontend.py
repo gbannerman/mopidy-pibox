@@ -11,9 +11,15 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		self.core = core
 		self.config = config
 		self.pussycat_list = ['spotify:track:0asT0RDbe4Vrf6pxLHgpkn', 'spotify:track:2HkHE4EeZyx9AncSN042q3']
+		self.uri = None
+		self.blacklist = []
 
 	def on_receive(self, message):
-		self.uri = message.get('playlist')
+		action = message.get('action')
+		if action == 'UPDATE_PLAYLIST':
+			self.uri = message.get('payload')
+		elif action == 'UPDATE_BLACKLIST':
+			self.blacklist = message.get('payload')
 
 	def track_playback_ended(self, tl_track, time_position):
 
@@ -25,7 +31,10 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 				self.core.playback.play()
 
 		if self.core.tracklist.get_length().get() == 0:
-			playlist = self.core.playlists.get_items(self.config['pibox']['default_playlist']).get()
+			if self.uri is None:
+				playlist = self.core.playlists.get_items(self.config['pibox']['default_playlist']).get()
+			else:
+				playlist = self.core.playlists.get_items(self.uri).get()
 			shuffle(playlist)
 			for ref in playlist:
 				new_track_uri = ref.uri
@@ -41,5 +50,5 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 		played_tracks = []
 		for tup in history:
 			played_tracks.append(tup[1].uri)
-		return uri in played_tracks
+		return (uri in played_tracks) or (uri in self.blacklist)
 			

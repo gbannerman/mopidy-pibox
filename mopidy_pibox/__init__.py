@@ -5,7 +5,7 @@ import os
 import tornado.web
 
 from mopidy import config, ext
-from pibox_api import api, session
+from pibox_api import api, session, socket
 
 __version__ = '0.5.4'
 
@@ -19,7 +19,10 @@ def my_app_factory(config, core):
     path = os.path.join( os.path.dirname(__file__), 'static')
     
     return [
+        (r'/ws/?', socket.PiboxWebSocket),
+        (r'/api/tracklist/?', api.TracklistHandler, {'core': core, 'session': this_session}),
         (r'/api/vote/?', api.VoteHandler, {'core': core, 'session': this_session}),
+        (r'/api/session/?', api.SessionHandler, {'core': core, 'session': this_session}),
         (r'/(.*)', tornado.web.StaticFileHandler, {
             'path': path,
             'default_filename': 'index.html'

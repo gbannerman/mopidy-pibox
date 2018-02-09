@@ -56,7 +56,14 @@ const store = configureStore({
 		results: [],
 		error: null
 	},
-	tracklist: mockTracklist
+	tracklist: mockTracklist,
+	session: {
+		started: false,
+		playlists: [],
+		sending: false,
+		fetching: true,
+		error: null
+	}
 });
 
 ReactDOM.render(

@@ -16,12 +16,12 @@ export default class Home extends React.Component {
 
 		return (
 			<div className="home">
-        <ul>
+        <ul class="nav-bar">
         	<li className="nav-item-title"><h2 className="nav-title">pibox</h2></li>
         	<li className="nav-item-search"><Link className="Link" to="/pibox/search/"><Search style={iconStyle}/></Link></li>
         </ul>
 	      <NowPlaying playback={this.props.playback} />
-	      <Tracklist mopidy={this.props.mopidy} tracks={this.props.tracklist} display={3} voteToSkip={this.props.voteToSkip}/>
+	      <Tracklist mopidy={this.props.mopidy} session={this.props.session} tracks={this.props.tracklist} display={3} voteToSkip={this.props.voteToSkip}/>
 			</div>
 		);
 	}
