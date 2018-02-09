@@ -6,7 +6,7 @@ export default class Tracklist extends React.Component {
 
 	render() {
 
-		const mappedTracks = this.props.tracks.slice(1, (1 + this.props.display)).map((track, index) => <TracklistItem key={index} track={track} mopidy={this.props.mopidy} handleClick={this.props.voteToSkip}/>);
+		const mappedTracks = this.props.tracks.slice(1, (1 + this.props.display)).map((track, index) => <TracklistItem key={index} track={track} mopidy={this.props.mopidy} skipThreshold={this.props.session.skipThreshold} handleClick={this.props.voteToSkip}/>);
 
 		return (
 

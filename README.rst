@@ -6,15 +6,26 @@ Mopidy-Pibox
     :target: https://pypi.python.org/pypi/Mopidy-Pibox/
     :alt: Latest PyPI version
 
-pibox is a Mopidy HTTP client that allows multiple users to search spotify and queue songs, via a clean and simple interface.
+.. image:: https://circleci.com/gh/gbannerman/mopidy-pibox/tree/master.svg?style=shield
+    :target: https://circleci.com/gh/gbannerman/mopidy-pibox/tree/master
+    :alt: CircleCI status
+
+
+**pibox** is a Mopidy HTTP client that allows multiple users to search spotify and queue songs, via a clean and simple interface.
 
 
 Installation
 ============
 
-Install by running::
+1. Install by running::
 
     pip install Mopidy-Pibox
+
+2. Start Mopidy::
+		
+		mopidy
+
+3. Open your Mopidy URL (e.g. `http://localhost:6680`) and click *Pibox*
 
 
 Configuration
@@ -24,7 +35,8 @@ Before starting Mopidy, you must add configuration for
 Mopidy-Pibox to your Mopidy configuration file::
 
     [pibox]
-    # TODO: Add example of extension config
+    enabled = true
+    default_playlist = spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL
 
 
 Project resources
