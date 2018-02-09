@@ -37,7 +37,7 @@ class TracklistItem extends React.Component {
 
 		const { classes } = this.props;
 
-		const artistSentence = (<ArtistSentence artists={ this.props.track.artists } />);
+		const artistSentence = (<ArtistSentence artists={ this.props.track.info.artists } />);
 
     const buttonIcon = this.props.track.voted ? null : <SkipNext className={classes.rightIcon}/> 
 
@@ -45,12 +45,12 @@ class TracklistItem extends React.Component {
 
 			<Card className={classes.card}>
 				<CardContent className={classes.content}>
-					<Typography type="subheading" component="h2">{ this.props.track.name }</Typography>
+					<Typography type="subheading" component="h2">{ this.props.track.info.name }</Typography>
 					<Typography type="body2" component="h2">{artistSentence}</Typography>
 				</CardContent>
 				<CardActions className={classes.actions}>
           <Button disabled={ (this.props.track.fetching || this.props.track.voted) } dense onClick={this.handleClick.bind(this)} color="primary">
-            { this.props.track.voted ? 'Voted' : 'Vote' }
+            { this.props.track.voted ? (this.props.track.votes + "/" + this.props.skipThreshold + ' votes') : 'Vote' }
             { buttonIcon }
           </Button>
         </CardActions>

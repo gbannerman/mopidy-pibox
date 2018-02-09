@@ -18,8 +18,7 @@ export default class Search extends React.Component {
 		const searchResults = this.props.search.results.map((track, index) => 
       <SearchResultItem 
       key={index} 
-      track={track} 
-      tracklist={this.props.tracklist} 
+      track={track}
       playbackState={this.props.playbackState} 
       queueTrack={this.props.queueTrack} />
     );

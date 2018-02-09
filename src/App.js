@@ -9,16 +9,19 @@ import {connect} from 'react-redux';
 import Fingerprint2 from 'fingerprintjs2';
 import './style/App.css';
 import SearchOverlay from './components/SearchOverlay.jsx';
+import SessionForm from './components/SessionForm.jsx';
 import Home from './components/Home.jsx'
 import * as mopidy from './reducers/ducks/mopidy';
 import * as playback from './reducers/ducks/playback';
 import * as search from './reducers/ducks/search';
 import * as tracklist from './reducers/ducks/tracklist';
+import * as session from './reducers/ducks/session';
 import Reboot from 'material-ui/Reboot';
 import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom';
+
 var Mopidy = require("mopidy");
 var Spinner = require('react-spinkit');
 var mopidyService;
@@ -32,17 +35,6 @@ const theme = createMuiTheme({
 });
 
 export class App extends Component {
-
-  updateTracklist() {
-    mopidyService.tracklist.getTracks().done((tracklist) => {
-      tracklist.map((track) => {
-        track.fetching = false;
-        track.voted = false;
-        return track;
-      });
-      this.props.updateTracklist(tracklist);
-    });
-  }
 
   updateNowPlaying() {
     mopidyService.playback.getCurrentTrack().done((track) => {
@@ -64,6 +56,26 @@ export class App extends Component {
   }
 
   componentDidMount() {
+
+    var ws = new WebSocket("ws://localhost:6680/pibox/ws");
+
+    ws.onmessage = (event) => {
+      var msg = JSON.parse(event.data);
+
+      switch (msg.type) {
+
+        case 'NEW_VOTE':
+          this.props.updateVoteCount(msg.payload)
+          break;
+
+        default:
+          console.warn("Default ws statement hit");
+          break;
+
+      }
+    }
+
+
     mopidyService = new Mopidy();
     mopidyService.on("state:online", () => {
       new Fingerprint2().get((fingerprint) => {
@@ -71,7 +83,7 @@ export class App extends Component {
       });
       console.debug("Mopidy: CONNECTED");
       mopidyService.tracklist.setConsume(true);
-      this.updateTracklist();
+      this.props.getTracklist();
       this.updateNowPlaying();
       this.updatePlaybackState();
       this.props.updateMopidyConnected(true);
@@ -92,11 +104,12 @@ export class App extends Component {
       console.debug("Mopidy: PLAYBACK STATE CHANGED");
       this.props.updatePlaybackState(playbackState.new_state);
       this.updateNowPlaying();
-      this.updateTracklist();
+      this.props.getTracklist();
     });
     mopidyService.on("event:tracklistChanged", () => {
-      this.updateTracklist();
+      this.props.getTracklist();
     });
+    this.props.retrieveSession();
   }
 
   render() {
@@ -112,9 +125,41 @@ export class App extends Component {
       );
     }
 
+    let mainBody;
+
+    if (!this.props.session.started) {
+      mainBody = (
+        <SessionForm
+          loadPlaylists={this.props.loadPlaylists}
+          onSubmit={this.props.submitSessionForm}
+          initialValues={{skips: 2, playlist: 'spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL'}}
+          session={this.props.session} />
+      );
+    } else {
+      mainBody = (
+        <div>
+          <Home
+            voteToSkip={this.props.voteToSkip}
+            mopidy={this.props.mopidy}
+            session={this.props.session}
+            playback={this.props.playback} 
+            tracklist={this.props.tracklist} />
+          <Route 
+            path="/pibox/search/"
+            render={ () =>
+              <SearchOverlay 
+                search={this.props.search}
+                playbackState={this.props.playback.state} 
+                onSearch={this.props.performSearch}
+                queueTrack={this.props.queueTrack}/>
+            } />
+        </div>
+      );
+    }
+
     return (
       <Router>
-        <div>
+        <div className="rebooted-div">
           <Reboot />
           <MuiThemeProvider theme={theme}>
             <div className="App">
@@ -124,23 +169,7 @@ export class App extends Component {
                 hideProgressBar={true} 
                 pauseOnHover={false} 
                 closeButton={false} />
-                <div>
-                  <Home
-                    voteToSkip={this.props.voteToSkip}
-                    mopidy={this.props.mopidy}
-                    playback={this.props.playback} 
-                    tracklist={this.props.tracklist} /> 
-                  <Route 
-                    path="/pibox/search/"
-                    render={ () =>
-                      <SearchOverlay 
-                        search={this.props.search}
-                        playbackState={this.props.playback.state} 
-                        tracklist={this.props.tracklist} 
-                        onSearch={this.props.performSearch}
-                        queueTrack={this.props.queueTrack}/>
-                    } />
-                </div>
+                {mainBody}
             </div>
           </MuiThemeProvider>
         </div>
@@ -154,13 +183,14 @@ function mapStateToProps(state) {
       playback: state.playback,
       mopidy: state.mopidy,
       tracklist: state.tracklist,
-      search: state.search
+      search: state.search,
+      session: state.session
     };
 }
 
 const mapDispatchToProps = function (dispatch) {
   return bindActionCreators({
-    updateTracklist: tracklist.updateTracklist,
+    getTracklist: tracklist.getTracklist,
     updateNowPlayingTrack: playback.updateNowPlayingTrack,
     updateNowPlayingImage: playback.updateNowPlayingImage,
     updatePlaybackState: playback.updatePlaybackState,
@@ -168,7 +198,11 @@ const mapDispatchToProps = function (dispatch) {
     updateFingerprint: mopidy.updateFingerprint,
     performSearch: search.search,
     queueTrack: search.queueTrack,
-    voteToSkip: tracklist.voteToSkip
+    voteToSkip: tracklist.voteToSkip,
+    loadPlaylists: session.loadPlaylists,
+    submitSessionForm: session.submitSessionForm,
+    retrieveSession: session.retrieveSession,
+    updateVoteCount: tracklist.updateTracklistVoteCount
   }, dispatch)
 }
 
