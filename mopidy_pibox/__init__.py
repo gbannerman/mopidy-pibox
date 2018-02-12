@@ -7,7 +7,7 @@ import tornado.web
 from mopidy import config, ext
 from pibox_api import api, session, socket
 
-__version__ = '0.6.0'
+__version__ = '0.6.1'
 
 # TODO: If you need to log, use loggers named after the current Python module
 logger = logging.getLogger(__name__)
