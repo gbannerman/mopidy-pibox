@@ -13,6 +13,13 @@ Mopidy-Pibox
 
 **pibox** is a Mopidy HTTP client that allows multiple users to search spotify and queue songs, via a clean and simple interface.
 
+Requirements
+============
+- Mopidy_
+- Mopidy-Spotify_
+
+.. _Mopidy: https://docs.mopidy.com/en/latest/installation/
+.. _Mopidy-Spotify: https://github.com/mopidy/mopidy-spotify
 
 Installation
 ============
