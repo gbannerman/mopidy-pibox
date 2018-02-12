@@ -65,7 +65,11 @@ export class App extends Component {
       switch (msg.type) {
 
         case 'NEW_VOTE':
-          this.props.updateVoteCount(msg.payload)
+          this.props.updateVoteCount(msg.payload);
+          break;
+
+        case 'SESSION_STARTED':
+          this.props.updateSession(msg.payload);
           break;
 
         default:
@@ -202,7 +206,8 @@ const mapDispatchToProps = function (dispatch) {
     loadPlaylists: session.loadPlaylists,
     submitSessionForm: session.submitSessionForm,
     retrieveSession: session.retrieveSession,
-    updateVoteCount: tracklist.updateTracklistVoteCount
+    updateVoteCount: tracklist.updateTracklistVoteCount,
+    updateSession: session.successCurrentSession
   }, dispatch)
 }
 

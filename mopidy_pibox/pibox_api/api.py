@@ -87,6 +87,7 @@ class SessionHandler(tornado.web.RequestHandler):
         self.session.skip_threshold = int(skip_threshold)
         self.logger.debug(type(self.session.skip_threshold))
         self.session.started = True
+        socket.PiboxWebSocket.send('SESSION_STARTED', { 'started': self.session.started, 'skipThreshold': self.session.skip_threshold, 'playlist': self.session.playlist })
         self.set_status(200)
 
     def get(self):
