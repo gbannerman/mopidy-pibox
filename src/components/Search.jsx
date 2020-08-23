@@ -1,91 +1,133 @@
-import React from 'react';
-import SearchBox from './SearchBox.jsx';
-import SearchResultItem from './SearchResultItem.jsx';
-import '../style/Search.css';
-import { Transition } from 'react-transition-group'
+import React, { useState } from "react";
+import SearchBox from "./SearchBox.jsx";
+import SearchResultItem from "./SearchResultItem.jsx";
+import { Transition } from "react-transition-group";
+import { searchSpotify, queueTrack, playIfStopped } from "services/mopidy.js";
+import { useHistory } from "react-router-dom";
+import { useSnackbar } from "notistack";
+import "../style/Search.css";
 
-var Spinner = require('react-spinkit');
+var Spinner = require("react-spinkit");
 
-export default class Search extends React.Component {
+const Search = () => {
+  const [results, setResults] = useState([]);
+  const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState(null);
 
-  search(values) {
-    let queryParameters = values.query.split(" ");
-    this.props.onSearch(queryParameters);
-  }
+  const [searchTerm, setSearchTerm] = useState("");
 
-	render() {
+  const history = useHistory();
 
-		const searchResults = this.props.search.results.map((track, index) => 
-      <SearchResultItem 
-      key={index} 
-      track={track}
-      playbackState={this.props.playbackState} 
-      queueTrack={this.props.queueTrack} />
-    );
+  const { enqueueSnackbar } = useSnackbar();
 
-    const defaultStyleBar = {
-      margin: '0 auto',
-      maxWidth: '800px',
-      transition: 'width 100ms ease-in-out',
-    };
+  const queue = async (track) => {
+    try {
+      const updatedTracklist = await queueTrack(track);
+      playIfStopped();
+      setSearchTerm("");
 
-    const transitionStylesBar = {
-      entering: { width: '0%' },
-      entered: { width: '100%' },
-    };
+      // TODO: This should use the actual length of the tracklist that is shown
+      if (updatedTracklist.length > 4) {
+        enqueueSnackbar(`${track.name} added to queue`, { variant: "success" });
+      }
 
-    const defaultStyleResults = {
-      transition: 'opacity 100ms ease-in-out'
-    };
+      history.push("");
+    } catch (e) {
+      enqueueSnackbar(e.message, { variant: "error" });
+    }
+  };
 
-    const transitionStylesResults = {
-      entering: { opacity: 0 },
-      entered: { opacity: 100 },
-    };
-
-    let results;
-
-    if (this.props.search.fetching) {
-      results = (
-        <div className="loading">
-          <Spinner fadeIn="none" name="double-bounce" color="white" />
-        </div>
-      );
-    } else if (this.props.search.error) {
-      results = (
-        <div className="error">
-          <h4 className="error-info">{this.props.search.error}</h4>
-        </div>
-      );
-    } else {
-      results = (
-        <div className="results">
-          { searchResults }
-        </div>
-      );
+  const search = async () => {
+    if (!searchTerm) {
+      return;
     }
 
-		return (
-			<div className="search">
-        <Transition appear={true} in={true} timeout={100}>
-          {(state) => (
-            <div>
-              <div style={{
+    setFetching(true);
+    const queryParameters = searchTerm.split(" ");
+    try {
+      const results = await searchSpotify(queryParameters);
+      setResults(results);
+      setFetching(false);
+    } catch (error) {
+      setError(error);
+      setFetching(false);
+    }
+  };
+
+  const searchResults = results.map((track, index) => (
+    <SearchResultItem key={index} track={track} onClick={queue} />
+  ));
+
+  const defaultStyleBar = {
+    margin: "0 auto",
+    maxWidth: "800px",
+    transition: "width 100ms ease-in-out",
+  };
+
+  const transitionStylesBar = {
+    entering: { width: "0%" },
+    entered: { width: "100%" },
+  };
+
+  const defaultStyleResults = {
+    transition: "opacity 100ms ease-in-out",
+  };
+
+  const transitionStylesResults = {
+    entering: { opacity: 0 },
+    entered: { opacity: 100 },
+  };
+
+  let displayResults;
+
+  if (fetching) {
+    displayResults = (
+      <div className="loading">
+        <Spinner fadeIn="none" name="double-bounce" color="white" />
+      </div>
+    );
+  } else if (error) {
+    displayResults = (
+      <div className="error">
+        <h4 className="error-info">{error}</h4>
+      </div>
+    );
+  } else {
+    displayResults = <div className="results">{searchResults}</div>;
+  }
+
+  return (
+    <div className="search">
+      <Transition appear={true} in={true} timeout={100}>
+        {(state) => (
+          <div>
+            <div
+              style={{
                 ...defaultStyleBar,
-                ...transitionStylesBar[state]
-              }}>
-                <SearchBox onSubmit={ this.search.bind(this) } term={ this.props.search.term }/>
-              </div>
-              <div style={{
-                ...defaultStyleResults,
-                ...transitionStylesResults[state]
-              }}>
-                { results }
+                ...transitionStylesBar[state],
+              }}
+            >
+              <div style={{ margin: "10px" }}>
+                <SearchBox
+                  onSubmit={search}
+                  term={searchTerm}
+                  onValueChange={setSearchTerm}
+                />
               </div>
             </div>
-          )}
-        </Transition>
-			</div>
-		);
-	}
-}
+            <div
+              style={{
+                ...defaultStyleResults,
+                ...transitionStylesResults[state],
+              }}
+            >
+              {displayResults}
+            </div>
+          </div>
+        )}
+      </Transition>
+    </div>
+  );
+};
+
+export default Search;

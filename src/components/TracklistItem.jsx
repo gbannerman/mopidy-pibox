@@ -1,62 +1,72 @@
-import React from 'react';
-import ArtistSentence from './ArtistSentence.jsx';
-import Card, { CardContent, CardActions } from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import { withStyles } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import SkipNext from 'material-ui-icons/SkipNext';
+import React from "react";
+import ArtistSentence from "./ArtistSentence.jsx";
+import { makeStyles } from "@material-ui/core/styles";
+import SkipNextIcon from "@material-ui/icons/SkipNext";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Button,
+} from "@material-ui/core";
 
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     margin: 10,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   content: {
-  	paddingLeft: 15,
-  	paddingTop: 15,
-  	paddingBottom: 15,
-  	paddingRight: 5
+    paddingLeft: 15,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingRight: 5,
   },
   actions: {
-  	flex: '0 0 auto'
+    flex: "0 0 auto",
   },
   rightIcon: {
-  	marginLeft: 3
-  }
-});
+    marginLeft: 3,
+  },
+}));
 
-class TracklistItem extends React.Component {
+const TracklistItem = ({
+  track,
+  skipThreshold,
+  buttonEnabled,
+  onVoteClick,
+}) => {
+  const classes = useStyles();
 
-  handleClick() {
-    this.props.handleClick(this.props.track, this.props.mopidy.fingerprint);
-  }
+  const artistSentence = <ArtistSentence artists={track.info.artists} />;
 
-	render() {
+  const buttonIcon = track.voted ? null : (
+    <SkipNextIcon className={classes.rightIcon} />
+  );
 
-		const { classes } = this.props;
+  return (
+    <Card className={classes.card}>
+      <CardContent className={classes.content}>
+        <Typography type="subheading" component="h2">
+          {track.info.name}
+        </Typography>
+        <Typography type="body2" component="h2">
+          {artistSentence}
+        </Typography>
+      </CardContent>
+      <CardActions className={classes.actions}>
+        <Button
+          disabled={!buttonEnabled}
+          onClick={onVoteClick}
+          color="secondary"
+        >
+          {track.voted ? track.votes + "/" + skipThreshold + " votes" : "Vote"}
+          {buttonIcon}
+        </Button>
+      </CardActions>
+    </Card>
+  );
+};
 
-		const artistSentence = (<ArtistSentence artists={ this.props.track.info.artists } />);
-
-    const buttonIcon = this.props.track.voted ? null : <SkipNext className={classes.rightIcon}/> 
-
-		return (
-
-			<Card className={classes.card}>
-				<CardContent className={classes.content}>
-					<Typography type="subheading" component="h2">{ this.props.track.info.name }</Typography>
-					<Typography type="body2" component="h2">{artistSentence}</Typography>
-				</CardContent>
-				<CardActions className={classes.actions}>
-          <Button disabled={ (this.props.track.fetching || this.props.track.voted) } dense onClick={this.handleClick.bind(this)} color="primary">
-            { this.props.track.voted ? (this.props.track.votes + "/" + this.props.skipThreshold + ' votes') : 'Vote' }
-            { buttonIcon }
-          </Button>
-        </CardActions>
-			</Card>
-		);
-	}
-}
-
-export default withStyles(styles)(TracklistItem);
+export default TracklistItem;

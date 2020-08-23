@@ -1,28 +1,34 @@
-import React from 'react';
-import NowPlaying from './NowPlaying.jsx';
-import Tracklist from './Tracklist.jsx';
-import '../style/Home.css';
-import { Link } from 'react-router-dom';
-import Search from 'material-ui-icons/Search';
+import React from "react";
+import NowPlaying from "./NowPlaying.jsx";
+import Tracklist from "./Tracklist.jsx";
+import { Link, Route } from "react-router-dom";
+import SearchIcon from "@material-ui/icons/Search";
+import { IconButton } from "@material-ui/core";
+import SearchOverlay from "./SearchOverlay.jsx";
+import "../style/Home.css";
 
-export default class Home extends React.Component {
-
-	render() {
-
-		const iconStyle = {
-      width: 45,
-      height: 45
-    }
-
-		return (
-			<div className="home">
-        <ul class="nav-bar">
-        	<li className="nav-item-title"><h2 className="nav-title">pibox</h2></li>
-        	<li className="nav-item-search"><Link className="Link" to="/pibox/search/"><Search style={iconStyle}/></Link></li>
+const Home = () => {
+  return (
+    <div>
+      <div className="home">
+        <ul className="nav-bar">
+          <li className="nav-item-title">
+            <h2 className="nav-title">pibox</h2>
+          </li>
+          <li className="nav-item-search">
+            <Link className="Link" to="/search/">
+              <IconButton color="secondary">
+                <SearchIcon fontSize="large" />
+              </IconButton>
+            </Link>
+          </li>
         </ul>
-	      <NowPlaying playback={this.props.playback} />
-	      <Tracklist mopidy={this.props.mopidy} session={this.props.session} tracks={this.props.tracklist} display={3} voteToSkip={this.props.voteToSkip}/>
-			</div>
-		);
-	}
-}
+        <NowPlaying />
+        <Tracklist display={3} />
+      </div>
+      <Route path="/search/" render={() => <SearchOverlay />} />
+    </div>
+  );
+};
+
+export default Home;

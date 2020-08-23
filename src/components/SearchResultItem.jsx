@@ -1,46 +1,39 @@
-import React from 'react';
-import ArtistSentence from './ArtistSentence.jsx'
-import '../style/SearchResultItem.css';
-import Card, { CardContent } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
+import React from "react";
+import ArtistSentence from "./ArtistSentence.jsx";
+import { Card, CardContent, Typography, makeStyles } from "@material-ui/core";
+import "../style/SearchResultItem.css";
 
-const styles = theme => ({
+const useStyle = makeStyles((theme) => ({
   card: {
     margin: 10,
   },
   content: {
-  	padding: 8 
-  }
-});
+    padding: 8,
+  },
+}));
 
-class SearchResultItem extends React.Component {
+const SearchResultItem = ({ track, onClick }) => {
+  const classes = useStyle();
 
-	static contextTypes = {
-    router: () => true, // replace with PropTypes.object if you use them
-  }
+  const artistAndAlbum = (
+    <span>
+      <ArtistSentence artists={track.artists} /> - {track.album.name}
+    </span>
+  );
 
-	handleClick() {
-		this.props.queueTrack(this.props.track, this.context.router.history.goBack);
-	}
+  return (
+    <Card className={classes.card} onClick={() => onClick(track)}>
+      <CardContent className={classes.content}>
+        <Typography noWrap type="body2" component="h2">
+          {track.name}
+        </Typography>
+        <Typography noWrap type="body1" component="h2">
+          {artistAndAlbum}
+        </Typography>
+      </CardContent>
+      <div></div>
+    </Card>
+  );
+};
 
-	render() {
-
-		const { classes } = this.props;
-
-		const artistAndAlbum = (<span><ArtistSentence artists={ this.props.track.artists } /> - {this.props.track.album.name}</span>);
-
-		return (
-
-			<Card className={classes.card} onClick={this.handleClick.bind(this)}>
-				<CardContent className={classes.content}>
-					<Typography noWrap type="body2" component="h2">{ this.props.track.name }</Typography>
-					<Typography noWrap type="body1" component="h2">{artistAndAlbum}</Typography>
-				</CardContent>
-				<div></div>
-			</Card>
-		);
-	}
-}
-
-export default withStyles(styles)(SearchResultItem);
+export default SearchResultItem;

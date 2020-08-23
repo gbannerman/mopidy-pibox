@@ -1,46 +1,77 @@
-import React from 'react';
-import Thumbnail from './Thumbnail.jsx';
-import ArtistSentence from './ArtistSentence.jsx';
-import '../style/NowPlaying.css';
-import PlaybackControls from './PlaybackControls.jsx';
-import logo from 'res/logo-black.png';
+import React, { useState } from "react";
+import Thumbnail from "./Thumbnail.jsx";
+import ArtistSentence from "./ArtistSentence.jsx";
+import PlaybackControls from "./PlaybackControls.jsx";
+import { useEffect } from "react";
+import {
+  getArtwork,
+  getCurrentTrack,
+  onPlaybackChanged,
+  getPlaybackState,
+  togglePlaybackState,
+} from "services/mopidy";
+import NothingPlaying from "./NothingPlaying.jsx";
+import "../style/NowPlaying.css";
 
-export default class NowPlaying extends React.Component {
+const NowPlaying = () => {
+  const [artworkUrl, setArtworkUrl] = useState(null);
+  const [track, setTrack] = useState(null);
+  const [playbackState, setPlaybackState] = useState("stopped");
 
-	render() {
+  useEffect(() => {
+    const updateCurrentTrack = async () => {
+      const currentTrack = await getCurrentTrack();
+      setTrack(currentTrack);
+    };
 
-		if (!this.props.playback.track) {
-			return(
-				<div className="no-song">
-					<h2 className="no-song-heading">Welcome to pibox!</h2>
-					<img className="no-song-logo" alt="logo" src={logo} />
-					<ol className="no-song-list" type="1">
-					  <li className="no-song-list-item">Tap the search icon at the top right</li>
-					  <li className="no-song-list-item">Search for an artist, song or album</li>
-					  <li className="no-song-list-item">Tap on the song you want to queue</li>
-					  <li className="no-song-list-item">Enjoy! <span role="img" aria-label="Music Note">&#127925;</span></li>
-					</ol>
-				</div>
-			);
-		}
+    const updatePlaybackState = async () => {
+      const playbackState = await getPlaybackState();
+      setPlaybackState(playbackState);
+    };
 
-		return (
-			<div>
-	      <h3 className="now-playing-heading">Now Playing</h3>
-				<div className="now-playing">
-					<div className="artwork-and-playback">
-						{ this.props.playback.image &&
-							<Thumbnail url ={this.props.playback.image} />
-						}
-						<PlaybackControls playbackState={this.props.playback.state} />
-					</div>
-				  <div className="info">
-						<h2 className="title">{ this.props.playback.track.name }</h2>
-						<h3 className="artist">{ this.props.playback.track ? <ArtistSentence artists={ this.props.playback.track.artists } /> : <ArtistSentence /> }</h3>
-				    <h3 className="album">{ this.props.playback.track.album.name }</h3>
-				  </div>
-				</div>
-			</div>
-		);
-	}
-}
+    onPlaybackChanged(async () => {
+      updateCurrentTrack();
+      updatePlaybackState();
+    });
+    updateCurrentTrack();
+    updatePlaybackState();
+  }, []);
+
+  useEffect(() => {
+    const updateArtwork = async () => {
+      if (track) {
+        const artwork = await getArtwork(track.uri);
+        setArtworkUrl(artwork);
+      }
+    };
+    updateArtwork();
+  }, [setArtworkUrl, track]);
+
+  if (!track) {
+    return <NothingPlaying />;
+  }
+
+  return (
+    <div>
+      <h3 className="now-playing-heading">Now Playing</h3>
+      <div className="now-playing">
+        <div className="artwork-and-playback">
+          {artworkUrl && <Thumbnail url={artworkUrl} />}
+          <PlaybackControls
+            playbackState={playbackState}
+            onClick={togglePlaybackState}
+          />
+        </div>
+        <div className="info">
+          <h2 className="title">{track.name}</h2>
+          <h3 className="artist">
+            <ArtistSentence artists={track.artists} />
+          </h3>
+          <h3 className="album">{track.album.name}</h3>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default NowPlaying;

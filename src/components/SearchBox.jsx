@@ -1,37 +1,56 @@
-import React from 'react';
-import { Field, reduxForm } from 'redux-form'
-import '../style/SearchBox.css';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import InputBase from "@material-ui/core/InputBase";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
+import "../style/SearchBox.css";
 
-class SearchBox extends React.Component {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+  },
+  input: {
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
+}));
 
-	componentDidMount() {
-		this.refs.queryRef.getRenderedComponent().focus()
-	}
+export const SearchBox = ({ value, onValueChange, onSubmit }) => {
+  const classes = useStyles();
 
-	render() {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSubmit();
+  };
 
-		return (
-			<form className="search-box-form" onSubmit={this.props.handleSubmit}>
-				<Field
-					withRef
-					ref="queryRef"
-					component="input" 
-					name="query" 
-					type="text" 
-					autoComplete="off" 
-					autoCorrect="off" 
-					autoCapitalize="off" 
-					spellCheck="false" 
-					autofocus="on" 
-					id="searchField" />
-	    </form>
-		);
-	}
-}
-
-SearchBox = reduxForm({
-  form: 'search',
-  destroyOnUnmount: false
-})(SearchBox)
+  return (
+    <Paper component="form" className={classes.root} onSubmit={handleSubmit}>
+      <InputBase
+        className={classes.input}
+        placeholder="Search Spotify"
+        inputProps={{ "aria-label": "search " }}
+        value={value}
+        onChange={(event) => onValueChange(event.target.value)}
+        autoFocus
+      />
+      <IconButton
+        type="submit"
+        className={classes.iconButton}
+        aria-label="search"
+      >
+        <SearchIcon />
+      </IconButton>
+    </Paper>
+  );
+};
 
 export default SearchBox;

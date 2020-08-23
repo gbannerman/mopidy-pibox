@@ -1,70 +1,81 @@
-import React from 'react';
-import { Field, reduxForm } from 'redux-form';
-import { MenuItem } from 'material-ui/Menu';
-import '../style/SessionForm.css';
-import { Select, TextField } from 'redux-form-material-ui';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
+import React, { useState, useEffect } from "react";
+import { getSpotifyPlaylists } from "services/mopidy";
+import {
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+  FormControl,
+  InputLabel,
+} from "@material-ui/core";
+import "../style/SessionForm.css";
 
-const styles = theme => ({
-  root: theme.typography.caption,
-});
+const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
+  const [playlists, setPlaylists] = useState([]);
+  const [votesToSkip, setVotesToSkip] = useState("");
+  const [selectedPlaylist, setSelectedPlaylist] = useState(defaultPlaylistUri);
 
-class SessionForm extends React.Component {
+  useEffect(() => {
+    const getPlaylists = async () => {
+      const spotifyPlaylists = await getSpotifyPlaylists();
+      setPlaylists(spotifyPlaylists);
+    };
 
-	componentDidMount() {
-		this.props.loadPlaylists();
-	}
+    getPlaylists();
+  }, []);
 
-	render() {
+  const menuItems = playlists.map((playlist) => (
+    <MenuItem key={playlist.uri} value={playlist.uri}>
+      {playlist.name}
+    </MenuItem>
+  ));
 
-		const menuItems = this.props.session.playlists.map((playlist, index) => <MenuItem value={playlist.uri}>{ playlist.name }</MenuItem>);
+  const handleSessionClick = (event) => {
+    event.preventDefault();
+    onStartSessionClick({
+      selectedPlaylist,
+      votesToSkip,
+    });
+  };
 
-		return (
-			<form className="session-form" onSubmit={this.props.handleSubmit}>
+  return (
+    <form className="session-form" onSubmit={handleSessionClick}>
+      <h2 className="no-song-heading">pibox</h2>
 
-				<h2 className="no-song-heading">pibox</h2>
+      <TextField
+        fullWidth
+        className="session-form-field"
+        label="Number of votes to skip"
+        type="number"
+        value={votesToSkip}
+        onChange={(event) => setVotesToSkip(event.target.value)}
+        placeholder="3"
+      />
 
-				<Field
-					className="session-form-field"
-					component={TextField}
-					label="Number of skips required"
-					name="skips" 
-					type="number"
-					parse={value => !value ? null : Number(value)}
-					placeholder="Number of skips required" />
+      <FormControl fullWidth>
+        <InputLabel>Playlist</InputLabel>
+        <Select
+          autoWidth
+          className="session-form-field-select"
+          value={selectedPlaylist}
+          onChange={(event) => setSelectedPlaylist(event.target.value)}
+          placeholder="Select a playlist"
+        >
+          {menuItems}
+        </Select>
+      </FormControl>
 
+      <Button
+        type="submit"
+        className="session-form-field"
+        variant="contained"
+        disabled={!votesToSkip || !selectedPlaylist}
+        color="primary"
+      >
+        Start
+      </Button>
+    </form>
+  );
+};
 
-				<div className="session-form-field">
-					<Typography className={this.props.classes.root} variant="display3" gutterBottom align="left">Playlist</Typography>
-					<Field 
-						className="session-form-field-select"
-						name="playlist" 
-						component={Select}
-						autoWidth
-						placeholder="Select a playlist" >
-						{menuItems}
-					</Field>
-				</div>
-
-				<Button 
-					className="session-form-field"
-					raised
-					disabled={this.props.session.sending}
-					color="primary" 
-					type="fab">
-					Start
-				</Button>
-
-	    </form>
-		);
-	}
-}
-
-SessionForm = reduxForm({
-  form: 'session',
-  destroyOnUnmount: false
-})(SessionForm)
-
-export default withStyles(styles)(SessionForm);
+export default SessionForm;
