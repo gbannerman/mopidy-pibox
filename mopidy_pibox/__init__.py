@@ -8,7 +8,7 @@ from mopidy import config, ext
 import sys
 from .pibox_api import api, session, socket
 
-__version__ = '0.6.1'
+__version__ = '0.7.0'
 
 def my_app_factory(config, core):
 
