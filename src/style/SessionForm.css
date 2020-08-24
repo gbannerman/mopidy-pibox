@@ -1,21 +1,14 @@
 .session-form {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: space-evenly;
-	margin-top: 10%;
-	margin-bottom: 10%;
-	height: 80%;
-	width: 100%;
-}
-
-.session-form-field {
-	margin: 10px;
-	width: 80%;
-	max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 0 auto;
+  height: 80%;
+  width: 80%;
 }
 
 .session-form-field-select {
-	margin: 0px;
-	width: 100%;
+  margin: 0px;
+  width: 100%;
 }

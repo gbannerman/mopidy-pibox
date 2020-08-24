@@ -1,75 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './style/index.css';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
-import { Provider } from 'react-redux';
-import configureStore from './configure-store';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import registerServiceWorker from "./registerServiceWorker";
+import { initialiseFingerprint } from "services/fingerprint";
+import { initialiseMopidy } from "services/mopidy";
+import MopidyRoot from "MopidyRoot";
+import "./style/index.css";
 
-const developmentBuild = process.env.NODE_ENV === 'development';
+const initialise = async () => {
+  await initialiseFingerprint();
+  await initialiseMopidy();
 
-if (developmentBuild) {
-	var mockTracklist = [
-		// {
-		// 	name: 'Break It',
-		// 	artists: [{name: 'Danny Brown'}],
-		// 	album: {name: 'Old'}
-		// },
-		// {
-		// 	name: 'Neighbors',
-		// 	artists: [{name: 'J. Cole'}],
-		// 	album: {name: '4 Your Eyez Only'}
-		// },
-		// // {
-		// // 	name: 'Let Me Out (feat. Mavis Staples & Pusha T)',
-		// // 	artists: [{name: 'Gorillaz'}, {name: 'Mavis Staples'}, {name: 'Pusha T'}],
-		// // 	album: {name: 'Humanz (Deluxe)'}
-		// // },
-		// {
-		// 	name: 'Ttktv',
-		// 	artists: [{name: 'Injury Reserve'}],
-		// 	album: {name: 'Live from the Dentist Office'}
-		// }
-	];
-	var mockNowPlayingTrack = null;//{
-	// 	name: '25 Bucks',
-	// 	artists: [{name: 'Danny Brown'}],
-	// 	album: {name: 'Old'}
-	// };
-	var mockNowPlayingImage = "https://i.scdn.co/image/8d625b3c2e7bbbcc3d4275d4ece08093556b362a";
-}
+  ReactDOM.render(
+    <Router>
+      <MopidyRoot />
+    </Router>,
+    document.getElementById("root")
+  );
+};
 
-const app = document.getElementById('root');
+initialise();
 
-const store = configureStore({
-	mopidy: {
-		connected: developmentBuild,
-		fingerprint: null
-	},
-	playback: {
-		track: mockNowPlayingTrack,
-		image: mockNowPlayingImage,
-		state: developmentBuild ? 'paused' : 'stopped'
-	},
-	search: {
-		fetching: false,
-		results: [],
-		error: null
-	},
-	tracklist: mockTracklist,
-	session: {
-		started: false,
-		playlists: [],
-		sending: false,
-		fetching: true,
-		error: null
-	}
-});
-
-ReactDOM.render(
-	<Provider store={store} >
-		<App />
-	</Provider>
-	, app);
-	
 registerServiceWorker();

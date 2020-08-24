@@ -1,27 +1,27 @@
-import axios from 'axios';
+import axios from "axios";
 
 export function submitSkipVote(fingerprint, uri) {
-	return (axios.post('/pibox/api/vote', {
+  return axios.post("/pibox/api/vote", {
     uri: uri,
-    fingerprint: fingerprint
-	}));
+    fingerprint: fingerprint,
+  });
 }
 
 export function createNewSession(skipThreshold, playlist) {
-	return (axios.post('/pibox/api/session', {
+  return axios.post("/pibox/api/session", {
     skipThreshold,
-    playlist
-	}));
+    playlist,
+  });
 }
 
 export function getSession() {
-	return (axios.get('/pibox/api/session'));
+  return axios.get("/pibox/api/session");
 }
 
 export function getVotes(uri) {
-	return (axios.get('/pibox/api/vote/' + uri));
+  return axios.get("/pibox/api/vote/" + uri);
 }
 
 export function getTracklist() {
-	return (axios.get('/pibox/api/tracklist/'));
+  return axios.get("/pibox/api/tracklist/");
 }
