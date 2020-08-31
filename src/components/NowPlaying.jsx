@@ -10,13 +10,15 @@ import {
   getPlaybackState,
   togglePlaybackState,
 } from "services/mopidy";
-import NothingPlaying from "./NothingPlaying.jsx";
+import NothingPlaying from "./NothingPlaying";
+import { useAdmin } from "hooks/admin";
 import "../style/NowPlaying.css";
 
 const NowPlaying = () => {
   const [artworkUrl, setArtworkUrl] = useState(null);
   const [track, setTrack] = useState(null);
   const [playbackState, setPlaybackState] = useState("stopped");
+  const { isAdmin } = useAdmin();
 
   useEffect(() => {
     const updateCurrentTrack = async () => {
@@ -57,10 +59,12 @@ const NowPlaying = () => {
       <div className="now-playing">
         <div className="artwork-and-playback">
           {artworkUrl && <Thumbnail url={artworkUrl} />}
-          <PlaybackControls
-            playbackState={playbackState}
-            onClick={togglePlaybackState}
-          />
+          {isAdmin && (
+            <PlaybackControls
+              playbackState={playbackState}
+              onClick={togglePlaybackState}
+            />
+          )}
         </div>
         <div className="info">
           <h2 className="title">{track.name}</h2>

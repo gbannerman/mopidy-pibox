@@ -11,8 +11,9 @@ import {
   onSessionEnded,
 } from "services/mopidy.js";
 import { SnackbarProvider } from "notistack";
-import "./style/App.css";
 import SessionPage from "pages/SessionPage.jsx";
+import { AdminContext, useAdminContext } from "hooks/admin.js";
+import "./style/App.css";
 
 const theme = createMuiTheme({
   palette: {
@@ -31,6 +32,8 @@ const App = () => {
 
   const history = useHistory();
   const location = useLocation();
+
+  const admin = useAdminContext();
 
   useEffect(() => {
     const updateCurrentSession = async () => {
@@ -72,20 +75,22 @@ const App = () => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider>
-        <div className="App">
-          <Switch>
-            <Route path="/pibox/session">
-              <SessionPage session={session} />
-            </Route>
-            <Route>
-              <Home />
-            </Route>
-          </Switch>
-        </div>
-      </SnackbarProvider>
-    </ThemeProvider>
+    <AdminContext.Provider value={admin}>
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider>
+          <div className="App">
+            <Switch>
+              <Route path="/pibox/session">
+                <SessionPage session={session} />
+              </Route>
+              <Route>
+                <Home />
+              </Route>
+            </Switch>
+          </div>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </AdminContext.Provider>
   );
 };
 

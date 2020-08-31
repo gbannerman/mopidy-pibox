@@ -3,9 +3,11 @@ import { startSession, endSession } from "services/mopidy";
 import { Button } from "@material-ui/core";
 import SessionForm from "components/SessionForm";
 import { useHistory } from "react-router-dom";
+import { useAdmin } from "hooks/admin";
 import "style/pages/SessionPage.css";
 
 const SessionPage = ({ session }) => {
+  const { isAdmin } = useAdmin();
   const history = useHistory();
 
   const createSession = async ({ votesToSkip, selectedPlaylist }) => {
@@ -21,9 +23,13 @@ const SessionPage = ({ session }) => {
           onStartSessionClick={createSession}
         />
       ) : (
-        <Button variant="contained" onClick={endSession}>
-          End Session
-        </Button>
+        <>
+          {isAdmin && (
+            <Button variant="contained" onClick={endSession}>
+              End Session
+            </Button>
+          )}
+        </>
       )}
     </div>
   );
