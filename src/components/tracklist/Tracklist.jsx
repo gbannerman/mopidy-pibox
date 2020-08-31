@@ -6,9 +6,18 @@ import {
   voteToSkipTrack,
   PiboxError,
 } from "services/mopidy";
-import "../style/Tracklist.css";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  root: {
+    maxWidth: "400px",
+    margin: "0 auto",
+  },
+});
 
 const Tracklist = ({ display }) => {
+  const classes = useStyles();
+
   const [tracklist, setTracklist] = useState([]);
   const [votePending, setVotePending] = useState(false);
 
@@ -59,7 +68,7 @@ const Tracklist = ({ display }) => {
       />
     ));
 
-  return <div className="tracklist">{tracklistItems}</div>;
+  return <div className={classes.root}>{tracklistItems}</div>;
 };
 
 export default Tracklist;

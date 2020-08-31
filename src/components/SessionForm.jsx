@@ -8,9 +8,27 @@ import {
   FormControl,
   InputLabel,
 } from "@material-ui/core";
-import "../style/SessionForm.css";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    margin: "0 auto",
+    height: "80%",
+    width: "80%",
+  },
+  selectField: {
+    margin: 0,
+    width: "100%",
+  },
+});
 
 const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
+  const classes = useStyles();
+
   const [playlists, setPlaylists] = useState([]);
   const [votesToSkip, setVotesToSkip] = useState("");
   const [selectedPlaylist, setSelectedPlaylist] = useState(defaultPlaylistUri);
@@ -39,12 +57,11 @@ const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
   };
 
   return (
-    <form className="session-form" onSubmit={handleSessionClick}>
+    <form className={classes.root} onSubmit={handleSessionClick}>
       <h2 className="no-song-heading">pibox</h2>
 
       <TextField
         fullWidth
-        className="session-form-field"
         label="Number of votes to skip"
         type="number"
         value={votesToSkip}
@@ -56,7 +73,7 @@ const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
         <InputLabel>Playlist</InputLabel>
         <Select
           autoWidth
-          className="session-form-field-select"
+          className={classes.selectField}
           value={selectedPlaylist}
           onChange={(event) => setSelectedPlaylist(event.target.value)}
           placeholder="Select a playlist"
@@ -67,7 +84,6 @@ const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
 
       <Button
         type="submit"
-        className="session-form-field"
         variant="contained"
         disabled={!votesToSkip || !selectedPlaylist}
         color="primary"

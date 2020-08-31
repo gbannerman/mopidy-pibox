@@ -5,11 +5,29 @@ import { Transition } from "react-transition-group";
 import { searchSpotify, queueTrack, playIfStopped } from "services/mopidy.js";
 import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
-import "../style/Search.css";
+import Spinner from "react-spinkit";
+import { makeStyles } from "@material-ui/core/styles";
 
-var Spinner = require("react-spinkit");
+const useStyles = makeStyles({
+  results: {
+    width: "100%",
+  },
+  error: {
+    maxWidth: "800px",
+    margin: "0 auto",
+  },
+  errorInfo: {
+    textAlign: "center",
+    fontWeight: "400",
+    margin: "10px",
+    color: "#FFFFFF",
+    marginTop: "30%",
+  },
+});
 
 const Search = () => {
+  const classes = useStyles();
+
   const [results, setResults] = useState([]);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(null);
@@ -88,12 +106,12 @@ const Search = () => {
     );
   } else if (error) {
     displayResults = (
-      <div className="error">
-        <h4 className="error-info">{error}</h4>
+      <div className={classes.error}>
+        <h4 className={classes.errorInfo}>{error}</h4>
       </div>
     );
   } else {
-    displayResults = <div className="results">{searchResults}</div>;
+    displayResults = <div className={classes.results}>{searchResults}</div>;
   }
 
   return (
