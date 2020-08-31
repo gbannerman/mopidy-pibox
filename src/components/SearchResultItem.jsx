@@ -1,7 +1,6 @@
 import React from "react";
 import ArtistSentence from "./ArtistSentence.jsx";
 import { Card, CardContent, Typography, makeStyles } from "@material-ui/core";
-import "../style/SearchResultItem.css";
 
 const useStyle = makeStyles((theme) => ({
   card: {

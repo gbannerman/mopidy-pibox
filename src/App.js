@@ -13,7 +13,6 @@ import {
 import { SnackbarProvider } from "notistack";
 import SessionPage from "pages/SessionPage.jsx";
 import { AdminContext, useAdminContext } from "hooks/admin.js";
-import "./style/App.css";
 
 const theme = createMuiTheme({
   palette: {

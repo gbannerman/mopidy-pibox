@@ -2,7 +2,6 @@ import React from "react";
 import { Fab } from "@material-ui/core";
 import PauseIcon from "@material-ui/icons/Pause";
 import PlayIcon from "@material-ui/icons/PlayArrow";
-import "../style/PlaybackControls.css";
 
 const PlaybackControls = ({ playbackState, onClick }) => {
   const iconStyle = {

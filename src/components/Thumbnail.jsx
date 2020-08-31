@@ -1,14 +1,22 @@
 import React from "react";
-import "../style/Thumbnail.css";
+import { makeStyles } from "@material-ui/core/styles";
 
-export default class Thumbnail extends React.Component {
-  render() {
-    return (
-      <img
-        className="thumbnail--artwork"
-        src={this.props.url}
-        alt="Album artwork"
-      />
-    );
-  }
-}
+const useStyles = makeStyles({
+  root: {
+    width: "100%",
+    height: "auto",
+    maxWidth: "220px",
+    minWidth: "160px",
+    borderRadius: "10px",
+  },
+});
+
+const Thumbnail = () => {
+  const classes = useStyles();
+
+  return (
+    <img className={classes.root} src={this.props.url} alt="Album artwork" />
+  );
+};
+
+export default Thumbnail;
