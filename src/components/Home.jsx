@@ -16,7 +16,7 @@ const Home = () => {
             <h2 className="nav-title">pibox</h2>
           </li>
           <li className="nav-item-search">
-            <Link className="Link" to="/search/">
+            <Link className="Link" to="/pibox/search">
               <IconButton color="secondary">
                 <SearchIcon fontSize="large" />
               </IconButton>
@@ -26,7 +26,7 @@ const Home = () => {
         <NowPlaying />
         <Tracklist display={3} />
       </div>
-      <Route path="/search/" render={() => <SearchOverlay />} />
+      <Route path="/pibox/search" render={() => <SearchOverlay />} />
     </div>
   );
 };

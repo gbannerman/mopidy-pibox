@@ -53,10 +53,10 @@ const App = () => {
     if (
       session &&
       !session.started &&
-      location.pathname !== "/session" &&
+      location.pathname !== "/pibox/session" &&
       !fetching
     ) {
-      history.push("/session");
+      history.push("/pibox/session");
     }
   }, [location, history, session, fetching]);
 
@@ -65,7 +65,7 @@ const App = () => {
     (session && fetching) ||
     (session &&
       !session.started &&
-      location.pathname !== "/session" &&
+      location.pathname !== "/pibox/session" &&
       !fetching)
   ) {
     return <Spinner fadeIn="quarter" name="double-bounce" color="#00796B" />;
@@ -76,7 +76,7 @@ const App = () => {
       <SnackbarProvider>
         <div className="App">
           <Switch>
-            <Route path="/session">
+            <Route path="/pibox/session">
               <SessionPage session={session} />
             </Route>
             <Route>

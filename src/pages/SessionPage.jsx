@@ -10,7 +10,7 @@ const SessionPage = ({ session }) => {
 
   const createSession = async ({ votesToSkip, selectedPlaylist }) => {
     await startSession(votesToSkip, selectedPlaylist);
-    history.push("/");
+    history.push("/pibox");
   };
 
   return (

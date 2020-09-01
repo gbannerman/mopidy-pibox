@@ -31,7 +31,7 @@ const Search = () => {
         enqueueSnackbar(`${track.name} added to queue`, { variant: "success" });
       }
 
-      history.push("");
+      history.push("/pibox");
     } catch (e) {
       enqueueSnackbar(e.message, { variant: "error" });
     }
