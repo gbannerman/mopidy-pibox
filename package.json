@@ -1,6 +1,6 @@
 {
   "name": "mopidy-pibox",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "private": true,
   "dependencies": {
     "@material-ui/core": "4.11.0",
@@ -30,6 +30,7 @@
     "prettier": "2.1.0"
   },
   "proxy": "http://localhost:6680",
+  "homepage": "/pibox",
   "browserslist": {
     "production": [
       ">0.2%",

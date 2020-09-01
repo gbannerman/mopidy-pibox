@@ -80,8 +80,11 @@ const connectToPibox = (websocketUrl) => {
 export const initialiseMopidy = async () => {
   // eslint-disable-next-line no-restricted-globals
   const hostname = location.hostname;
-  mopidy = await connectToMopidy(`ws://${hostname}/mopidy/ws/`);
-  connectToPibox(`ws://${hostname}/pibox/ws`);
+  // eslint-disable-next-line no-restricted-globals
+  const port = location.port ? `:${location.port}` : "";
+  const baseWebsocketUrl = `ws://${hostname}${port}`;
+  mopidy = await connectToMopidy(`${baseWebsocketUrl}/mopidy/ws/`);
+  connectToPibox(`${baseWebsocketUrl}/pibox/ws`);
   return mopidy;
 };
 

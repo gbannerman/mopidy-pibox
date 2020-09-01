@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.6eae9811.chunk.css",
-    "main.js": "/static/js/main.cdfdc80f.chunk.js",
-    "main.js.map": "/static/js/main.cdfdc80f.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.533cd48e.js",
-    "runtime-main.js.map": "/static/js/runtime-main.533cd48e.js.map",
-    "static/css/2.d97600f8.chunk.css": "/static/css/2.d97600f8.chunk.css",
-    "static/js/2.5c0abb94.chunk.js": "/static/js/2.5c0abb94.chunk.js",
-    "static/js/2.5c0abb94.chunk.js.map": "/static/js/2.5c0abb94.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.e04de1527daaa323a56b828ffcc2ac6d.js": "/precache-manifest.e04de1527daaa323a56b828ffcc2ac6d.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.d97600f8.chunk.css.map": "/static/css/2.d97600f8.chunk.css.map",
-    "static/css/main.6eae9811.chunk.css.map": "/static/css/main.6eae9811.chunk.css.map",
-    "static/js/2.5c0abb94.chunk.js.LICENSE.txt": "/static/js/2.5c0abb94.chunk.js.LICENSE.txt"
+    "main.css": "/pibox/static/css/main.6eae9811.chunk.css",
+    "main.js": "/pibox/static/js/main.661f5149.chunk.js",
+    "main.js.map": "/pibox/static/js/main.661f5149.chunk.js.map",
+    "runtime-main.js": "/pibox/static/js/runtime-main.7ff7a994.js",
+    "runtime-main.js.map": "/pibox/static/js/runtime-main.7ff7a994.js.map",
+    "static/css/2.d97600f8.chunk.css": "/pibox/static/css/2.d97600f8.chunk.css",
+    "static/js/2.704d0bbc.chunk.js": "/pibox/static/js/2.704d0bbc.chunk.js",
+    "static/js/2.704d0bbc.chunk.js.map": "/pibox/static/js/2.704d0bbc.chunk.js.map",
+    "index.html": "/pibox/index.html",
+    "precache-manifest.3d49db55dd089d406f9c86072721fb20.js": "/pibox/precache-manifest.3d49db55dd089d406f9c86072721fb20.js",
+    "service-worker.js": "/pibox/service-worker.js",
+    "static/css/2.d97600f8.chunk.css.map": "/pibox/static/css/2.d97600f8.chunk.css.map",
+    "static/css/main.6eae9811.chunk.css.map": "/pibox/static/css/main.6eae9811.chunk.css.map",
+    "static/js/2.704d0bbc.chunk.js.LICENSE.txt": "/pibox/static/js/2.704d0bbc.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.533cd48e.js",
+    "static/js/runtime-main.7ff7a994.js",
     "static/css/2.d97600f8.chunk.css",
-    "static/js/2.5c0abb94.chunk.js",
+    "static/js/2.704d0bbc.chunk.js",
     "static/css/main.6eae9811.chunk.css",
-    "static/js/main.cdfdc80f.chunk.js"
+    "static/js/main.661f5149.chunk.js"
   ]
 }
