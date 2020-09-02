@@ -8,13 +8,16 @@ from mopidy import config, ext
 import sys
 from .pibox_api import api, session, socket
 
-__version__ = '0.7.4'
+__version__ = '0.7.6'
 
 def my_app_factory(config, core):
 
     this_session = session.PiboxSession(2)
 
     path = os.path.join( os.path.dirname(__file__), 'static')
+
+    logger = logging.getLogger(__name__)
+    logger.info(path)
     
     return [
         (r'/ws/?', socket.PiboxWebSocket),
