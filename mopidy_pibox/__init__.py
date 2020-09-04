@@ -2,13 +2,13 @@ from __future__ import unicode_literals
 
 import logging
 import os
-import tornado.web
 
 from mopidy import config, ext
-import sys
 from .pibox_api import api, session, socket
+from .routing import ClientRoutingHandler
 
 __version__ = '0.7.6'
+
 
 def my_app_factory(config, core):
 
@@ -24,7 +24,7 @@ def my_app_factory(config, core):
         (r'/api/tracklist/?', api.TracklistHandler, {'core': core, 'session': this_session}),
         (r'/api/vote/?', api.VoteHandler, {'core': core, 'session': this_session}),
         (r'/api/session/?', api.SessionHandler, {'core': core, 'session': this_session}),
-        (r'/(.*)', tornado.web.StaticFileHandler, {
+        (r'/(.*)', routing.ClientRoutingHandler, {
             'path': path,
             'default_filename': 'index.html'
         }),
@@ -49,8 +49,8 @@ class Extension(ext.Extension):
     def setup(self, registry):
 
         from .frontend import PiboxFrontend
-        registry.add('frontend', PiboxFrontend)
 
+        registry.add('frontend', PiboxFrontend)
         registry.add('http:app', {
             'name': self.ext_name,
             'factory': my_app_factory,
