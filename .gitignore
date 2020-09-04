@@ -18,6 +18,7 @@ dist/
 
 # production
 /build
+mopidy_pibox/static
 
 # misc
 .DS_Store

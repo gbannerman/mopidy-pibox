@@ -19,7 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "lint": "eslint src/ --ext .jsx,.js",
-    "build": "rm -rf mopidy_pibox/static && react-scripts build && mv build mopidy_pibox/static",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
