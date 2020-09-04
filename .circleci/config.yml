@@ -68,8 +68,7 @@ jobs:
       - run:
           name: Upload to pypi
           command: |
-            . venv/bin/activate
-            twine upload dist/*
+            cd mopidy_pibox && ls -la
 workflows:
   version: 2
   build_and_deploy:
@@ -83,4 +82,4 @@ workflows:
             - build
           filters:
             branches:
-              only: master
+              only: /.*/
