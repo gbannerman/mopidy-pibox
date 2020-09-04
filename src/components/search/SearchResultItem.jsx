@@ -1,5 +1,5 @@
 import React from "react";
-import ArtistSentence from "./ArtistSentence.jsx";
+import ArtistSentence from "components/common/ArtistSentence.jsx";
 import { Card, CardContent, Typography, makeStyles } from "@material-ui/core";
 
 const useStyle = makeStyles((theme) => ({

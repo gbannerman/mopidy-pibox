@@ -3,16 +3,18 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Spinner from "react-spinkit";
 import teal from "@material-ui/core/colors/teal";
 import pink from "@material-ui/core/colors/pink";
-import Home from "./components/Home.jsx";
+import HomePage from "pages/HomePage";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import {
   getCurrentSession,
   onSessionStarted,
   onSessionEnded,
+  onConnectionChanged,
 } from "services/mopidy.js";
 import { SnackbarProvider } from "notistack";
 import SessionPage from "pages/SessionPage.jsx";
 import { AdminContext, useAdminContext } from "hooks/admin.js";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 const theme = createMuiTheme({
   palette: {
@@ -28,11 +30,16 @@ const theme = createMuiTheme({
 const App = () => {
   const [session, setSession] = useState(null);
   const [fetching, setFetching] = useState(false);
+  const [connected, setConnected] = useState(false);
 
   const history = useHistory();
   const location = useLocation();
 
   const admin = useAdminContext();
+
+  useEffect(() => {
+    onConnectionChanged(setConnected);
+  }, []);
 
   useEffect(() => {
     const updateCurrentSession = async () => {
@@ -63,6 +70,7 @@ const App = () => {
   }, [location, history, session, fetching]);
 
   if (
+    !connected ||
     !session ||
     (session && fetching) ||
     (session &&
@@ -70,20 +78,28 @@ const App = () => {
       location.pathname !== "/pibox/session" &&
       !fetching)
   ) {
-    return <Spinner fadeIn="quarter" name="double-bounce" color="#00796B" />;
+    return (
+      <div className="Root">
+        <div className="loading">
+          <h1>pibox</h1>
+          <Spinner fadeIn="quarter" name="double-bounce" color="#00796B" />
+        </div>
+      </div>
+    );
   }
 
   return (
     <AdminContext.Provider value={admin}>
+      <CssBaseline />
       <ThemeProvider theme={theme}>
         <SnackbarProvider>
-          <div className="App">
+          <div className="Root">
             <Switch>
               <Route path="/pibox/session">
                 <SessionPage session={session} />
               </Route>
               <Route>
-                <Home />
+                <HomePage />
               </Route>
             </Switch>
           </div>

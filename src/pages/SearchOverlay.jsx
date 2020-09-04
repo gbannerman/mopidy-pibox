@@ -1,5 +1,5 @@
 import React from "react";
-import Search from "./Search.jsx";
+import Search from "components/search/Search";
 import { Transition } from "react-transition-group";
 
 export default class SearchOverlay extends React.Component {

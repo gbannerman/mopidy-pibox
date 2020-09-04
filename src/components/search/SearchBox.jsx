@@ -1,10 +1,9 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
-import "../style/SearchBox.css";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,17 +13,6 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     flex: 1,
-    // Taken from css
-    // display: block;
-    // margin: 10px;
-    // font-size: 20px;
-    // font-family: 'Roboto', sans-serif;
-    // padding: 5px;
-    // border-radius: 3px;
-    // border-top: none;
-    // border-bottom: 1px solid #DDD;
-    // background-color: rgba(255, 255, 255, 1);
-    // z-index: 50;
   },
   iconButton: {
     padding: 10,

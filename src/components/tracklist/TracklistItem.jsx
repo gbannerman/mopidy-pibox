@@ -1,5 +1,5 @@
 import React from "react";
-import ArtistSentence from "./ArtistSentence.jsx";
+import ArtistSentence from "components/common/ArtistSentence";
 import { makeStyles } from "@material-ui/core/styles";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Thumbnail from "./Thumbnail.jsx";
-import ArtistSentence from "./ArtistSentence.jsx";
-import PlaybackControls from "./PlaybackControls.jsx";
+import Thumbnail from "components/common/Thumbnail";
+import ArtistSentence from "components/common/ArtistSentence";
+import PlaybackControls from "./PlaybackControls";
 import { useEffect } from "react";
 import {
   getArtwork,
@@ -19,6 +19,7 @@ const useStyles = makeStyles({
     fontSize: "14px",
     fontWeight: "400",
     color: "#757575",
+    textAlign: "center",
   },
   detail: {
     display: "flex",
@@ -32,7 +33,11 @@ const useStyles = makeStyles({
     textAlign: "center",
     margin: "10px",
   },
+  primaryInfo: {
+    fontSize: "20px",
+  },
   secondaryInfo: {
+    fontSize: "16px",
     fontWeight: "500",
     color: "#757575",
   },
@@ -100,11 +105,11 @@ const NowPlaying = () => {
           )}
         </div>
         <div className={classes.info}>
-          <h2 className="title">{track.name}</h2>
+          <h2 className={classes.primaryInfo}>{track.name}</h2>
           <h3 className={classes.secondaryInfo}>
             <ArtistSentence artists={track.artists} />
           </h3>
-          <h3 className="album">{track.album.name}</h3>
+          <h3 className={classes.secondaryInfo}>{track.album.name}</h3>
         </div>
       </div>
     </div>
