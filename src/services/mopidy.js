@@ -162,7 +162,7 @@ export const searchSpotify = (searchTerms) =>
     mopidy.library
       .search({ query: { any: searchTerms }, uris: ["spotify:"], exact: false })
       .then((result) => {
-        resolve(result[0].tracks);
+        resolve(result[0].tracks || []);
       });
   });
 
