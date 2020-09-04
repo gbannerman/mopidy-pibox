@@ -23,12 +23,16 @@ const useStyles = makeStyles({
     color: "#FFFFFF",
     marginTop: "30%",
   },
+  noResults: {
+    color: "white",
+    textAlign: "center",
+  },
 });
 
 const Search = () => {
   const classes = useStyles();
 
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState(null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(null);
 
@@ -72,9 +76,11 @@ const Search = () => {
     }
   };
 
-  const searchResults = results.map((track, index) => (
-    <SearchResultItem key={index} track={track} onClick={queue} />
-  ));
+  const searchResults = results
+    ? results.map((track, index) => (
+        <SearchResultItem key={index} track={track} onClick={queue} />
+      ))
+    : null;
 
   const defaultStyleBar = {
     margin: "0 auto",
@@ -110,6 +116,8 @@ const Search = () => {
         <h4 className={classes.errorInfo}>{error}</h4>
       </div>
     );
+  } else if (results && !results.length) {
+    displayResults = <div className={classes.noResults}>No results found</div>;
   } else {
     displayResults = <div className={classes.results}>{searchResults}</div>;
   }

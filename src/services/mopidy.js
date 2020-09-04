@@ -102,7 +102,8 @@ export const getPlaybackState = () => mopidy.playback.getState();
 export const getArtwork = (uri) =>
   new Promise((resolve) => {
     mopidy.library.getImages({ uris: [uri] }).then((result) => {
-      resolve(result[uri][0].uri);
+      const artworkUri = result[uri].length ? result[uri][0].uri : "";
+      resolve(artworkUri);
     });
   });
 
@@ -160,9 +161,16 @@ export const endSession = async () => {
 export const searchSpotify = (searchTerms) =>
   new Promise((resolve) => {
     mopidy.library
-      .search({ query: { any: searchTerms }, uris: ["spotify:"], exact: false })
+      .search({
+        query: { any: searchTerms },
+        exact: false,
+      })
       .then((result) => {
-        resolve(result[0].tracks || []);
+        const results = result.reduce((tracks, backendResult) => {
+          tracks.push(...(backendResult.tracks || []));
+          return tracks;
+        }, []);
+        resolve(results);
       });
   });
 

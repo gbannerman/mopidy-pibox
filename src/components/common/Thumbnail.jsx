@@ -1,5 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import placeholder from "res/placeholder.png";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -14,7 +15,13 @@ const useStyles = makeStyles(() => ({
 const Thumbnail = ({ url }) => {
   const classes = useStyles();
 
-  return <img className={classes.root} src={url} alt="Album artwork" />;
+  return (
+    <img
+      className={classes.root}
+      src={url || placeholder}
+      alt="Album artwork"
+    />
+  );
 };
 
 export default Thumbnail;

@@ -96,7 +96,7 @@ const NowPlaying = () => {
       <h3 className={classes.heading}>Now Playing</h3>
       <div className={classes.detail}>
         <div className={classes.artwork}>
-          {artworkUrl && <Thumbnail url={artworkUrl} />}
+          <Thumbnail url={artworkUrl} />
           {isAdmin && (
             <PlaybackControls
               playbackState={playbackState}
