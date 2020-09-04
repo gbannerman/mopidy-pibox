@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6
+      - image: cimg/node:12.16
     steps:
       - checkout
 
@@ -22,13 +22,13 @@ jobs:
             npm run build
 
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: .
           paths:
             - build/*
 
   deploy:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.8
     steps:
       - checkout
 
@@ -36,7 +36,7 @@ jobs:
           key: v1-dependency-cache-{{ checksum "setup.py" }}
       
       - attach_workspace:
-          at: /tmp/workspace
+          at: .
 
       - run:
           name: Move React app to Tornado static directory
@@ -68,7 +68,7 @@ jobs:
       - run:
           name: Upload to pypi
           command: |
-            cd mopidy_pibox && ls -la
+            cd mopidy_pibox/static/static/js && ls -la
 workflows:
   version: 2
   build_and_deploy:
