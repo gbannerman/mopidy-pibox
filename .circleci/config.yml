@@ -2,39 +2,49 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6
+      - image: cimg/node:12.16
     steps:
       - checkout
 
-      - restore_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}
+      - run:
+          name: Install JavaScript dependencies
+          command: |
+            npm ci
 
       - run:
-          name: install python dependencies
+          name: Run linter
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install twine
-            pip install -e .
-      - save_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}
-          paths:
-            - "venv"
+            npm run lint
 
-      - store_artifacts:
-          path: htmlcov/
+      - run:
+          name: Build React app
+          command: |
+            npm run build
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/*
 
   deploy:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.8
     steps:
       - checkout
 
       - restore_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}
+      
+      - attach_workspace:
+          at: .
 
       - run:
-          name: install python dependencies
+          name: Move React app to Tornado static directory
+          command: |
+            mv build mopidy_pibox/static
+
+      - run:
+          name: Install python dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
@@ -46,20 +56,21 @@ jobs:
             - "venv"
 
       - run:
-          name: init .pypirc
+          name: Init .pypirc
           command: |
             echo -e "[pypi]" >> ~/.pypirc
             echo -e "username = gbannerman" >> ~/.pypirc
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
       - run:
-          name: create packages
+          name: Create packages
           command: |
             python setup.py sdist
       - run:
-          name: upload to pypi
+          name: Upload to pypi
           command: |
             . venv/bin/activate
             twine upload dist/*
+
 workflows:
   version: 2
   build_and_deploy:

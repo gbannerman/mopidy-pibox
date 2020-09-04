@@ -7,7 +7,7 @@ from mopidy import config, ext
 from .pibox_api import api, session, socket
 from .routing import ClientRoutingHandler
 
-__version__ = '0.7.8'
+__version__ = '0.7.9'
 
 def my_app_factory(config, core):
 
