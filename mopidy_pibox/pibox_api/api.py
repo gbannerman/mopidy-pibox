@@ -99,6 +99,7 @@ class SessionHandler(tornado.web.RequestHandler):
     
     def delete(self):
         self.core.playback.stop()
+        self.core.tracklist.clear()
         
         actors = pykka.ActorRegistry.get_by_class(frontend.PiboxFrontend)
         for actor_ref in actors:
