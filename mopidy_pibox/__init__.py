@@ -14,9 +14,6 @@ def my_app_factory(config, core):
     this_session = session.PiboxSession(2)
 
     path = os.path.join( os.path.dirname(__file__), 'static')
-
-    logger = logging.getLogger(__name__)
-    logger.info(path)
     
     return [
         (r'/ws/?', socket.PiboxWebSocket),
