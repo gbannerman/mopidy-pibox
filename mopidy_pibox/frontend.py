@@ -35,7 +35,9 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 				self.core.playback.play()
 
 		if self.core.tracklist.get_length().get() == 0 and self.session_active:
-			if self.uri is None:
+			if self.config.offline:
+				playlist = self.core.library.browse(uri="local:directory?type=track").get()
+			elif self.uri is None:
 				playlist = self.core.playlists.get_items(self.config['pibox']['default_playlist']).get()
 			else:
 				playlist = self.core.playlists.get_items(self.uri).get()

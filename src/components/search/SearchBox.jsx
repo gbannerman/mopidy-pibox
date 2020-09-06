@@ -35,7 +35,7 @@ export const SearchBox = ({ value, onValueChange, onSubmit }) => {
     <Paper component="form" className={classes.root} onSubmit={handleSubmit}>
       <InputBase
         className={classes.input}
-        placeholder="Search Spotify"
+        placeholder="Search library"
         inputProps={{ "aria-label": "search " }}
         value={value}
         onChange={(event) => onValueChange(event.target.value)}
