@@ -40,6 +40,7 @@ class Extension(ext.Extension):
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
         schema['default_playlist'] = config.String()
+        schema['offline'] = config.Boolean(optional=True)
         return schema
 
     def setup(self, registry):

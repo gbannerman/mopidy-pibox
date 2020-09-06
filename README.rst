@@ -44,6 +44,7 @@ Mopidy-Pibox to your Mopidy configuration file::
     [pibox]
     enabled = true
     default_playlist = spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL
+    offline = false
 
 
 Project resources
