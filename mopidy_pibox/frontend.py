@@ -9,7 +9,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 	def __init__(self, config, core):
 		super(PiboxFrontend, self).__init__()
 		self.core = core
-		self.config = config
+		self.config = config['pibox']
 		self.pussycat_list = ['spotify:track:0asT0RDbe4Vrf6pxLHgpkn', 'spotify:track:2HkHE4EeZyx9AncSN042q3']
 		self.uri = None
 		self.session_active = False
@@ -35,10 +35,10 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 				self.core.playback.play()
 
 		if self.core.tracklist.get_length().get() == 0 and self.session_active:
-			if self.config.offline:
+			if self.config['offline']:
 				playlist = self.core.library.browse(uri="local:directory?type=track").get()
 			elif self.uri is None:
-				playlist = self.core.playlists.get_items(self.config['pibox']['default_playlist']).get()
+				playlist = self.core.playlists.get_items(self.config['default_playlist']).get()
 			else:
 				playlist = self.core.playlists.get_items(self.uri).get()
 			shuffle(playlist)
