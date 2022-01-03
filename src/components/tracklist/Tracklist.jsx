@@ -7,11 +7,23 @@ import {
   PiboxError,
 } from "services/mopidy";
 import { makeStyles } from "@material-ui/core/styles";
+import { Card } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
     maxWidth: "400px",
-    margin: "0 auto",
+    margin: "0 auto 30px",
+  },
+  title: {
+    margin: "0px 10px",
+    fontWeight: "400",
+    color: "#757575",
+    borderBottom: "1px solid #d5d0d0",
+  },
+  more: {
+    margin: 10,
+    textAlign: "center",
+    padding: 15,
   },
 });
 
@@ -56,6 +68,9 @@ const Tracklist = ({ display }) => {
     setVotePending(false);
   };
 
+  const queueLength = tracklist.length - 1;
+  const tracksNotShown = queueLength - display;
+
   const tracklistItems = tracklist
     .slice(1, 1 + display)
     .map((track) => (
@@ -68,7 +83,21 @@ const Tracklist = ({ display }) => {
       />
     ));
 
-  return <div className={classes.root}>{tracklistItems}</div>;
+  return (
+    <>
+      <div className={classes.root}>
+        {queueLength > 0 && (
+          <div className={classes.title}>
+            {queueLength} song{queueLength !== 1 ? "s" : ""} queued
+          </div>
+        )}
+        {tracklistItems}
+        {tracksNotShown > 0 && (
+          <Card className={classes.more}>+ {tracksNotShown} more</Card>
+        )}
+      </div>
+    </>
+  );
 };
 
 export default Tracklist;

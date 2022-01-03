@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import Spinner from "react-spinkit";
 import { makeStyles } from "@material-ui/core/styles";
+import { useDebounce } from "hooks/debounce.js";
 
 const useStyles = makeStyles({
   results: {
@@ -59,7 +60,7 @@ const Search = () => {
     }
   };
 
-  const search = async () => {
+  const debouncedSearch = useDebounce(async () => {
     if (!searchTerm) {
       return;
     }
@@ -73,6 +74,13 @@ const Search = () => {
     } catch (error) {
       setError(error);
       setFetching(false);
+    }
+  }, 500);
+
+  const onSearchValueChange = (newValue) => {
+    setSearchTerm(newValue);
+    if (newValue) {
+      debouncedSearch();
     }
   };
 
@@ -135,9 +143,9 @@ const Search = () => {
             >
               <div style={{ margin: "10px" }}>
                 <SearchBox
-                  onSubmit={search}
+                  onSubmit={debouncedSearch}
                   term={searchTerm}
-                  onValueChange={setSearchTerm}
+                  onValueChange={onSearchValueChange}
                 />
               </div>
             </div>

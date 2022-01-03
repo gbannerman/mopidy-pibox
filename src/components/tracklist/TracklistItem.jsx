@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 15,
     paddingTop: 15,
     paddingBottom: 15,
-    paddingRight: 5,
+    paddingRight: 15,
   },
   actions: {
     flex: "0 0 auto",
@@ -61,7 +61,9 @@ const TracklistItem = ({
           onClick={onVoteClick}
           color="secondary"
         >
-          {track.voted ? track.votes + "/" + skipThreshold + " votes" : "Vote"}
+          {track.voted
+            ? track.votes + "/" + skipThreshold + " votes"
+            : "Vote to skip"}
           {buttonIcon}
         </Button>
       </CardActions>
