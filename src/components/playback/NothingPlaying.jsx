@@ -35,15 +35,26 @@ const NothingPlaying = () => {
           Search for an artist, song or album
         </li>
         <li className={classes.listItem}>Tap on the song you want to queue</li>
-        <li className={classes.listItem}>
-          Enjoy!{" "}
-          <span role="img" aria-label="Music Note">
-            &#127925;
-          </span>
-        </li>
+        <Step4 className={classes.listItem} />
       </ol>
     </div>
   );
+};
+
+const Step4 = ({ className }) => {
+  const options = [
+    "Enjoy! 🎵",
+    "Have a wee boogie! 💃",
+    "Have a wee boogie! 🕺",
+    "Sing your heart out! 🎤",
+    "Just bust a move! 😎",
+    "Dance like nobody's watching! 🙈",
+    "Turn it up to 11! 🎸",
+  ];
+
+  const option = options[(options.length * Math.random()) | 0];
+
+  return <li className={className}>{option}</li>;
 };
 
 export default NothingPlaying;
