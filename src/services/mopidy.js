@@ -204,6 +204,10 @@ export const togglePlaybackState = async () => {
   }
 };
 
+export const skipCurrentTrack = async () => {
+  await mopidy.playback.next();
+};
+
 export const onConnectionChanged = (callback) =>
   mopidy.on("state", (event) => {
     switch (event) {

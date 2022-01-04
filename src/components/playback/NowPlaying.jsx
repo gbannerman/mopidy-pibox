@@ -9,6 +9,7 @@ import {
   onPlaybackChanged,
   getPlaybackState,
   togglePlaybackState,
+  skipCurrentTrack,
 } from "services/mopidy";
 import NothingPlaying from "./NothingPlaying";
 import { useAdmin } from "hooks/admin";
@@ -100,7 +101,8 @@ const NowPlaying = () => {
           {isAdmin && (
             <PlaybackControls
               playbackState={playbackState}
-              onClick={togglePlaybackState}
+              onPlayPauseClick={togglePlaybackState}
+              onSkipClick={skipCurrentTrack}
             />
           )}
         </div>

@@ -1,33 +1,51 @@
 import React from "react";
-import { Fab } from "@material-ui/core";
+import { Fab, makeStyles } from "@material-ui/core";
 import PauseIcon from "@material-ui/icons/Pause";
 import PlayIcon from "@material-ui/icons/PlayArrow";
+import SkipNext from "@material-ui/icons/SkipNext";
 
-const PlaybackControls = ({ playbackState, onClick }) => {
-  const iconStyle = {
-    width: 45,
-    height: 45,
-  };
-
-  const buttonStyle = {
+const useStyles = makeStyles({
+  root: {
     position: "absolute",
+    bottom: -30,
+    width: 140,
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  button: {
     width: 65,
     height: 65,
-    bottom: -30,
-  };
+  },
+  icon: {
+    width: 45,
+    height: 45,
+  },
+});
+
+const PlaybackControls = ({ playbackState, onPlayPauseClick, onSkipClick }) => {
+  const classes = useStyles();
 
   if (playbackState === "stopped") {
     return null;
   }
 
   return (
-    <Fab style={buttonStyle} color="primary" onClick={onClick}>
-      {playbackState === "playing" ? (
-        <PauseIcon style={iconStyle} />
-      ) : (
-        <PlayIcon style={iconStyle} />
-      )}
-    </Fab>
+    <div className={classes.root}>
+      <Fab
+        className={classes.button}
+        color="primary"
+        onClick={onPlayPauseClick}
+      >
+        {playbackState === "playing" ? (
+          <PauseIcon className={classes.icon} />
+        ) : (
+          <PlayIcon className={classes.icon} />
+        )}
+      </Fab>
+      <Fab className={classes.button} color="primary" onClick={onSkipClick}>
+        <SkipNext className={classes.icon} />
+      </Fab>
+    </div>
   );
 };
 
