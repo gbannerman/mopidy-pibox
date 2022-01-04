@@ -1,6 +1,6 @@
 {
   "name": "mopidy-pibox",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "private": true,
   "dependencies": {
     "@material-ui/core": "4.11.0",
