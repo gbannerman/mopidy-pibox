@@ -82,7 +82,11 @@ export const initialiseMopidy = async () => {
   const hostname = location.hostname;
   // eslint-disable-next-line no-restricted-globals
   const port = location.port ? `:${location.port}` : "";
-  const baseWebsocketUrl = `ws://${hostname}${port}`;
+  const protocol =
+    typeof document !== "undefined" && document.location.protocol === "https:"
+      ? "wss://"
+      : "ws://";
+  const baseWebsocketUrl = `${protocol}${hostname}${port}`;
   mopidy = await connectToMopidy(`${baseWebsocketUrl}/mopidy/ws/`);
   connectToPibox(`${baseWebsocketUrl}/pibox/ws`);
   return mopidy;
