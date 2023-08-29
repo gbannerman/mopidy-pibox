@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "res/logo-black.png";
 import { makeStyles } from "@material-ui/core/styles";
+import { useState } from "react";
 
 const useStyles = makeStyles({
   root: {
@@ -52,7 +53,9 @@ const Step4 = ({ className }) => {
     "Turn it up to 11! 🎸",
   ];
 
-  const option = options[(options.length * Math.random()) | 0];
+  const [option] = useState(
+    () => options[(options.length * Math.random()) | 0]
+  );
 
   return <li className={className}>{option}</li>;
 };
