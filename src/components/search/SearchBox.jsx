@@ -5,11 +5,12 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
+    flexGrow: 1,
   },
   input: {
     flex: 1,
@@ -35,7 +36,7 @@ export const SearchBox = ({ value, onValueChange, onSubmit }) => {
     <Paper component="form" className={classes.root} onSubmit={handleSubmit}>
       <InputBase
         className={classes.input}
-        placeholder="Search library"
+        placeholder="Start typing to search..."
         inputProps={{ "aria-label": "search " }}
         value={value}
         onChange={(event) => onValueChange(event.target.value)}

@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import SearchBox from "./SearchBox.jsx";
 import SearchResultItem from "./SearchResultItem.jsx";
 import { Transition } from "react-transition-group";
-import { searchSpotify, queueTrack, playIfStopped } from "services/mopidy.js";
+import { searchLibrary, queueTrack, playIfStopped } from "services/mopidy.js";
 import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import Spinner from "react-spinkit";
 import { makeStyles } from "@material-ui/core/styles";
+import CloseIcon from "@material-ui/icons/Close";
 import { useDebounce } from "hooks/debounce.js";
+import { IconButton } from "@material-ui/core";
 
 const useStyles = makeStyles({
   results: {
@@ -27,6 +29,17 @@ const useStyles = makeStyles({
   noResults: {
     color: "white",
     textAlign: "center",
+  },
+  closeIcon: {
+    width: 45,
+    height: 45,
+    color: "#FFFFFF",
+  },
+  closeIconContainer: {
+    marginLeft: 10,
+    padding: 0,
+    backgroundColor: "transparent",
+    borderColor: "transparent",
   },
 });
 
@@ -66,9 +79,9 @@ const Search = () => {
     }
 
     setFetching(true);
-    const queryParameters = searchTerm.split(" ");
+    const queryParameters = searchTerm.split(" ").filter((term) => !!term);
     try {
-      const results = await searchSpotify(queryParameters);
+      const results = await searchLibrary(queryParameters);
       setResults(results);
       setFetching(false);
     } catch (error) {
@@ -97,7 +110,7 @@ const Search = () => {
   };
 
   const transitionStylesBar = {
-    entering: { width: "0%" },
+    entering: { width: "10%" },
     entered: { width: "100%" },
   };
 
@@ -141,12 +154,19 @@ const Search = () => {
                 ...transitionStylesBar[state],
               }}
             >
-              <div style={{ margin: "10px" }}>
+              <div style={{ margin: "10px", display: "flex" }}>
                 <SearchBox
                   onSubmit={debouncedSearch}
                   term={searchTerm}
                   onValueChange={onSearchValueChange}
                 />
+                <IconButton
+                  color="secondary"
+                  onClick={() => history.push("/pibox")}
+                  className={classes.closeIconContainer}
+                >
+                  <CloseIcon className={classes.closeIcon} />
+                </IconButton>
               </div>
             </div>
             <div

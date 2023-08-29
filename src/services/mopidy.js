@@ -162,7 +162,7 @@ export const endSession = async () => {
   return result.data;
 };
 
-export const searchSpotify = (searchTerms) =>
+export const searchLibrary = (searchTerms) =>
   new Promise((resolve) => {
     mopidy.library
       .search({
