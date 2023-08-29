@@ -6,9 +6,9 @@ Mopidy-Pibox
     :target: https://pypi.python.org/pypi/Mopidy-Pibox/
     :alt: Latest PyPI version
 
-.. image:: https://circleci.com/gh/gbannerman/mopidy-pibox/tree/master.svg?style=shield
-    :target: https://circleci.com/gh/gbannerman/mopidy-pibox/tree/master
-    :alt: CircleCI status
+.. image:: https://github.com/gbannerman/mopidy-pibox/actions/workflows/ci.yml/badge.svg?branch=main
+    :target: https://github.com/gbannerman/mopidy-pibox/releases
+    :alt: GitHub Actions
 
 
 **pibox** is a Mopidy HTTP client that allows multiple users to search spotify and queue songs, via a clean and simple interface.
