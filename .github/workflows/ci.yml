@@ -1,0 +1,8 @@
+name: Create stable release
+
+on: push
+
+jobs:
+  release:
+    name: Build
+    uses: gbannerman/mopidy-pibox/.github/workflows/build.yml@main

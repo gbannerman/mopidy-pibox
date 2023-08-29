@@ -1,0 +1,72 @@
+name: CI Workflow
+
+on: workflow_call
+
+jobs:
+  build_js:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Run Linter
+        run: npm run lint
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Store built React app
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
+          retention-days: 1
+          if-no-files-found: error
+
+  # build_py:
+  #   needs: build_js
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - name: Download built React app
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: build
+  #         path: build
+
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.11"
+
+  #     - name: Move React app to Tornado static directory
+  #       run: mv build mopidy_pibox/static
+
+  #     - name: Install python dependencies
+  #       run: |
+  #         python3 -m venv venv
+  #         . venv/bin/activate
+  #         pip install twine
+  #         pip install -e .
+
+  #     - name: Init .pypirc
+  #       run: |
+  #         echo -e "[pypi]" >> ~/.pypirc
+  #         echo -e "username = gbannerman" >> ~/.pypirc
+  #         echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+
+  #     - name: Create packages
+  #       run: python setup.py sdist
+
+  #     - name: Upload to pypi
+  #       run: |
+  #         . venv/bin/activate
+  #         twine upload dist/*

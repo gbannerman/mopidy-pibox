@@ -1,0 +1,10 @@
+name: Create stable release
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  release:
+    name: Build and publish
+    uses: gbannerman/mopidy-pibox/.github/workflows/build.yml@main
