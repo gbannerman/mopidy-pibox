@@ -1,8 +1,11 @@
-name: Create stable release
+name: Build
 
-on: push
+on:
+  push:
+    branches:
+      - "**"
 
 jobs:
-  release:
+  build:
     name: Build
     uses: gbannerman/mopidy-pibox/.github/workflows/build.yml@main

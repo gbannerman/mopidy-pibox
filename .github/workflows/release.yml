@@ -2,9 +2,53 @@ name: Create stable release
 
 on:
   release:
-    types: [released]
+    types: [published]
 
 jobs:
-  release:
-    name: Build and publish
+  build:
+    name: Build
     uses: gbannerman/mopidy-pibox/.github/workflows/build.yml@main
+
+  build_and_publish_py:
+    name: Build and publish python package
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download built React app
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ github.sha }}-js-build
+          path: build
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Move React app to Tornado static directory
+        run: mv build mopidy_pibox/static
+
+      - name: Install python dependencies
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install twine
+          pip install -e .
+
+      - name: Init .pypirc
+        env:
+          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          echo -e "[pypi]" >> ~/.pypirc
+          echo -e "username = gbannerman" >> ~/.pypirc
+          echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+
+      - name: Create packages
+        run: python setup.py sdist
+
+      - name: Upload to pypi
+        run: |
+          . venv/bin/activate
+          twine upload dist/*
