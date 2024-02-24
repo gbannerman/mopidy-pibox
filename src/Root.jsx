@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import Spinner from "react-spinkit";
+import BounceLoader from "react-spinners/BounceLoader";
 import teal from "@material-ui/core/colors/teal";
 import pink from "@material-ui/core/colors/pink";
 import HomePage from "pages/HomePage";
@@ -82,7 +82,7 @@ const App = () => {
       <div className="Root">
         <div className="loading">
           <h1>pibox</h1>
-          <Spinner fadeIn="quarter" name="double-bounce" color="#00796B" />
+          <BounceLoader size={44} color="#00796B" />
         </div>
       </div>
     );

@@ -5,7 +5,7 @@ import { Transition } from "react-transition-group";
 import { searchLibrary, queueTrack, playIfStopped } from "services/mopidy.js";
 import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
-import Spinner from "react-spinkit";
+import BounceLoader from "react-spinners/BounceLoader";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import { useDebounce } from "hooks/debounce.js";
@@ -128,7 +128,7 @@ const Search = () => {
   if (fetching) {
     displayResults = (
       <div className="loading">
-        <Spinner fadeIn="none" name="double-bounce" color="white" />
+        <BounceLoader size={44} color="#FFFFFF" />
       </div>
     );
   } else if (error) {

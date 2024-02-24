@@ -34,9 +34,7 @@ const generateFingerprint = () =>
           hash = (hash << 5) - hash + chr;
           hash |= 0; // Convert to 32bit integer
         }
-        const base64Fingerprint = Buffer.from(hash.toString()).toString(
-          "base64"
-        );
+        const base64Fingerprint = btoa(hash.toString());
         resolve(base64Fingerprint);
       });
     };
