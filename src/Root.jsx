@@ -4,7 +4,13 @@ import BounceLoader from "react-spinners/BounceLoader";
 import teal from "@material-ui/core/colors/teal";
 import pink from "@material-ui/core/colors/pink";
 import HomePage from "pages/HomePage";
-import { Route, Switch, useHistory, useLocation } from "react-router-dom";
+import {
+  Route,
+  Switch,
+  Redirect,
+  useHistory,
+  useLocation,
+} from "react-router-dom";
 import {
   getCurrentSession,
   onSessionStarted,
@@ -95,9 +101,13 @@ const App = () => {
         <SnackbarProvider>
           <div className="Root">
             <Switch>
-              <Route path="/pibox/session">
-                <SessionPage session={session} />
-              </Route>
+              {admin.isAdmin ? (
+                <Route path="/pibox/session">
+                  <SessionPage session={session} />
+                </Route>
+              ) : (
+                <Redirect from="/pibox/session" to="/pibox" />
+              )}
               <Route>
                 <HomePage />
               </Route>
