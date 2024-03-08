@@ -226,7 +226,7 @@ export const onConnectionChanged = (callback) =>
 
 export const onPlaybackChanged = (callback) =>
   mopidy.on("event:playbackStateChanged", (playback) =>
-    callback(playback.new_state)
+    callback(playback.new_state),
   );
 
 export const onTracklistChanged = (callback) =>
@@ -237,7 +237,7 @@ export const onTracklistChanged = (callback) =>
 
 export const onSessionStarted = (callback) =>
   document.addEventListener("pibox:sessionStart", (event) =>
-    callback(event.detail)
+    callback(event.detail),
   );
 
 export const onSessionEnded = (callback) =>

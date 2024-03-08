@@ -1,11 +1,21 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true
-    },
-    "extends": ["react-app", "prettier"],
-    "plugins": ["react", "prettier"],
-    "rules": {
-      "prettier/prettier": ["error"]
+  "env": {
+    "browser": true,
+    "es2023": true
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
+  "plugins": ["react", "prettier"],
+  "rules": {
+    "prettier/prettier": ["error"],
+    "react/prop-types": 0
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
     }
+  },
+  "ecmaFeatures": {}
 }

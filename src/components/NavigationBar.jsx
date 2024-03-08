@@ -7,7 +7,7 @@ import { useAdmin } from "hooks/admin";
 import { useSnackbar } from "notistack";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     flexDirection: "row",

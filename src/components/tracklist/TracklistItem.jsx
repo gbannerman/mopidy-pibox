@@ -10,7 +10,7 @@ import {
   Button,
 } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   card: {
     margin: 10,
     display: "flex",

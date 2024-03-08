@@ -16,7 +16,7 @@ export default class ArtistSentence extends React.Component {
       >
         {this.props.artists.map((artist, index) => {
           if (!artist) {
-            return <span>-</span>;
+            return <span key={index}>-</span>;
           }
 
           var separator = null;

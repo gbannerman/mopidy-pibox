@@ -18,7 +18,7 @@ const initialise = async () => {
     <Router>
       <Root />
     </Router>,
-    document.getElementById("root")
+    document.getElementById("root"),
   );
 };
 

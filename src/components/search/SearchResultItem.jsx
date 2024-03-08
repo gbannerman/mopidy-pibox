@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import { getIconFromURI } from "utils/uris";
 
-const useStyle = makeStyles((theme) => ({
+const useStyle = makeStyles(() => ({
   card: {
     margin: 10,
     padding: 5,

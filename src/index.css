@@ -1,6 +1,8 @@
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 body {
@@ -14,7 +16,7 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .loading {
@@ -22,7 +24,7 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   text-align: center;
   align-items: center;
   justify-content: center;

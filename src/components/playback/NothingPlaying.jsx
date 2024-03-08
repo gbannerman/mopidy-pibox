@@ -54,7 +54,7 @@ const Step4 = ({ className }) => {
   ];
 
   const [option] = useState(
-    () => options[(options.length * Math.random()) | 0]
+    () => options[(options.length * Math.random()) | 0],
   );
 
   return <li className={className}>{option}</li>;

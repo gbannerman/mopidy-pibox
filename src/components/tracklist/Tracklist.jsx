@@ -54,8 +54,8 @@ const Tracklist = ({ display }) => {
       updateTracklist();
       setTracklist(
         [...tracklist].map((t) =>
-          t.info.uri === trackUri ? { ...t, voted: true } : t
-        )
+          t.info.uri === trackUri ? { ...t, voted: true } : t,
+        ),
       );
     };
 
