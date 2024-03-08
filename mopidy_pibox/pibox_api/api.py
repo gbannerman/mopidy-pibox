@@ -11,7 +11,6 @@ import logging
 from mopidy.models import ModelJSONEncoder
 from mopidy_pibox import frontend
 from . import socket
-from .session import PiboxSession
 
 
 class TracklistHandler(tornado.web.RequestHandler):
@@ -83,18 +82,18 @@ class SessionHandler(tornado.web.RequestHandler):
 
         actors = pykka.ActorRegistry.get_by_class(frontend.PiboxFrontend)
         for actor_ref in actors:
-            actor_ref.tell({'action': 'UPDATE_SESSION_PLAYLIST', 'payload': playlist})
+            actor_ref.tell({'action': 'UPDATE_SESSION_PLAYLIST', 'payload': playlist.get("uri")})
 
         self.session.playlist = playlist
         self.logger.debug(type(skip_threshold)) 
         self.session.skip_threshold = int(skip_threshold)
         self.logger.debug(type(self.session.skip_threshold))
         self.session.start()
-        socket.PiboxWebSocket.send('SESSION_STARTED', { 'started': self.session.started, 'startTime': self.session.start_time, 'skipThreshold': self.session.skip_threshold, 'playlist': self.session.playlist })
+        socket.PiboxWebSocket.send('SESSION_STARTED', { 'started': self.session.started, 'startTime': self.session.start_time.isoformat(), 'skipThreshold': self.session.skip_threshold, 'playlist': self.session.playlist })
         self.set_status(200)
 
     def get(self):
-        response = { 'started': self.session.started, 'startTime': self.session.start_time, 'skipThreshold': self.session.skip_threshold, 'playlist': self.session.playlist }
+        response = { 'started': self.session.started, 'startTime': self.session.start_time.isoformat() if self.session.start_time else None, 'skipThreshold': self.session.skip_threshold, 'playlist': self.session.playlist }
         self.write(response)
     
     def delete(self):

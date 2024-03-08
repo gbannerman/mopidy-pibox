@@ -1,10 +1,8 @@
 import React from "react";
-import { startSession, endSession } from "services/mopidy";
+import { endSession } from "services/mopidy";
 import { Button } from "@material-ui/core";
-import SessionForm from "components/SessionForm";
-import { useHistory } from "react-router-dom";
-import { useAdmin } from "hooks/admin";
 import { makeStyles } from "@material-ui/core/styles";
+import { useSession } from "hooks/session";
 
 const useStyles = makeStyles({
   root: {
@@ -15,35 +13,28 @@ const useStyles = makeStyles({
     justifyContent: "center",
     alignItems: "center",
   },
+  info: {
+    fontSize: "18px",
+    fontWeight: "400",
+    color: "#757575",
+    textAlign: "center",
+  },
 });
 
-const SessionPage = ({ session }) => {
+const SessionPage = () => {
   const classes = useStyles();
 
-  const { isAdmin } = useAdmin();
-  const history = useHistory();
-
-  const createSession = async ({ votesToSkip, selectedPlaylist }) => {
-    await startSession(votesToSkip, selectedPlaylist);
-    history.push("/pibox");
-  };
+  const { playlistName, skipThreshold, startedAt } = useSession();
 
   return (
     <div className={classes.root}>
-      {!session.started ? (
-        <SessionForm
-          defaultPlaylistUri={"spotify:playlist:79inBfAlnfUB7i5kRthmWL"}
-          onStartSessionClick={createSession}
-        />
-      ) : (
-        <>
-          {isAdmin && (
-            <Button variant="contained" onClick={endSession}>
-              End Session
-            </Button>
-          )}
-        </>
-      )}
+      <p className={classes.info}>Selected Playlist: {playlistName} </p>
+      <p className={classes.info}>Skip Threshold: {skipThreshold} </p>
+      <p className={classes.info}>Started: {startedAt.fromNow()} </p>
+
+      <Button variant="contained" onClick={endSession}>
+        End Session
+      </Button>
     </div>
   );
 };

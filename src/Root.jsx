@@ -4,23 +4,21 @@ import BounceLoader from "react-spinners/BounceLoader";
 import teal from "@material-ui/core/colors/teal";
 import pink from "@material-ui/core/colors/pink";
 import HomePage from "pages/HomePage";
-import {
-  Route,
-  Switch,
-  Redirect,
-  useHistory,
-  useLocation,
-} from "react-router-dom";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
+import dayjs from "dayjs";
 import {
   getCurrentSession,
   onSessionStarted,
   onSessionEnded,
   onConnectionChanged,
+  startSession,
 } from "services/mopidy.js";
 import { SnackbarProvider } from "notistack";
 import SessionPage from "pages/SessionPage.jsx";
 import { AdminContext, useAdminContext } from "hooks/admin.js";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import SessionForm from "components/SessionForm";
+import { SessionContext } from "hooks/session";
 
 const theme = createMuiTheme({
   palette: {
@@ -35,11 +33,10 @@ const theme = createMuiTheme({
 
 const App = () => {
   const [session, setSession] = useState(null);
-  const [fetching, setFetching] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [connected, setConnected] = useState(false);
 
   const history = useHistory();
-  const location = useLocation();
 
   const admin = useAdminContext();
 
@@ -51,6 +48,7 @@ const App = () => {
     const updateCurrentSession = async () => {
       setFetching(true);
       const currentSession = await getCurrentSession();
+      console.log(currentSession);
       setSession(currentSession);
       setFetching(false);
     };
@@ -64,26 +62,12 @@ const App = () => {
     updateCurrentSession();
   }, []);
 
-  useEffect(() => {
-    if (
-      session &&
-      !session.started &&
-      location.pathname !== "/pibox/session" &&
-      !fetching
-    ) {
-      history.push("/pibox/session");
-    }
-  }, [location, history, session, fetching]);
+  const createSession = async ({ votesToSkip, selectedPlaylist }) => {
+    await startSession(votesToSkip, selectedPlaylist);
+    history.push("/pibox");
+  };
 
-  if (
-    !connected ||
-    !session ||
-    (session && fetching) ||
-    (session &&
-      !session.started &&
-      location.pathname !== "/pibox/session" &&
-      !fetching)
-  ) {
+  if (!connected || fetching) {
     return (
       <div className="Root">
         <div className="loading">
@@ -94,27 +78,55 @@ const App = () => {
     );
   }
 
+  if (!session?.started) {
+    return (
+      <>
+        <CssBaseline />
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider>
+            <div className="Root">
+              <SessionForm
+                defaultPlaylistUri={"spotify:playlist:79inBfAlnfUB7i5kRthmWL"}
+                onStartSessionClick={createSession}
+              />
+            </div>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </>
+    );
+  }
+
+  console.log(session);
+
   return (
     <AdminContext.Provider value={admin}>
-      <CssBaseline />
-      <ThemeProvider theme={theme}>
-        <SnackbarProvider>
-          <div className="Root">
-            <Switch>
-              {admin.isAdmin ? (
-                <Route path="/pibox/session">
-                  <SessionPage session={session} />
+      <SessionContext.Provider
+        value={{
+          playlistName: session.playlist.name,
+          skipThreshold: session.skipThreshold,
+          startedAt: dayjs(session.startTime),
+        }}
+      >
+        <CssBaseline />
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider>
+            <div className="Root">
+              <Switch>
+                {admin.isAdmin ? (
+                  <Route path="/pibox/session">
+                    <SessionPage session={session} />
+                  </Route>
+                ) : (
+                  <Redirect from="/pibox/session" to="/pibox" />
+                )}
+                <Route>
+                  <HomePage session={session} />
                 </Route>
-              ) : (
-                <Redirect from="/pibox/session" to="/pibox" />
-              )}
-              <Route>
-                <HomePage />
-              </Route>
-            </Switch>
-          </div>
-        </SnackbarProvider>
-      </ThemeProvider>
+              </Switch>
+            </div>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </SessionContext.Provider>
     </AdminContext.Provider>
   );
 };

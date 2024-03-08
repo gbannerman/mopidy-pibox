@@ -1,3 +1,4 @@
+from datetime import datetime
 import time
 
 class PiboxSession(object):
@@ -13,7 +14,7 @@ class PiboxSession(object):
   
   def start(self):
     self.started = True
-    self.start_time = int(round(time.time() * 1000))
+    self.start_time = datetime.utcnow()
   
   def reset(self):
     self.started = False

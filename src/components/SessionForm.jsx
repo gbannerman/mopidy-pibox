@@ -51,7 +51,12 @@ const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
   const handleSessionClick = (event) => {
     event.preventDefault();
     onStartSessionClick({
-      selectedPlaylist,
+      selectedPlaylist: {
+        uri: selectedPlaylist,
+        name:
+          playlists.find((p) => p.uri === selectedPlaylist).name ??
+          "Unknown Playlist",
+      },
       votesToSkip,
     });
   };

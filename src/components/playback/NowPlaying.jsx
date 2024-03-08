@@ -14,6 +14,7 @@ import {
 import NothingPlaying from "./NothingPlaying";
 import { useAdmin } from "hooks/admin";
 import { makeStyles } from "@material-ui/core/styles";
+import { useSession } from "hooks/session";
 
 const useStyles = makeStyles({
   heading: {
@@ -53,6 +54,8 @@ const useStyles = makeStyles({
 
 const NowPlaying = () => {
   const classes = useStyles();
+
+  const { playlistName } = useSession();
 
   const [artworkUrl, setArtworkUrl] = useState(null);
   const [track, setTrack] = useState(null);
@@ -94,7 +97,7 @@ const NowPlaying = () => {
 
   return (
     <div>
-      <h3 className={classes.heading}>Now Playing</h3>
+      <h3 className={classes.heading}>Playing from: {playlistName} </h3>
       <div className={classes.detail}>
         <div className={classes.artwork}>
           <Thumbnail url={artworkUrl} />

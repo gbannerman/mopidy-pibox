@@ -8,6 +8,7 @@ import {
 } from "services/mopidy";
 import { makeStyles } from "@material-ui/core/styles";
 import { Card } from "@material-ui/core";
+import { useSession } from "hooks/session.js";
 
 const useStyles = makeStyles({
   root: {
@@ -29,6 +30,8 @@ const useStyles = makeStyles({
 
 const Tracklist = ({ display }) => {
   const classes = useStyles();
+
+  const { skipThreshold } = useSession();
 
   const [tracklist, setTracklist] = useState([]);
   const [votePending, setVotePending] = useState(false);
@@ -77,7 +80,7 @@ const Tracklist = ({ display }) => {
       <TracklistItem
         key={track.info.uri}
         track={track}
-        skipThreshold={2}
+        skipThreshold={skipThreshold}
         buttonEnabled={!(votePending || track.voted)}
         onVoteClick={generateSkipHandler(track)}
       />
