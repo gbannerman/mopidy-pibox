@@ -48,7 +48,6 @@ const App = () => {
     const updateCurrentSession = async () => {
       setFetching(true);
       const currentSession = await getCurrentSession();
-      console.log(currentSession);
       setSession(currentSession);
       setFetching(false);
     };
@@ -96,8 +95,6 @@ const App = () => {
     );
   }
 
-  console.log(session);
-
   return (
     <AdminContext.Provider value={admin}>
       <SessionContext.Provider
@@ -117,7 +114,10 @@ const App = () => {
                     <SessionPage session={session} />
                   </Route>
                 ) : (
-                  <Redirect from="/pibox/session" to="/pibox" />
+                  <Route
+                    path="/pibox/session"
+                    render={() => <Redirect to="/pibox" />}
+                  />
                 )}
                 <Route>
                   <HomePage session={session} />
