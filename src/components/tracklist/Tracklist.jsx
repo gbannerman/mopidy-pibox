@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Tracklist = ({ display }) => {
+const Tracklist = ({ display, readOnly = false }) => {
   const classes = useStyles();
 
   const { skipThreshold } = useSession();
@@ -76,15 +76,25 @@ const Tracklist = ({ display }) => {
 
   const tracklistItems = tracklist
     .slice(1, 1 + display)
-    .map((track) => (
-      <TracklistItem
-        key={track.info.uri}
-        track={track}
-        skipThreshold={skipThreshold}
-        buttonEnabled={!(votePending || track.voted)}
-        onVoteClick={generateSkipHandler(track)}
-      />
-    ));
+    .map((track) =>
+      readOnly ? (
+        <TracklistItem
+          key={track.info.uri}
+          track={{ ...track, voted: true }}
+          skipThreshold={skipThreshold}
+          buttonEnabled={true}
+          onVoteClick={() => {}}
+        />
+      ) : (
+        <TracklistItem
+          key={track.info.uri}
+          track={track}
+          skipThreshold={skipThreshold}
+          buttonEnabled={!(votePending || track.voted)}
+          onVoteClick={generateSkipHandler(track)}
+        />
+      ),
+    );
 
   return (
     <>

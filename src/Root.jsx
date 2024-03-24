@@ -19,6 +19,7 @@ import { AdminContext, useAdminContext } from "hooks/admin.js";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import SessionForm from "components/SessionForm";
 import { SessionContext } from "hooks/session";
+import DisplayPage from "pages/DisplayPage";
 
 const theme = createMuiTheme({
   palette: {
@@ -119,6 +120,9 @@ const App = () => {
                     render={() => <Redirect to="/pibox" />}
                   />
                 )}
+                <Route path="/pibox/display">
+                  <DisplayPage session={session} />
+                </Route>
                 <Route>
                   <HomePage session={session} />
                 </Route>
