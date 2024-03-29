@@ -88,6 +88,10 @@ class SessionHandler(tornado.web.RequestHandler):
         self.logger.debug(type(skip_threshold)) 
         self.session.skip_threshold = int(skip_threshold)
         self.logger.debug(type(self.session.skip_threshold))
+
+        for actor_ref in actors:
+            actor_ref.tell({'action': 'START_SESSION', 'payload': data.get('autoStart', True)})
+
         self.session.start()
         socket.PiboxWebSocket.send('SESSION_STARTED', { 'started': self.session.started, 'startTime': self.session.start_time.isoformat(), 'skipThreshold': self.session.skip_threshold, 'playlist': self.session.playlist })
         self.set_status(200)
@@ -95,11 +99,11 @@ class SessionHandler(tornado.web.RequestHandler):
     def get(self):
         response = { 'started': self.session.started, 'startTime': self.session.start_time.isoformat() if self.session.start_time else None, 'skipThreshold': self.session.skip_threshold, 'playlist': self.session.playlist }
         self.write(response)
-    
+
     def delete(self):
         self.core.playback.stop()
         self.core.tracklist.clear()
-        
+
         actors = pykka.ActorRegistry.get_by_class(frontend.PiboxFrontend)
         for actor_ref in actors:
             actor_ref.tell({'action': 'END_SESSION'})
@@ -107,5 +111,3 @@ class SessionHandler(tornado.web.RequestHandler):
         self.session.reset()
         socket.PiboxWebSocket.send('SESSION_ENDED', {})
         self.set_status(200)
-
-

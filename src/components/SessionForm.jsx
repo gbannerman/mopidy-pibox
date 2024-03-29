@@ -7,6 +7,8 @@ import {
   Button,
   FormControl,
   InputLabel,
+  Checkbox,
+  FormControlLabel,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -31,6 +33,8 @@ const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
 
   const [playlists, setPlaylists] = useState([]);
   const [votesToSkip, setVotesToSkip] = useState("");
+  const [automaticallyStartPlaying, setAutomaticallyStartPlaying] =
+    useState(true);
   const [selectedPlaylist, setSelectedPlaylist] = useState(defaultPlaylistUri);
 
   useEffect(() => {
@@ -58,6 +62,7 @@ const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
           "Unknown Playlist",
       },
       votesToSkip,
+      automaticallyStartPlaying,
     });
   };
 
@@ -86,6 +91,19 @@ const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
           {menuItems}
         </Select>
       </FormControl>
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="automaticallyStartPlaying"
+            checked={automaticallyStartPlaying}
+            onChange={(event) =>
+              setAutomaticallyStartPlaying(event.target.checked)
+            }
+          />
+        }
+        label="Automatically start playing music when session starts"
+      />
 
       <Button
         type="submit"

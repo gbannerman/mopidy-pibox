@@ -62,8 +62,16 @@ const App = () => {
     updateCurrentSession();
   }, []);
 
-  const createSession = async ({ votesToSkip, selectedPlaylist }) => {
-    await startSession(votesToSkip, selectedPlaylist);
+  const createSession = async ({
+    votesToSkip,
+    selectedPlaylist,
+    automaticallyStartPlaying,
+  }) => {
+    await startSession(
+      votesToSkip,
+      selectedPlaylist,
+      automaticallyStartPlaying,
+    );
     history.push("/pibox");
   };
 

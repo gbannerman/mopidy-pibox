@@ -149,10 +149,15 @@ export const queueTrack = async (selectedTrack) => {
   return updatedTracklist;
 };
 
-export const startSession = async (skipThreshold, playlist) => {
+export const startSession = async (
+  skipThreshold,
+  playlist,
+  automaticallyStartPlaying,
+) => {
   const result = await axios.post("/pibox/api/session", {
     skipThreshold,
     playlist,
+    autoStart: automaticallyStartPlaying,
   });
   return result.data;
 };
