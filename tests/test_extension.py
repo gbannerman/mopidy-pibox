@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from mopidy_pibox import Extension, frontend as frontend_lib
+from mopidy_pibox import Extension
 
 
 def test_get_default_config():
@@ -8,8 +8,13 @@ def test_get_default_config():
 
     config = ext.get_default_config()
 
-    assert '[pibox]' in config
-    assert 'enabled = true' in config
+    assert "[pibox]" in config
+    assert "enabled = true" in config
+    assert (
+        "default_playlist = spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL"
+        in config
+    )
+    assert "offline = false" in config
 
 
 def test_get_config_schema():
@@ -17,9 +22,6 @@ def test_get_config_schema():
 
     schema = ext.get_config_schema()
 
-    # TODO Test the content of your config schema
-    #assert 'username' in schema
-    #assert 'password' in schema
-
-
-# TODO Write more tests
+    assert "enabled" in schema
+    assert "default_playlist" in schema
+    assert "offline" in schema
