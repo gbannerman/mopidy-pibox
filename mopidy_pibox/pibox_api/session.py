@@ -2,7 +2,6 @@ from datetime import datetime
 
 
 class PiboxSession(object):
-
     def __init__(self, skip_threshold):
         self.started = False
         self.start_time = None

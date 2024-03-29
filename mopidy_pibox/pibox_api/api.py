@@ -13,7 +13,6 @@ from . import socket
 
 
 class TracklistHandler(tornado.web.RequestHandler):
-
     def initialize(self, core, session):
         self.core = core
         self.session = session

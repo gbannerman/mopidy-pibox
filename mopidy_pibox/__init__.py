@@ -10,7 +10,6 @@ __version__ = "0.11.0"
 
 
 def my_app_factory(config, core):
-
     this_session = session.PiboxSession(2)
 
     path = os.path.join(os.path.dirname(__file__), "static")
@@ -37,7 +36,6 @@ def my_app_factory(config, core):
 
 
 class Extension(ext.Extension):
-
     dist_name = "Mopidy-Pibox"
     ext_name = "pibox"
     version = __version__
@@ -53,7 +51,6 @@ class Extension(ext.Extension):
         return schema
 
     def setup(self, registry):
-
         from .frontend import PiboxFrontend
 
         registry.add("frontend", PiboxFrontend)
