@@ -2,6 +2,7 @@ import logging
 
 import tornado.websocket
 
+
 class PiboxWebSocket(tornado.websocket.WebSocketHandler):
     clients = set()
     logger = logging.getLogger(__name__)
@@ -23,4 +24,4 @@ class PiboxWebSocket(tornado.websocket.WebSocketHandler):
     @classmethod
     def send(cls, subject, message):
         for conn in cls.clients:
-            conn.write_message({'type': subject, 'payload': message})
+            conn.write_message({"type": subject, "payload": message})
