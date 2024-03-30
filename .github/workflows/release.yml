@@ -14,7 +14,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Download built React app
         uses: actions/download-artifact@v3
@@ -23,9 +23,9 @@ jobs:
           path: build
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Move React app to Tornado static directory
         run: mv build mopidy_pibox/static

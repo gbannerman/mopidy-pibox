@@ -1,0 +1,52 @@
+name: Testing
+
+on: workflow_call
+
+jobs:
+  python:
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - name: "Test: Python 3.9"
+            python: "3.9"
+            tox-command: py39
+
+          - name: "Test: Python 3.10"
+            python: "3.10"
+            tox-command: py310
+
+          - name: "Test: Python 3.11"
+            python: "3.11"
+            tox-command: py311
+
+          - name: "Test: Python 3.12"
+            python: "3.12"
+            tox-command: py312
+
+          - name: "Lint: check-manifest"
+            python: "3.12"
+            tox-command: check-manifest
+
+          - name: "Lint: ruff"
+            python: "3.12"
+            tox-command: ruff-lint
+
+          - name: "Format: ruff"
+            python: "3.12"
+            tox-command: ruff-format
+
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    container: ghcr.io/mopidy/ci:12
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - run: python -m pip install pygobject tox
+
+      - run: python -m tox -e ${{ matrix.tox-command }}

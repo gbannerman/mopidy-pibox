@@ -1,4 +1,4 @@
-name: Build
+name: CI
 
 on:
   push:
@@ -6,6 +6,11 @@ on:
       - "**"
 
 jobs:
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yml
+
   build:
     name: Build
-    uses: gbannerman/mopidy-pibox/.github/workflows/build.yml@main
+    needs: test
+    uses: ./.github/workflows/build.yml
