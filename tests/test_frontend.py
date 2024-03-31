@@ -18,15 +18,18 @@ def config():
     }
 
 
-class TestPiboxFrontendBase(unittest.TestCase):
+class TestPiboxFrontend(unittest.TestCase):
     def setUp(self):
         random.seed(0)
         self.audio = dummy_audio.create_proxy()
         self.backend = dummy_backend.create_proxy(audio=self.audio)
         self.core = core.Core.start(config(), backends=[self.backend]).proxy()
         self.frontend = PiboxFrontend(config=config(), core=self.core)
-        self.frontend.session_active = True
-        self.frontend.uri = "dummy:playlist1"
+
+        self.frontend.pussycat_list = [
+            "dummy:pussycat1",
+            "dummy:pussycat2",
+        ]
 
         tracks = [
             models.Track(uri="dummy:a", length=40000, name="Dummy Track A"),
@@ -48,26 +51,108 @@ class TestPiboxFrontendBase(unittest.TestCase):
     def tearDown(self):
         pykka.ActorRegistry.stop_all()
 
+    def test_start_session_plays_song_from_session_playlist_if_autostart_enabled(self):
+        self.__start_session(auto_start=True)
 
-class TrackPlaybackEndedTestCase(TestPiboxFrontendBase):
-    def test_plays_whats_new_pussycat_if_last_song_was_whats_new_pussycat_and_nothing_in_queue(
+        current_track = self.core.playback.get_current_track().get()
+        playback_state = self.core.playback.get_state().get()
+
+        assert current_track.uri == "dummy:a"
+        assert playback_state == core.PlaybackState.PLAYING
+
+    def test_start_session_doesnt_play_music_if_autostart_disabled(self):
+        self.__start_session()
+
+        current_track = self.core.playback.get_current_track().get()
+        playback_state = self.core.playback.get_state().get()
+
+        assert current_track == None
+        assert playback_state == core.PlaybackState.STOPPED
+
+    def test_when_track_ends_plays_song_from_session_playlist_if_no_songs_in_queue(
         self,
     ):
-        self.frontend.pussycat_list = [
-            "dummy:pussycat1",
-            "dummy:pussycat2",
-        ]
+        self.__start_session()
 
-        self.core.tracklist.add(uris=["dummy:a", "dummy:pussycat1"])
-        self.core.playback.play().get()
-        self.core.playback.next().get()
-        self.core.playback.next().get()
+        self.__play_track("Dummy Track Z", "dummy:z")
 
-        track = models.Track(uri="dummy:pussycat1", length=40000)
+        current_track = self.core.playback.get_current_track().get()
+        playback_state = self.core.playback.get_state().get()
 
-        self.frontend.track_playback_ended(
-            tl_track=models.TlTrack(tlid=1, track=track), time_position=None
+        assert current_track.uri == "dummy:a"
+        assert playback_state == core.PlaybackState.PLAYING
+
+    def test_when_track_ends_skips_songs_which_have_already_been_played(self):
+        self.__start_session()
+
+        self.__play_track("Dummy Track A", "dummy:a")
+        self.__play_track("Dummy Track Z", "dummy:z")
+
+        current_track = self.core.playback.get_current_track().get()
+        playback_state = self.core.playback.get_state().get()
+
+        assert current_track.uri == "dummy:c"
+        assert playback_state == core.PlaybackState.PLAYING
+
+    def test_add_vote_for_user_on_queued_track_removes_track_if_skip_threshold_reached(
+        self,
+    ):
+        self.__start_session()
+
+        self.core.tracklist.add(uris=["dummy:a"])
+        queued_tracks = self.core.tracklist.get_tracks().get()
+
+        self.frontend.add_vote_for_user_on_queued_track(
+            user_fingerprint="dummy", track=queued_tracks[0]
         )
+
+        updated_queued_tracks = self.core.tracklist.get_tracks().get()
+
+        assert len(updated_queued_tracks) == 0
+
+    def test_add_vote_for_user_on_queued_track_adds_track_to_denylist(
+        self,
+    ):
+        self.__start_session()
+
+        self.core.tracklist.add(uris=["dummy:a"])
+        queued_tracks = self.core.tracklist.get_tracks().get()
+
+        self.frontend.add_vote_for_user_on_queued_track(
+            user_fingerprint="dummy", track=queued_tracks[0]
+        )
+
+        assert "dummy:a" in self.frontend.pibox.denylist
+
+    def test_when_track_ends_skips_songs_that_are_on_denylist(self):
+        self.__start_session()
+
+        self.frontend.pibox.denylist = ["dummy:a"]
+
+        self.__play_track("Dummy Track Z", "dummy:z")
+
+        current_track = self.core.playback.get_current_track().get()
+        playback_state = self.core.playback.get_state().get()
+
+        assert current_track.uri == "dummy:c"
+        assert playback_state == core.PlaybackState.PLAYING
+
+    def test_when_track_ends_resets_session_when_playlist_exhausted(self):
+        self.__start_session()
+
+        self.__play_track("Dummy Track A", "dummy:a")
+        self.__play_track("Dummy Track B", "dummy:b")
+        self.__play_track("Dummy Track C", "dummy:c")
+
+        assert self.frontend.pibox.started is False
+        assert self.frontend.pibox.played_tracks == []
+
+    def test_when_track_ends_plays_whats_new_pussycat_if_last_song_was_whats_new_pussycat_and_nothing_in_queue(
+        self,
+    ):
+        self.__start_session()
+
+        self.__play_track("What's New Pussycat?", "dummy:pussycat1")
 
         current_track = self.core.playback.get_current_track().get()
         playback_state = self.core.playback.get_state().get()
@@ -75,24 +160,14 @@ class TrackPlaybackEndedTestCase(TestPiboxFrontendBase):
         assert current_track.uri == "dummy:pussycat1"
         assert playback_state == core.PlaybackState.PLAYING
 
-    def test_does_not_play_whats_new_pussycat_if_last_song_was_whats_new_pussycat_and_songs_in_queue(
+    def test_when_track_ends_does_not_play_whats_new_pussycat_if_last_song_was_whats_new_pussycat_and_songs_in_queue(
         self,
     ):
-        self.frontend.pussycat_list = [
-            "dummy:pussycat1",
-            "dummy:pussycat2",
-        ]
+        self.__start_session()
 
         self.core.tracklist.add(uris=["dummy:a", "dummy:pussycat1", "dummy:c"])
-        self.core.playback.play().get()
-        self.core.playback.next().get()
-        self.core.playback.next().get()
-
-        track = models.Track(uri="dummy:pussycat1", length=40000)
-
-        self.frontend.track_playback_ended(
-            tl_track=models.TlTrack(tlid=1, track=track), time_position=None
-        )
+        self.__play_track("Dummy Track A", "dummy:a")
+        self.__play_track("What's New Pussycat?", "dummy:pussycat1")
 
         current_track = self.core.playback.get_current_track().get()
         playback_state = self.core.playback.get_state().get()
@@ -100,128 +175,23 @@ class TrackPlaybackEndedTestCase(TestPiboxFrontendBase):
         assert current_track.uri == "dummy:c"
         assert playback_state == core.PlaybackState.PLAYING
 
-    def test_plays_song_from_session_playlist_if_no_songs_in_queue(self):
-        track = models.Track(uri="dummy:z", length=40000)
+    def __start_session(self, auto_start=False):
+        self.frontend.start_session(
+            skip_threshold=1,
+            playlist={"name": "Dummy Playlist", "uri": "dummy:playlist1"},
+            auto_start=auto_start,
+        )
 
+    def __play_track(self, name, uri):
+        track = models.Track(name=name, uri=uri, length=40000)
+
+        self.core.tracklist.remove({"uri": [uri]}).get()
+        self.core.playback.stop().get()
+
+        tracklist_length = self.core.tracklist.get_length().get()
         self.frontend.track_playback_ended(
             tl_track=models.TlTrack(tlid=1, track=track), time_position=None
         )
 
-        current_track = self.core.playback.get_current_track().get()
-        playback_state = self.core.playback.get_state().get()
-
-        assert current_track.uri == "dummy:a"
-        assert playback_state == core.PlaybackState.PLAYING
-
-    def test_skips_songs_which_have_already_been_played(self):
-        self.core.tracklist.add(uris=["dummy:a"])
-        self.core.playback.play().get()
-        self.core.playback.next().get()
-
-        track = models.Track(uri="dummy:z", length=40000)
-
-        self.frontend.track_playback_ended(
-            tl_track=models.TlTrack(tlid=1, track=track), time_position=None
-        )
-
-        current_track = self.core.playback.get_current_track().get()
-        playback_state = self.core.playback.get_state().get()
-
-        assert current_track.uri == "dummy:c"
-        assert playback_state == core.PlaybackState.PLAYING
-
-    def test_skips_songs_that_are_on_denylist(self):
-        self.frontend.denylist = ["dummy:a"]
-
-        track = models.Track(uri="dummy:z", length=40000)
-
-        self.frontend.track_playback_ended(
-            tl_track=models.TlTrack(tlid=1, track=track), time_position=None
-        )
-
-        current_track = self.core.playback.get_current_track().get()
-        playback_state = self.core.playback.get_state().get()
-
-        assert current_track.uri == "dummy:c"
-        assert playback_state == core.PlaybackState.PLAYING
-
-    def test_resets_session_when_playlist_exhausted(self):
-        self.core.tracklist.add(uris=["dummy:a", "dummy:b", "dummy:c"])
-        self.core.playback.play().get()
-        self.core.playback.next().get()
-        self.core.playback.next().get()
-        self.core.playback.next().get()
-
-        track = models.Track(uri="dummy:c", length=40000)
-
-        self.frontend.track_playback_ended(
-            tl_track=models.TlTrack(tlid=1, track=track), time_position=None
-        )
-
-        assert self.frontend.session_active is False
-        assert self.frontend.denylist == []
-        assert self.frontend.played_tracks == []
-        assert self.frontend.uri is None
-
-
-class OnReceiveTestCase(TestPiboxFrontendBase):
-    def test_updates_uri_on_update_session_playlist_action(self):
-        self.frontend.uri = None
-
-        self.frontend.on_receive(
-            {"action": "UPDATE_SESSION_PLAYLIST", "payload": "dummy:playlist2"}
-        )
-
-        assert self.frontend.uri == "dummy:playlist2"
-
-    def test_marks_session_as_active_on_start_session_action(self):
-        self.frontend.session_active = False
-
-        self.frontend.on_receive({"action": "START_SESSION"})
-
-        assert self.frontend.session_active is True
-
-    def test_starts_playing_music_from_session_playlist_if_autostart_enabled_in_start_session_action(
-        self,
-    ):
-        self.frontend.session_active = False
-
-        self.frontend.on_receive({"action": "START_SESSION", "payload": True})
-
-        current_track = self.core.playback.get_current_track().get()
-        playback_state = self.core.playback.get_state().get()
-
-        assert current_track.uri == "dummy:a"
-        assert playback_state == core.PlaybackState.PLAYING
-
-    def test_does_not_start_playing_music_from_session_playlist_if_autostart_disabled_in_start_session_action(
-        self,
-    ):
-        self.frontend.session_active = False
-
-        self.frontend.on_receive({"action": "START_SESSION", "payload": False})
-
-        current_track = self.core.playback.get_current_track().get()
-        playback_state = self.core.playback.get_state().get()
-
-        assert current_track is None
-        assert playback_state == core.PlaybackState.STOPPED
-
-    def test_sets_denylist_on_update_denylist_action(self):
-        self.frontend.denylist = []
-
-        self.frontend.on_receive(
-            {"action": "UPDATE_DENYLIST", "payload": ["dummy:a", "dummy:b"]}
-        )
-
-        assert self.frontend.denylist == ["dummy:a", "dummy:b"]
-
-    def test_resets_session_on_end_session_action(self):
-        self.frontend.session_active = True
-
-        self.frontend.on_receive({"action": "END_SESSION"})
-
-        assert self.frontend.session_active is False
-        assert self.frontend.denylist == []
-        assert self.frontend.played_tracks == []
-        assert self.frontend.uri is None
+        if tracklist_length > 0:
+            self.core.playback.play().get()

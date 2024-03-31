@@ -1,52 +1,58 @@
 from __future__ import absolute_import, unicode_literals
 
-import pykka
 import json
 
 import tornado.web
 
 import logging
 
-from mopidy.models import ModelJSONEncoder
-from mopidy_pibox import frontend
+from mopidy.models import ModelJSONEncoder, Track
 from . import socket
 
 
-class TracklistHandler(tornado.web.RequestHandler):
-    def initialize(self, core, session):
+class PiboxHandler(tornado.web.RequestHandler):
+    def initialize(self, core, frontend):
         self.core = core
-        self.session = session
+        self.frontend = frontend
         self.logger = logging.getLogger(__name__)
 
     def get(self):
-        fingerprint = self.request.headers["pibox-fingerprint"]
-        tracklist = []
-        for track in self.core.tracklist.get_tracks().get():
-            has_voted = fingerprint in self.session.has_voted.get(track.uri, [])
-            tracklist.append(
-                {
-                    "info": track,
-                    "votes": self.session.votes.get(track.uri, 0),
-                    "voted": has_voted,
-                }
-            )
+        pass
+
+    def post(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def _get_body(self):
+        return tornado.escape.json_decode(self.request.body)
+
+    def _get_user_fingerprint(self):
+        return self.request.headers["X-Pibox-Fingerprint"]
+
+
+class TracklistHandler(PiboxHandler):
+    def initialize(self, core, frontend):
+        super(TracklistHandler, self).initialize(core, frontend)
+
+    def get(self):
+        fingerprint = self._get_user_fingerprint()
+        tracklist = self.frontend.get_queued_tracks(fingerprint).get()
         self.set_header("Content-Type", "application/json")
         self.write(json.dumps({"tracklist": tracklist}, cls=ModelJSONEncoder))
 
 
-class VoteHandler(tornado.web.RequestHandler):
-    def initialize(self, core, session):
-        self.core = core
-        self.session = session
-        self.logger = logging.getLogger(__name__)
+class VoteHandler(PiboxHandler):
+    def initialize(self, core, frontend):
+        super(VoteHandler, self).initialize(core, frontend)
 
     def post(self):
-        data = tornado.escape.json_decode(self.request.body)
-        fingerprint = self.request.headers["pibox-fingerprint"]
-        uri = data["uri"]
-        users_who_voted = self.session.has_voted.get(uri, [])
+        data = self._get_body()
+        fingerprint = self._get_user_fingerprint()
+        track = Track(uri=data["uri"])
 
-        if fingerprint in users_who_voted:
+        if self.frontend.pibox.has_user_voted_on_track(fingerprint, track).get():
             self.set_status(400)
             response = {
                 "code": "15",
@@ -55,95 +61,35 @@ class VoteHandler(tornado.web.RequestHandler):
             }
             self.write(response)
         else:
-            users_who_voted.append(fingerprint)
-            self.session.has_voted[uri] = users_who_voted
-            vote_count = self.session.votes.get(uri, 0) + 1
-            self.session.votes[uri] = vote_count
-            tl_tracks = self.core.tracklist.filter({"uri": [uri]}).get()
-            tracklist_index = self.core.tracklist.index(tl_tracks[0]).get()
-            socket.PiboxWebSocket.send(
-                "NEW_VOTE",
-                {
-                    "votes": vote_count,
-                    "threshold": self.session.skip_threshold,
-                    "uri": uri,
-                    "tracklistIndex": tracklist_index,
-                },
-            )
-            if vote_count >= self.session.skip_threshold:
-                self.core.tracklist.remove({"uri": [uri]})
-                del self.session.votes[uri]
-                del self.session.has_voted[uri]
-                self.session.denylist.append(uri)
-                actors = pykka.ActorRegistry.get_by_class(frontend.PiboxFrontend)
-                for actor_ref in actors:
-                    actor_ref.tell(
-                        {
-                            "action": "UPDATE_DENYLIST",
-                            "payload": self.session.denylist,
-                        }
-                    )
+            self.frontend.add_vote_for_user_on_queued_track(fingerprint, track)
+
             self.set_status(200)
 
 
-class SessionHandler(tornado.web.RequestHandler):
-    def initialize(self, core, session):
-        self.core = core
-        self.session = session
-        self.logger = logging.getLogger(__name__)
+class SessionHandler(PiboxHandler):
+    def initialize(self, core, frontend):
+        super(SessionHandler, self).initialize(core, frontend)
 
     def post(self):
-        data = tornado.escape.json_decode(self.request.body)
+        data = self._get_body()
         skip_threshold = data["skipThreshold"]
         playlist = data["playlist"]
+        auto_start = data.get("autoStart", True)
 
-        actors = pykka.ActorRegistry.get_by_class(frontend.PiboxFrontend)
-        for actor_ref in actors:
-            actor_ref.tell(
-                {"action": "UPDATE_SESSION_PLAYLIST", "payload": playlist.get("uri")}
-            )
+        self.frontend.start_session(skip_threshold, playlist, auto_start)
+        session = self.frontend.pibox.to_json().get()
 
-        self.session.playlist = playlist
-        self.logger.debug(type(skip_threshold))
-        self.session.skip_threshold = int(skip_threshold)
-        self.logger.debug(type(self.session.skip_threshold))
-
-        for actor_ref in actors:
-            actor_ref.tell(
-                {"action": "START_SESSION", "payload": data.get("autoStart", True)}
-            )
-
-        self.session.start()
         socket.PiboxWebSocket.send(
             "SESSION_STARTED",
-            {
-                "started": self.session.started,
-                "startTime": self.session.start_time.isoformat(),
-                "skipThreshold": self.session.skip_threshold,
-                "playlist": self.session.playlist,
-            },
+            session,
         )
         self.set_status(200)
 
     def get(self):
-        response = {
-            "started": self.session.started,
-            "startTime": (
-                self.session.start_time.isoformat() if self.session.start_time else None
-            ),
-            "skipThreshold": self.session.skip_threshold,
-            "playlist": self.session.playlist,
-        }
-        self.write(response)
+        session = self.frontend.pibox.to_json().get()
+        self.write(session)
 
     def delete(self):
-        self.core.playback.stop()
-        self.core.tracklist.clear()
-
-        actors = pykka.ActorRegistry.get_by_class(frontend.PiboxFrontend)
-        for actor_ref in actors:
-            actor_ref.tell({"action": "END_SESSION"})
-
-        self.session.reset()
+        self.frontend.end_session().get()
         socket.PiboxWebSocket.send("SESSION_ENDED", {})
         self.set_status(200)

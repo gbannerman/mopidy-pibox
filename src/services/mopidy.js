@@ -50,12 +50,6 @@ const connectToPibox = (websocketUrl) => {
     let event;
 
     switch (data.type) {
-      case "NEW_VOTE":
-        event = new CustomEvent("pibox:newVote", {
-          detail: data.payload,
-        });
-        break;
-
       case "SESSION_STARTED":
         event = new CustomEvent("pibox:sessionStart", {
           detail: data.payload,
@@ -247,6 +241,3 @@ export const onSessionStarted = (callback) =>
 
 export const onSessionEnded = (callback) =>
   document.addEventListener("pibox:sessionEnd", () => callback());
-
-export const onNewVote = (callback) =>
-  document.addEventListener("pibox:newVote", (event) => callback(event.detail));

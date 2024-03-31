@@ -3,29 +3,32 @@ from __future__ import unicode_literals
 import os
 
 from mopidy import config, ext
-from .pibox_api import api, session, socket
+import pykka
+from .pibox_api import api, socket
 from .routing import ClientRoutingHandler
 
 __version__ = "0.11.0"
 
 
 def my_app_factory(config, core):
-    this_session = session.PiboxSession(2)
+    from .frontend import PiboxFrontend
 
     path = os.path.join(os.path.dirname(__file__), "static")
+
+    pibox = pykka.ActorRegistry.get_by_class(PiboxFrontend)[0].proxy()
 
     return [
         (r"/ws/?", socket.PiboxWebSocket),
         (
             r"/api/tracklist/?",
             api.TracklistHandler,
-            {"core": core, "session": this_session},
+            {"core": core, "frontend": pibox},
         ),
-        (r"/api/vote/?", api.VoteHandler, {"core": core, "session": this_session}),
+        (r"/api/vote/?", api.VoteHandler, {"core": core, "frontend": pibox}),
         (
             r"/api/session/?",
             api.SessionHandler,
-            {"core": core, "session": this_session},
+            {"core": core, "frontend": pibox},
         ),
         (
             r"/(.*)",

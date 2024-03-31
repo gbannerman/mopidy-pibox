@@ -48,7 +48,7 @@ const generateFingerprint = () =>
 
 export const initialiseFingerprint = async () => {
   fingerprint = await generateFingerprint();
-  axios.defaults.headers.common["pibox-fingerprint"] = fingerprint;
+  axios.defaults.headers.common["X-Pibox-Fingerprint"] = fingerprint;
   return fingerprint;
 };
 
