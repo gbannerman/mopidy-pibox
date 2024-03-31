@@ -130,6 +130,21 @@ class TrackPlaybackEndedTestCase(TestPiboxFrontendBase):
         assert current_track.uri == "dummy:c"
         assert playback_state == core.PlaybackState.PLAYING
 
+    def test_skips_songs_that_are_on_denylist(self):
+        self.frontend.denylist = ["dummy:a"]
+
+        track = models.Track(uri="dummy:z", length=40000)
+
+        self.frontend.track_playback_ended(
+            tl_track=models.TlTrack(tlid=1, track=track), time_position=None
+        )
+
+        current_track = self.core.playback.get_current_track().get()
+        playback_state = self.core.playback.get_state().get()
+
+        assert current_track.uri == "dummy:c"
+        assert playback_state == core.PlaybackState.PLAYING
+
     def test_marks_session_as_inactive_when_playlist_exhausted(self):
         self.core.tracklist.add(uris=["dummy:a", "dummy:b", "dummy:c"])
         self.core.playback.play().get()
@@ -188,6 +203,15 @@ class OnReceiveTestCase(TestPiboxFrontendBase):
 
         assert current_track is None
         assert playback_state == core.PlaybackState.STOPPED
+
+    def test_sets_denylist_on_update_denylist_action(self):
+        self.frontend.denylist = []
+
+        self.frontend.on_receive(
+            {"action": "UPDATE_DENYLIST", "payload": ["dummy:a", "dummy:b"]}
+        )
+
+        assert self.frontend.denylist == ["dummy:a", "dummy:b"]
 
     def test_marks_session_as_inactive_on_end_session_action(self):
         self.frontend.session_active = True

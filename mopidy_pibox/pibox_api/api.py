@@ -74,13 +74,13 @@ class VoteHandler(tornado.web.RequestHandler):
                 self.core.tracklist.remove({"uri": [uri]})
                 del self.session.votes[uri]
                 del self.session.has_voted[uri]
-                self.session.blacklist.append(uri)
+                self.session.denylist.append(uri)
                 actors = pykka.ActorRegistry.get_by_class(frontend.PiboxFrontend)
                 for actor_ref in actors:
                     actor_ref.tell(
                         {
-                            "action": "UPDATE_BLACKLIST",
-                            "payload": self.session.blacklist,
+                            "action": "UPDATE_DENYLIST",
+                            "payload": self.session.denylist,
                         }
                     )
             self.set_status(200)

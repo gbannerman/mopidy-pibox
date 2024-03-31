@@ -7,7 +7,7 @@ class PiboxSession(object):
         self.start_time = None
         self.skip_threshold = skip_threshold
         self.playlist = None
-        self.blacklist = ["spotify:track:0afhq8XCExXpqazXczTSve"]
+        self.denylist = ["spotify:track:0afhq8XCExXpqazXczTSve"]
         self.votes = {}
         self.has_voted = {}
 
@@ -18,6 +18,6 @@ class PiboxSession(object):
     def reset(self):
         self.started = False
         self.playlist = None
-        self.blacklist = ["spotify:track:0afhq8XCExXpqazXczTSve"]
+        self.denylist = ["spotify:track:0afhq8XCExXpqazXczTSve"]
         self.votes = {}
         self.has_voted = {}

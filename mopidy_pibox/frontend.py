@@ -16,7 +16,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         ]
         self.uri = None
         self.session_active = False
-        self.blacklist = []
+        self.denylist = []
         self.played_tracks = []
         self.logger = logging.getLogger(__name__)
 
@@ -33,8 +33,8 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
                 if auto_start:
                     self.__queue_song_from_session_playlist()
                     self.__start_playing()
-        elif action == "UPDATE_BLACKLIST":
-            self.blacklist = message.get("payload")
+        elif action == "UPDATE_DENYLIST":
+            self.denylist = message.get("payload")
         elif action == "END_SESSION":
             self.session_active = False
 
@@ -53,9 +53,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         playlist = self.__get_session_playlist()
         shuffle(playlist)
 
-        remaining_playlist = [
-            ref for ref in playlist if not self.__played_already(ref.uri)
-        ]
+        remaining_playlist = [ref for ref in playlist if self.__can_play(ref.uri)]
 
         if len(remaining_playlist) == 0:
             self.logger.info("No more tracks to play")
@@ -70,8 +68,6 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
     def __get_session_playlist(self):
         if self.config["offline"]:
             return self.core.library.browse(uri="local:directory?type=track").get()
-        elif self.uri is None:
-            return self.core.playlists.get_items(self.config["default_playlist"]).get()
         else:
             return self.core.playlists.get_items(self.uri).get()
 
@@ -82,8 +78,8 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             played_tracks.append(tup[1].uri)
         self.played_tracks = played_tracks
 
-    def __played_already(self, uri):
-        return (uri in self.played_tracks) or (uri in self.blacklist)
+    def __can_play(self, uri):
+        return (uri not in self.played_tracks) and (uri not in self.denylist)
 
     def __start_playing(self):
         if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
