@@ -145,7 +145,7 @@ class TrackPlaybackEndedTestCase(TestPiboxFrontendBase):
         assert current_track.uri == "dummy:c"
         assert playback_state == core.PlaybackState.PLAYING
 
-    def test_marks_session_as_inactive_when_playlist_exhausted(self):
+    def test_resets_session_when_playlist_exhausted(self):
         self.core.tracklist.add(uris=["dummy:a", "dummy:b", "dummy:c"])
         self.core.playback.play().get()
         self.core.playback.next().get()
@@ -159,6 +159,9 @@ class TrackPlaybackEndedTestCase(TestPiboxFrontendBase):
         )
 
         assert self.frontend.session_active is False
+        assert self.frontend.denylist == []
+        assert self.frontend.played_tracks == []
+        assert self.frontend.uri is None
 
 
 class OnReceiveTestCase(TestPiboxFrontendBase):
@@ -213,9 +216,12 @@ class OnReceiveTestCase(TestPiboxFrontendBase):
 
         assert self.frontend.denylist == ["dummy:a", "dummy:b"]
 
-    def test_marks_session_as_inactive_on_end_session_action(self):
+    def test_resets_session_on_end_session_action(self):
         self.frontend.session_active = True
 
         self.frontend.on_receive({"action": "END_SESSION"})
 
         assert self.frontend.session_active is False
+        assert self.frontend.denylist == []
+        assert self.frontend.played_tracks == []
+        assert self.frontend.uri is None

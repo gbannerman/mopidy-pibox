@@ -36,7 +36,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         elif action == "UPDATE_DENYLIST":
             self.denylist = message.get("payload")
         elif action == "END_SESSION":
-            self.session_active = False
+            self.__end_session()
 
     def track_playback_ended(self, tl_track, time_position):
         self.__update_played_tracks()
@@ -57,7 +57,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
         if len(remaining_playlist) == 0:
             self.logger.info("No more tracks to play")
-            self.session_active = False
+            self.__end_session()
             return
 
         next_track = remaining_playlist[0]
@@ -90,3 +90,11 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             tl_track.track.uri in self.pussycat_list
             and self.core.tracklist.get_length().get() == 0
         )
+
+    def __end_session(self):
+        self.core.tracklist.clear().get()
+        self.session_active = False
+        self.denylist = []
+        self.played_tracks = []
+        self.uri = None
+        self.logger.info("Session ended")
