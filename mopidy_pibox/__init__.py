@@ -4,7 +4,9 @@ import os
 
 from mopidy import config, ext
 import pykka
-from .pibox_api import api, socket
+
+from . import api
+from . import socket
 from .routing import ClientRoutingHandler
 
 __version__ = "0.11.0"
