@@ -16,15 +16,6 @@ class PiboxHandler(tornado.web.RequestHandler):
         self.frontend = frontend
         self.logger = logging.getLogger(__name__)
 
-    def get(self):
-        pass
-
-    def post(self):
-        pass
-
-    def delete(self):
-        pass
-
     def _get_body(self):
         return tornado.escape.json_decode(self.request.body)
 

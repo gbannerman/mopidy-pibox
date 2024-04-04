@@ -12,31 +12,37 @@ from .routing import ClientRoutingHandler
 __version__ = "0.11.0"
 
 
-def my_app_factory(config, core):
-    from .frontend import PiboxFrontend
-
+def get_http_handlers(core, frontend):
     path = os.path.join(os.path.dirname(__file__), "static")
 
-    pibox = pykka.ActorRegistry.get_by_class(PiboxFrontend)[0].proxy()
-
     return [
-        (r"/ws/?", socket.PiboxWebSocket),
         (
             r"/api/tracklist/?",
             api.TracklistHandler,
-            {"core": core, "frontend": pibox},
+            {"core": core, "frontend": frontend},
         ),
-        (r"/api/vote/?", api.VoteHandler, {"core": core, "frontend": pibox}),
+        (r"/api/vote/?", api.VoteHandler, {"core": core, "frontend": frontend}),
         (
             r"/api/session/?",
             api.SessionHandler,
-            {"core": core, "frontend": pibox},
+            {"core": core, "frontend": frontend},
         ),
         (
             r"/(.*)",
             ClientRoutingHandler,
             {"path": path, "default_filename": "index.html"},
         ),
+    ]
+
+
+def my_app_factory(config, core):
+    from .frontend import PiboxFrontend
+
+    frontend = pykka.ActorRegistry.get_by_class(PiboxFrontend)[0].proxy()
+
+    return [
+        (r"/ws/?", socket.PiboxWebSocket),
+        *get_http_handlers(core, frontend),
     ]
 
 
