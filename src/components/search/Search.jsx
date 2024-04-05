@@ -184,4 +184,6 @@ const Search = () => {
   );
 };
 
+export const BACKEND_PRIORITY_ORDER = ["spotify", "soundcloud"];
+
 export default Search;

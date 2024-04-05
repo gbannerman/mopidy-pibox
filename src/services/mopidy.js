@@ -1,6 +1,7 @@
 import axios from "axios";
 import MopidyConnection from "mopidy";
 import { getFingerprint } from "./fingerprint";
+import { BACKEND_PRIORITY_ORDER } from "components/search/Search";
 
 let mopidy = null;
 let connected = false;
@@ -169,6 +170,15 @@ export const searchLibrary = (searchTerms) =>
         exact: false,
       })
       .then((result) => {
+        result.sort((a, b) => {
+          const [backendA] = a.uri.split(":");
+          const [backendB] = b.uri.split(":");
+          const resultA = BACKEND_PRIORITY_ORDER.indexOf(backendA);
+          return (
+            (resultA === -1 ? Number.MAX_VALUE : resultA) -
+            BACKEND_PRIORITY_ORDER.indexOf(backendB)
+          );
+        });
         const results = result.reduce((tracks, backendResult) => {
           tracks.push(...(backendResult.tracks || []));
           return tracks;
