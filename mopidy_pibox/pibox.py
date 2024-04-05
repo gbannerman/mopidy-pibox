@@ -1,4 +1,4 @@
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 import logging
 
 
@@ -18,7 +18,7 @@ class Pibox:
 
     def start_session(self, skip_threshold, playlist):
         self.started = True
-        self.start_time = datetime.now(UTC)
+        self.start_time = datetime.now(timezone.utc)
 
         self.skip_threshold = skip_threshold
         self.playlist = playlist
