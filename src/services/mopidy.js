@@ -114,6 +114,11 @@ export const getHistory = async () => {
   return sessionHistory.map((tuple) => tuple[1].uri);
 };
 
+export const getConfig = async () => {
+  const result = await axios.get("/pibox/config");
+  return result.data;
+};
+
 export const getCurrentSession = async () => {
   const result = await axios.get("/pibox/api/session");
   return result.data;

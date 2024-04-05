@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 import json
 
+from mopidy import config
 import tornado.web
 
 import logging
@@ -84,3 +85,19 @@ class SessionHandler(PiboxHandler):
         self.frontend.end_session().get()
         socket.PiboxWebSocket.send("SESSION_ENDED", {})
         self.set_status(200)
+
+
+class ConfigHandler(tornado.web.RequestHandler):
+    def initialize(self, config: config.Proxy):
+        self.config = config
+        self.logger = logging.getLogger(__name__)
+
+    def get(self):
+        pibox_config = self.config.get("pibox")
+        self.write(
+            {
+                "offline": pibox_config.get("offline"),
+                "defaultPlaylist": pibox_config.get("default_playlist"),
+                "defaultSkipThreshold": pibox_config.get("default_skip_threshold"),
+            }
+        )

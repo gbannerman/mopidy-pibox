@@ -16,14 +16,27 @@ def _mock_actor_return_value(fn, value):
     fn.return_value.get.return_value = value
 
 
+def _config():
+    return {
+        "core": {"max_tracklist_length": 5},
+        "pibox": {
+            "enabled": True,
+            "offline": False,
+            "default_playlist": "dummy:user:someuser:playlist1",
+            "default_skip_threshold": 10,
+        },
+    }
+
+
 class TestPiboxHandlerBase(tornado.testing.AsyncHTTPTestCase):
     def get_app(self):
         self.core = mock.Mock()
         self.frontend = mock.Mock(spec=PiboxFrontend)
         self.frontend.pibox = mock.Mock(spec=Pibox)
+        config = _config()
         static_directory_path = os.path.join(os.path.dirname(__file__), "fixtures")
         return tornado.web.Application(
-            get_http_handlers(self.core, self.frontend, static_directory_path)
+            get_http_handlers(self.core, config, self.frontend, static_directory_path)
         )
 
 
@@ -125,12 +138,17 @@ class TestSessionHandler(TestPiboxHandlerBase):
             skip_threshold, playlist, auto_start
         )
 
-    def test_delete(self):
-        response = self.fetch("/api/session", method="DELETE")
+
+class TestConfigHandler(TestPiboxHandlerBase):
+    def test_get(self):
+        response = self.fetch("/config")
+        body = json.loads(response.body)
 
         self.assertEqual(response.code, 200)
 
-        self.assertTrue(self.frontend.end_session.called)
+        self.assertEqual(body["offline"], False)
+        self.assertEqual(body["defaultPlaylist"], "dummy:user:someuser:playlist1")
+        self.assertEqual(body["defaultSkipThreshold"], 10)
 
 
 class TestClientRoutingHandler(TestPiboxHandlerBase):

@@ -12,7 +12,7 @@ from .routing import ClientRoutingHandler
 __version__ = "0.11.0"
 
 
-def get_http_handlers(core, frontend, static_directory_path):
+def get_http_handlers(core, config, frontend, static_directory_path):
     return [
         (
             r"/api/tracklist/?",
@@ -24,6 +24,11 @@ def get_http_handlers(core, frontend, static_directory_path):
             r"/api/session/?",
             api.SessionHandler,
             {"core": core, "frontend": frontend},
+        ),
+        (
+            r"/config/?",
+            api.ConfigHandler,
+            {"config": config},
         ),
         (
             r"/(.*)",
@@ -42,7 +47,7 @@ def my_app_factory(config, core):
 
     return [
         (r"/ws/?", socket.PiboxWebSocket),
-        *get_http_handlers(core, frontend, static_directory_path),
+        *get_http_handlers(core, config, frontend, static_directory_path),
     ]
 
 
@@ -58,6 +63,7 @@ class Extension(ext.Extension):
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
         schema["default_playlist"] = config.String()
+        schema["default_skip_threshold"] = config.Integer(minimum=1)
         schema["offline"] = config.Boolean(optional=True)
         return schema
 

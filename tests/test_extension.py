@@ -10,10 +10,8 @@ def test_get_default_config():
 
     assert "[pibox]" in config
     assert "enabled = true" in config
-    assert (
-        "default_playlist = spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL"
-        in config
-    )
+    assert "default_playlist = spotify:playlist:79inBfAlnfUB7i5kRthmWL" in config
+    assert "default_skip_threshold = 3" in config
     assert "offline = false" in config
 
 

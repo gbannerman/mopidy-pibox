@@ -32,6 +32,14 @@ export default defineConfig({
           options.hostRewrite = true;
         },
       },
+      "/pibox/config": {
+        target: "http://localhost:6680",
+        changeOrigin: true,
+        secure: false,
+        configure: (proxy, options) => {
+          options.hostRewrite = true;
+        },
+      },
       "/mopidy": {
         target: "ws://localhost:6680",
         changeOrigin: true,

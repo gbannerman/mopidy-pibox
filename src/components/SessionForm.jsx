@@ -11,6 +11,7 @@ import {
   FormControlLabel,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { useConfig } from "hooks/config";
 
 const useStyles = makeStyles({
   root: {
@@ -28,14 +29,16 @@ const useStyles = makeStyles({
   },
 });
 
-const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
+const SessionForm = ({ onStartSessionClick }) => {
   const classes = useStyles();
 
+  const { defaultPlaylist, defaultSkipThreshold } = useConfig();
+
   const [playlists, setPlaylists] = useState([]);
-  const [votesToSkip, setVotesToSkip] = useState("");
+  const [votesToSkip, setVotesToSkip] = useState(`${defaultSkipThreshold}`);
   const [automaticallyStartPlaying, setAutomaticallyStartPlaying] =
     useState(true);
-  const [selectedPlaylist, setSelectedPlaylist] = useState(defaultPlaylistUri);
+  const [selectedPlaylist, setSelectedPlaylist] = useState(defaultPlaylist);
 
   useEffect(() => {
     const updatePlaylists = async () => {

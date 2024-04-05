@@ -12,6 +12,7 @@ import {
   onSessionEnded,
   onConnectionChanged,
   startSession,
+  getConfig,
 } from "services/mopidy.js";
 import { SnackbarProvider } from "notistack";
 import SessionPage from "pages/SessionPage.jsx";
@@ -20,6 +21,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import SessionForm from "components/SessionForm";
 import { SessionContext } from "hooks/session";
 import DisplayPage from "pages/DisplayPage";
+import { ConfigContext } from "hooks/config";
 
 const theme = createMuiTheme({
   palette: {
@@ -34,7 +36,10 @@ const theme = createMuiTheme({
 
 const App = () => {
   const [session, setSession] = useState(null);
-  const [fetching, setFetching] = useState(true);
+  const [config, setConfig] = useState(null);
+  const [sessionFetching, setSessionFetching] = useState(true);
+  const [configFetching, setConfigFetching] = useState(true);
+
   const [connected, setConnected] = useState(false);
 
   const history = useHistory();
@@ -47,10 +52,17 @@ const App = () => {
 
   useEffect(() => {
     const updateCurrentSession = async () => {
-      setFetching(true);
+      setSessionFetching(true);
       const currentSession = await getCurrentSession();
       setSession(currentSession);
-      setFetching(false);
+      setSessionFetching(false);
+    };
+
+    const fetchConfig = async () => {
+      setConfigFetching(true);
+      const config = await getConfig();
+      setConfig(config);
+      setConfigFetching(false);
     };
 
     onSessionStarted(async () => {
@@ -59,6 +71,7 @@ const App = () => {
     onSessionEnded(async () => {
       updateCurrentSession();
     });
+    fetchConfig();
     updateCurrentSession();
   }, []);
 
@@ -75,7 +88,7 @@ const App = () => {
     history.push("/pibox");
   };
 
-  if (!connected || fetching) {
+  if (!connected || sessionFetching || configFetching) {
     return (
       <div className="Root">
         <div className="loading">
@@ -88,57 +101,56 @@ const App = () => {
 
   if (!session?.started) {
     return (
-      <>
+      <ConfigContext.Provider value={config}>
         <CssBaseline />
         <ThemeProvider theme={theme}>
           <SnackbarProvider>
             <div className="Root">
-              <SessionForm
-                defaultPlaylistUri={"spotify:playlist:79inBfAlnfUB7i5kRthmWL"}
-                onStartSessionClick={createSession}
-              />
+              <SessionForm onStartSessionClick={createSession} />
             </div>
           </SnackbarProvider>
         </ThemeProvider>
-      </>
+      </ConfigContext.Provider>
     );
   }
 
   return (
     <AdminContext.Provider value={admin}>
-      <SessionContext.Provider
-        value={{
-          playlistName: session.playlist.name,
-          skipThreshold: session.skipThreshold,
-          startedAt: dayjs(session.startTime),
-        }}
-      >
-        <CssBaseline />
-        <ThemeProvider theme={theme}>
-          <SnackbarProvider>
-            <div className="Root">
-              <Switch>
-                {admin.isAdmin ? (
-                  <Route path="/pibox/session">
-                    <SessionPage session={session} />
+      <ConfigContext.Provider value={config}>
+        <SessionContext.Provider
+          value={{
+            playlistName: session.playlist.name,
+            skipThreshold: session.skipThreshold,
+            startedAt: dayjs(session.startTime),
+          }}
+        >
+          <CssBaseline />
+          <ThemeProvider theme={theme}>
+            <SnackbarProvider>
+              <div className="Root">
+                <Switch>
+                  {admin.isAdmin ? (
+                    <Route path="/pibox/session">
+                      <SessionPage session={session} />
+                    </Route>
+                  ) : (
+                    <Route
+                      path="/pibox/session"
+                      render={() => <Redirect to="/pibox" />}
+                    />
+                  )}
+                  <Route path="/pibox/display">
+                    <DisplayPage session={session} />
                   </Route>
-                ) : (
-                  <Route
-                    path="/pibox/session"
-                    render={() => <Redirect to="/pibox" />}
-                  />
-                )}
-                <Route path="/pibox/display">
-                  <DisplayPage session={session} />
-                </Route>
-                <Route>
-                  <HomePage session={session} />
-                </Route>
-              </Switch>
-            </div>
-          </SnackbarProvider>
-        </ThemeProvider>
-      </SessionContext.Provider>
+                  <Route>
+                    <HomePage session={session} />
+                  </Route>
+                </Switch>
+              </div>
+            </SnackbarProvider>
+          </ThemeProvider>
+        </SessionContext.Provider>
+      </ConfigContext.Provider>
     </AdminContext.Provider>
   );
 };
