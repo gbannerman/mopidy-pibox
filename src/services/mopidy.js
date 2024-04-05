@@ -118,7 +118,7 @@ export const getCurrentSession = async () => {
   return result.data;
 };
 
-export const getSpotifyPlaylists = async () => {
+export const getPlaylists = async () => {
   const playlists = await mopidy.playlists.asList();
   return playlists;
 };

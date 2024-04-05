@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getSpotifyPlaylists } from "services/mopidy";
+import { getPlaylists } from "services/mopidy";
 import {
   TextField,
   Select,
@@ -38,12 +38,12 @@ const SessionForm = ({ defaultPlaylistUri, onStartSessionClick }) => {
   const [selectedPlaylist, setSelectedPlaylist] = useState(defaultPlaylistUri);
 
   useEffect(() => {
-    const getPlaylists = async () => {
-      const spotifyPlaylists = await getSpotifyPlaylists();
-      setPlaylists(spotifyPlaylists);
+    const updatePlaylists = async () => {
+      const playlists = await getPlaylists();
+      setPlaylists(playlists);
     };
 
-    getPlaylists();
+    updatePlaylists();
   }, []);
 
   const menuItems = playlists.map((playlist) => (
