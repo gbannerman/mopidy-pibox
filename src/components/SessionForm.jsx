@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import { getPlaylists } from "services/mopidy";
 import {
   TextField,
-  Select,
-  MenuItem,
   Button,
   FormControl,
-  InputLabel,
   Checkbox,
   FormControlLabel,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useConfig } from "hooks/config";
+import { Autocomplete } from "@material-ui/lab";
 
 const useStyles = makeStyles({
   root: {
@@ -38,31 +36,24 @@ const SessionForm = ({ onStartSessionClick }) => {
   const [votesToSkip, setVotesToSkip] = useState(`${defaultSkipThreshold}`);
   const [automaticallyStartPlaying, setAutomaticallyStartPlaying] =
     useState(true);
-  const [selectedPlaylist, setSelectedPlaylist] = useState(defaultPlaylist);
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
 
   useEffect(() => {
     const updatePlaylists = async () => {
       const playlists = await getPlaylists();
       setPlaylists(playlists);
+      setSelectedPlaylist(playlists.find((p) => p.uri === defaultPlaylist));
     };
 
     updatePlaylists();
   }, []);
 
-  const menuItems = playlists.map((playlist) => (
-    <MenuItem key={playlist.uri} value={playlist.uri}>
-      {playlist.name}
-    </MenuItem>
-  ));
-
   const handleSessionClick = (event) => {
     event.preventDefault();
     onStartSessionClick({
       selectedPlaylist: {
-        uri: selectedPlaylist,
-        name:
-          playlists.find((p) => p.uri === selectedPlaylist).name ??
-          "Unknown Playlist",
+        name: selectedPlaylist.name,
+        uri: selectedPlaylist.uri,
       },
       votesToSkip,
       automaticallyStartPlaying,
@@ -83,16 +74,17 @@ const SessionForm = ({ onStartSessionClick }) => {
       />
 
       <FormControl fullWidth>
-        <InputLabel>Playlist</InputLabel>
-        <Select
-          autoWidth
+        <Autocomplete
+          options={playlists}
           className={classes.selectField}
+          getOptionLabel={(playlist) => playlist.name}
+          style={{ width: "100%" }}
+          renderInput={(params) => (
+            <TextField {...params} label="Playlist" variant="outlined" />
+          )}
           value={selectedPlaylist}
-          onChange={(event) => setSelectedPlaylist(event.target.value)}
-          placeholder="Select a playlist"
-        >
-          {menuItems}
-        </Select>
+          onChange={(_event, value) => setSelectedPlaylist(value)}
+        />
       </FormControl>
 
       <FormControlLabel
