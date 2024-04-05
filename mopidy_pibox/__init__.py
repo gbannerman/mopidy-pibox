@@ -12,9 +12,7 @@ from .routing import ClientRoutingHandler
 __version__ = "0.11.0"
 
 
-def get_http_handlers(core, frontend):
-    path = os.path.join(os.path.dirname(__file__), "static")
-
+def get_http_handlers(core, frontend, static_directory_path):
     return [
         (
             r"/api/tracklist/?",
@@ -30,7 +28,7 @@ def get_http_handlers(core, frontend):
         (
             r"/(.*)",
             ClientRoutingHandler,
-            {"path": path, "default_filename": "index.html"},
+            {"path": static_directory_path, "default_filename": "index.html"},
         ),
     ]
 
@@ -40,9 +38,11 @@ def my_app_factory(config, core):
 
     frontend = pykka.ActorRegistry.get_by_class(PiboxFrontend)[0].proxy()
 
+    static_directory_path = os.path.join(os.path.dirname(__file__), "static")
+
     return [
         (r"/ws/?", socket.PiboxWebSocket),
-        *get_http_handlers(core, frontend),
+        *get_http_handlers(core, frontend, static_directory_path),
     ]
 
 

@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import os
 from unittest import mock
 import tornado.testing
 import tornado.web
@@ -20,7 +21,10 @@ class TestPiboxHandlerBase(tornado.testing.AsyncHTTPTestCase):
         self.core = mock.Mock()
         self.frontend = mock.Mock(spec=PiboxFrontend)
         self.frontend.pibox = mock.Mock(spec=Pibox)
-        return tornado.web.Application(get_http_handlers(self.core, self.frontend))
+        static_directory_path = os.path.join(os.path.dirname(__file__), "fixtures")
+        return tornado.web.Application(
+            get_http_handlers(self.core, self.frontend, static_directory_path)
+        )
 
 
 class TestTracklistHandler(TestPiboxHandlerBase):
@@ -127,3 +131,17 @@ class TestSessionHandler(TestPiboxHandlerBase):
         self.assertEqual(response.code, 200)
 
         self.assertTrue(self.frontend.end_session.called)
+
+
+class TestClientRoutingHandler(TestPiboxHandlerBase):
+    def test_get_root(self):
+        response = self.fetch("/")
+
+        self.assertEqual(response.code, 200)
+        self.assertIn(b"<!doctype html>", response.body)
+
+    def test_get_invalid_route(self):
+        response = self.fetch("/foo/bar/baz")
+
+        self.assertEqual(response.code, 200)
+        self.assertIn(b"<!doctype html>", response.body)
