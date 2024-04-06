@@ -66,7 +66,7 @@ class TestPiboxFrontend(unittest.TestCase):
         current_track = self.core.playback.get_current_track().get()
         playback_state = self.core.playback.get_state().get()
 
-        assert current_track == None
+        assert current_track is None
         assert playback_state == core.PlaybackState.STOPPED
 
     def test_when_track_ends_plays_song_from_session_playlist_if_no_songs_in_queue(
