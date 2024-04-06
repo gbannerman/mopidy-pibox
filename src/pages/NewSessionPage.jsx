@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-const SessionForm = ({ onStartSessionClick }) => {
+const NewSessionPage = ({ onStartSessionClick }) => {
   const classes = useStyles();
 
   const { defaultPlaylist, defaultSkipThreshold } = useConfig();
@@ -112,4 +112,4 @@ const SessionForm = ({ onStartSessionClick }) => {
   );
 };
 
-export default SessionForm;
+export default NewSessionPage;

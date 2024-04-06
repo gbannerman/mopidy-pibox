@@ -18,7 +18,7 @@ import { SnackbarProvider } from "notistack";
 import SessionPage from "pages/SessionPage.jsx";
 import { AdminContext, useAdminContext } from "hooks/admin.js";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import SessionForm from "components/SessionForm";
+import NewSessionPage from "pages/NewSessionPage";
 import { SessionContext } from "hooks/session";
 import DisplayPage from "pages/DisplayPage";
 import { ConfigContext } from "hooks/config";
@@ -106,7 +106,7 @@ const App = () => {
         <ThemeProvider theme={theme}>
           <SnackbarProvider>
             <div className="Root">
-              <SessionForm onStartSessionClick={createSession} />
+              <NewSessionPage onStartSessionClick={createSession} />
             </div>
           </SnackbarProvider>
         </ThemeProvider>
