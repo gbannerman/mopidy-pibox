@@ -31,6 +31,9 @@ const useStyles = makeStyles({
     fontWeight: "bold",
     color: "rgba(0, 0, 0, 0.87)",
   },
+  sessionStatisticValue: {
+    textAlign: "right",
+  },
   logoSection: {
     textAlign: "center",
   },
@@ -84,11 +87,12 @@ const SessionPage = () => {
 };
 
 function SessionStatistic({ label, value }) {
-  const { sessionStatistic, sessionStatisticLabel } = useStyles();
+  const { sessionStatistic, sessionStatisticLabel, sessionStatisticValue } =
+    useStyles();
   return (
     <div className={sessionStatistic}>
       <p className={sessionStatisticLabel}>{label}:</p>
-      <p>{value}</p>
+      <p className={sessionStatisticValue}>{value}</p>
     </div>
   );
 }
