@@ -30,11 +30,15 @@ jobs:
       - name: Move React app to Tornado static directory
         run: mv build mopidy_pibox/static
 
+      - name: Install PyGObject dependencies
+        run: |
+          sudo apt-get install -y libgirepository1.0-dev
+
       - name: Install python dependencies
         run: |
           python3 -m venv venv
           . venv/bin/activate
-          pip install twine
+          pip install build twine
           pip install -e .
 
       - name: Init .pypirc
@@ -46,7 +50,9 @@ jobs:
           echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
 
       - name: Create packages
-        run: python setup.py sdist
+        run: |
+          . venv/bin/activate
+          python -m build
 
       - name: Upload to pypi
         run: |
