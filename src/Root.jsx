@@ -158,7 +158,3 @@ const App = () => {
 };
 
 export default App;
-
-export function getMopidy() {
-  return null;
-}
