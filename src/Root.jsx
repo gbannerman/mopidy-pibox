@@ -122,6 +122,8 @@ const App = () => {
             playlistName: session.playlist.name,
             skipThreshold: session.skipThreshold,
             startedAt: dayjs(session.startTime),
+            playedTracks: session.playedTracks,
+            remainingPlaylistTracks: session.remainingPlaylistTracks,
           }}
         >
           <CssBaseline />

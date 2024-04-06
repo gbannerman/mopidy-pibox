@@ -11,6 +11,7 @@ class Pibox:
         self.playlist = None
         self.denylist = ["spotify:track:0afhq8XCExXpqazXczTSve"]
         self.played_tracks = []
+        self.remaining_playlist_tracks = []
         self.votes = {}
         self.has_voted = {}
 
@@ -57,6 +58,7 @@ class Pibox:
         self.playlist = None
         self.denylist = ["spotify:track:0afhq8XCExXpqazXczTSve"]
         self.played_tracks = []
+        self.remaining_playlist_tracks = []
         self.votes = {}
         self.has_voted = {}
 
@@ -68,4 +70,6 @@ class Pibox:
             "startTime": (self.start_time.isoformat() if self.start_time else None),
             "skipThreshold": self.skip_threshold,
             "playlist": self.playlist,
+            "playedTracks": self.played_tracks,
+            "remainingPlaylistTracks": self.remaining_playlist_tracks,
         }

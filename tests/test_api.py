@@ -102,6 +102,8 @@ class TestSessionHandler(TestPiboxHandlerBase):
                 "startTime": start_time,
                 "skipThreshold": 3,
                 "playlist": {"name": "test", "uri": "dummy:playlist1"},
+                "playedTracks": ["dummy:track1", "dummy:track2"],
+                "remainingPlaylistTracks": ["dummy:track3", "dummy:track4"],
             },
         )
 
@@ -114,6 +116,10 @@ class TestSessionHandler(TestPiboxHandlerBase):
         self.assertEqual(body["startTime"], start_time)
         self.assertEqual(body["skipThreshold"], 3)
         self.assertEqual(body["playlist"], {"name": "test", "uri": "dummy:playlist1"})
+        self.assertEqual(body["playedTracks"], ["dummy:track1", "dummy:track2"])
+        self.assertEqual(
+            body["remainingPlaylistTracks"], ["dummy:track3", "dummy:track4"]
+        )
 
     def test_post(self):
         skip_threshold = 3

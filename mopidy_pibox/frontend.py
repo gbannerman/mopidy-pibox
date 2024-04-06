@@ -71,6 +71,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         shuffle(playlist)
 
         remaining_playlist = [ref for ref in playlist if self.__can_play(ref.uri)]
+        self.__update_remaining_playlist_tracks(remaining_playlist)
 
         if len(remaining_playlist) == 0:
             self.logger.info("No more tracks to play")
@@ -90,6 +91,11 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def __update_played_tracks(self, tl_track):
         self.pibox.played_tracks.append(tl_track.track.uri)
+
+    def __update_remaining_playlist_tracks(self, remaining_playlist):
+        self.pibox.remaining_playlist_tracks = [
+            track.uri for track in remaining_playlist
+        ]
 
     def __can_play(self, uri):
         return (uri not in self.pibox.played_tracks) and (
