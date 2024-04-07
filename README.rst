@@ -1,3 +1,5 @@
+.. image:: https://raw.githubusercontent.com/gbannerman/mopidy-pibox/main/src/res/logo.png
+
 ****************************
 Mopidy-Pibox
 ****************************
@@ -11,15 +13,29 @@ Mopidy-Pibox
     :alt: GitHub Actions
 
 
-**pibox** is a Mopidy HTTP client that allows multiple users to search spotify and queue songs, via a clean and simple interface.
+**pibox** is a Mopidy HTTP client that allows multiple users to search for and queue songs as a group, via a clean and simple interface.
+
+Features
+========
+- Search for and queue songs using any Mopidy backend
+- Vote to skip queued tracks
+- Plays from a predefined playlist if no tracks are queued
+- Prevents tracks from being queued again after they have been played or skipped
+- Admins controls to pause/resume playback or skip current track
+- Display view for showing on a TV or monitor
+- Can be used offline without an internet connection using Mopidy-Local_
+
+.. _Mopidy-Local: https://mopidy.com/ext/local/
+
 
 Requirements
 ============
 - Mopidy_
-- Mopidy-Spotify_
+- A backend for Mopidy such as Mopidy-Spotify_ or Mopidy-SoundCloud_
 
 .. _Mopidy: https://docs.mopidy.com/en/latest/installation/
-.. _Mopidy-Spotify: https://github.com/mopidy/mopidy-spotify
+.. _Mopidy-Spotify: https://mopidy.com/ext/spotify/
+.. _Mopidy-SoundCloud: https://mopidy.com/ext/soundcloud/
 
 Installation
 ============
@@ -43,8 +59,20 @@ Mopidy-Pibox to your Mopidy configuration file::
 
     [pibox]
     enabled = true
-    default_playlist = spotify:user:gavinbannerman:playlist:79inBfAlnfUB7i5kRthmWL
+    default_playlist = spotify:playlist:79inBfAlnfUB7i5kRthmWL
+    default_skip_threshold = 3
     offline = false
+
+The following configuration values are available:
+
+- ``pibox/enabled``: If the pibox extension should be enabled or not.
+  Defaults to ``true``.
+
+- ``pibox/default_playlist``: The default playlist URI to play from when starting a new session. Defaults to `a Spotify playlist of great party songs <https://open.spotify.com/playlist/79inBfAlnfUB7i5kRthmWL?si=e8a5da23f91048c2>`_. Save it to your Spotify library!
+
+- ``pibox/default_skip_threshold``: The default number of votes required to skip a track. Defaults to 3.
+
+- ``pibox/offline``: If the extension should be used offline. Defaults to false.
 
 
 Project resources
