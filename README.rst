@@ -1,4 +1,4 @@
-.. image:: https://raw.githubusercontent.com/gbannerman/mopidy-pibox/main/src/res/logo.png
+.. image:: https://raw.githubusercontent.com/gbannerman/mopidy-pibox/update-readme/docs/screenshots/pibox-header.png
 
 ****************************
 Mopidy-Pibox
