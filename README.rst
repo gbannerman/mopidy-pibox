@@ -25,6 +25,8 @@ Features
 - Display view for showing on a TV or monitor
 - Can be used offline without an internet connection using Mopidy-Local_
 
+.. image:: https://raw.githubusercontent.com/gbannerman/mopidy-pibox/update-readme/docs/screenshots/pibox-mobile.png
+
 .. _Mopidy-Local: https://mopidy.com/ext/local/
 
 
