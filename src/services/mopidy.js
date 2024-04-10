@@ -249,6 +249,9 @@ export const onTracklistChanged = (callback) =>
     callback(tracklist);
   });
 
+export const onTrackPlaybackEnded = (callback) =>
+  mopidy.on("event:trackPlaybackEnded", () => callback());
+
 export const onSessionStarted = (callback) =>
   document.addEventListener("pibox:sessionStart", (event) =>
     callback(event.detail),

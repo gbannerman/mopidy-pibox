@@ -13,6 +13,7 @@ import {
   onConnectionChanged,
   startSession,
   getConfig,
+  onTrackPlaybackEnded,
 } from "services/mopidy.js";
 import { SnackbarProvider } from "notistack";
 import SessionPage from "pages/SessionPage.jsx";
@@ -52,20 +53,21 @@ const App = () => {
 
   useEffect(() => {
     const updateCurrentSession = async () => {
-      setSessionFetching(true);
       const currentSession = await getCurrentSession();
       setSession(currentSession);
       setSessionFetching(false);
     };
 
     const fetchConfig = async () => {
-      setConfigFetching(true);
       const config = await getConfig();
       setConfig(config);
       setConfigFetching(false);
     };
 
     onSessionStarted(async () => {
+      updateCurrentSession();
+    });
+    onTrackPlaybackEnded(async () => {
       updateCurrentSession();
     });
     onSessionEnded(async () => {
