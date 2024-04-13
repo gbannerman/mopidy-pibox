@@ -42,10 +42,12 @@ const Tracklist = ({ display, readOnly = false }) => {
   };
 
   useEffect(() => {
-    onTracklistChanged(async () => {
+    const cleanup = onTracklistChanged(async () => {
       updateTracklist();
     });
     updateTracklist();
+
+    return cleanup;
   }, []);
 
   const generateSkipHandler = (track) => async () => {

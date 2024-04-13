@@ -238,24 +238,35 @@ export const onConnectionChanged = (callback) =>
     }
   });
 
-export const onPlaybackChanged = (callback) =>
-  mopidy.on("event:playbackStateChanged", (playback) =>
-    callback(playback.new_state),
-  );
+export const onPlaybackChanged = (callback) => {
+  const fn = (playback) => callback(playback.new_state);
+  mopidy.on("event:playbackStateChanged", fn);
+  return () => mopidy.off("event:playbackStateChanged", fn);
+};
 
-export const onTracklistChanged = (callback) =>
-  mopidy.on("event:tracklistChanged", async () => {
+export const onTracklistChanged = (callback) => {
+  const fn = async () => {
     const tracklist = await getTracklist();
     callback(tracklist);
-  });
+  };
+  mopidy.on("event:tracklistChanged", fn);
+  return () => mopidy.off("event:tracklistChanged", fn);
+};
 
-export const onTrackPlaybackEnded = (callback) =>
-  mopidy.on("event:trackPlaybackEnded", () => callback());
+export const onTrackPlaybackEnded = (callback) => {
+  const fn = () => callback();
+  mopidy.on("event:trackPlaybackEnded", fn);
+  return () => mopidy.off("event:trackPlaybackEnded", fn);
+};
 
-export const onSessionStarted = (callback) =>
-  document.addEventListener("pibox:sessionStart", (event) =>
-    callback(event.detail),
-  );
+export const onSessionStarted = (callback) => {
+  const fn = (event) => callback(event.detail);
+  document.addEventListener("pibox:sessionStart", fn);
+  return () => document.removeEventListener("pibox:sessionStart", fn);
+};
 
-export const onSessionEnded = (callback) =>
-  document.addEventListener("pibox:sessionEnd", () => callback());
+export const onSessionEnded = (callback) => {
+  const fn = () => callback();
+  document.addEventListener("pibox:sessionEnd", fn);
+  return () => document.removeEventListener("pibox:sessionEnd", fn);
+};

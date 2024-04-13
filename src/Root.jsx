@@ -64,17 +64,23 @@ const App = () => {
       setConfigFetching(false);
     };
 
-    onSessionStarted(async () => {
+    const cleanupSessionStarted = onSessionStarted(async () => {
       updateCurrentSession();
     });
-    onTrackPlaybackEnded(async () => {
+    const cleanupTrackPlaybackEnded = onTrackPlaybackEnded(async () => {
       updateCurrentSession();
     });
-    onSessionEnded(async () => {
+    const cleanupSessionEnded = onSessionEnded(async () => {
       updateCurrentSession();
     });
     fetchConfig();
     updateCurrentSession();
+
+    return () => {
+      cleanupSessionStarted();
+      cleanupSessionEnded();
+      cleanupTrackPlaybackEnded();
+    };
   }, []);
 
   const createSession = async ({

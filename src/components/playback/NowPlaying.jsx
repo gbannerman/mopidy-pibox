@@ -73,12 +73,14 @@ const NowPlaying = () => {
       setPlaybackState(playbackState);
     };
 
-    onPlaybackChanged(async () => {
+    const cleanup = onPlaybackChanged(async () => {
       updateCurrentTrack();
       updatePlaybackState();
     });
     updateCurrentTrack();
     updatePlaybackState();
+
+    return cleanup;
   }, []);
 
   useEffect(() => {
