@@ -29,6 +29,10 @@ def _config():
 
 
 class TestPiboxHandlerBase(tornado.testing.AsyncHTTPTestCase):
+    # Workaround for https://github.com/pytest-dev/pytest/issues/12263.
+    def runTest(self):
+        pass
+
     def get_app(self):
         self.core = mock.Mock()
         self.frontend = mock.Mock(spec=PiboxFrontend)
