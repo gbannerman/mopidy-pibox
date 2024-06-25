@@ -38,7 +38,7 @@ jobs:
         run: |
           python3 -m venv venv
           . venv/bin/activate
-          pip install build twine
+          pip install build twine==5.0.0
           pip install -e .
 
       - name: Init .pypirc
