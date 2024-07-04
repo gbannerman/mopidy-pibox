@@ -1,5 +1,5 @@
 import { Spotify, Soundcloud } from "mdi-material-ui";
-import CloudDownload from "@material-ui/icons/CloudDownload";
+import CloudDownload from "@mui/icons-material/CloudDownload";
 
 export const getIconFromURI = (uri) => {
   if (uri.startsWith("spotify")) {

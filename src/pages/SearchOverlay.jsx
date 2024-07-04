@@ -12,7 +12,7 @@ export default class SearchOverlay extends React.Component {
       position: "fixed",
       background: "rgba(0, 0, 0, 0)",
       overflowY: "scroll",
-      zIndex: 5,
+      zIndex: 1100,
       transition: "background 100ms ease-in-out",
     };
 

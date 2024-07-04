@@ -1,35 +1,13 @@
 import React from "react";
 import ArtistSentence from "components/common/ArtistSentence";
-import { makeStyles } from "@material-ui/core/styles";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
+import SkipNextIcon from "@mui/icons-material/SkipNext";
 import {
   Card,
   CardContent,
   CardActions,
   Typography,
   Button,
-} from "@material-ui/core";
-
-const useStyles = makeStyles(() => ({
-  card: {
-    margin: 10,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  content: {
-    paddingLeft: 15,
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingRight: 15,
-  },
-  actions: {
-    flex: "0 0 auto",
-  },
-  rightIcon: {
-    marginLeft: 3,
-  },
-}));
+} from "@mui/material";
 
 const TracklistItem = ({
   track,
@@ -37,17 +15,13 @@ const TracklistItem = ({
   buttonEnabled,
   onVoteClick,
 }) => {
-  const classes = useStyles();
-
   const artistSentence = <ArtistSentence artists={track.info.artists} />;
 
-  const buttonIcon = track.voted ? null : (
-    <SkipNextIcon className={classes.rightIcon} />
-  );
+  const buttonIcon = track.voted ? null : <SkipNextIcon className="ml-1" />;
 
   return (
-    <Card className={classes.card}>
-      <CardContent className={classes.content}>
+    <Card className="m-2 flex justify-between items-center">
+      <CardContent className="p-4">
         <Typography type="subheading" component="h2">
           {track.info.name}
         </Typography>
@@ -55,7 +29,7 @@ const TracklistItem = ({
           {artistSentence}
         </Typography>
       </CardContent>
-      <CardActions className={classes.actions}>
+      <CardActions className="flex flex-grow-0 flex-shrink-0">
         <Button
           disabled={!buttonEnabled}
           onClick={onVoteClick}

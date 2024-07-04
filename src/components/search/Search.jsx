@@ -6,46 +6,11 @@ import { searchLibrary, queueTrack, playIfStopped } from "services/mopidy.js";
 import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import BounceLoader from "react-spinners/BounceLoader";
-import { makeStyles } from "@material-ui/core/styles";
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "@mui/icons-material/Close";
 import { useDebounce } from "hooks/debounce.js";
-import { IconButton } from "@material-ui/core";
-
-const useStyles = makeStyles({
-  results: {
-    width: "100%",
-  },
-  error: {
-    maxWidth: "800px",
-    margin: "0 auto",
-  },
-  errorInfo: {
-    textAlign: "center",
-    fontWeight: "400",
-    margin: "10px",
-    color: "#FFFFFF",
-    marginTop: "30%",
-  },
-  noResults: {
-    color: "white",
-    textAlign: "center",
-  },
-  closeIcon: {
-    width: 45,
-    height: 45,
-    color: "#FFFFFF",
-  },
-  closeIconContainer: {
-    marginLeft: 10,
-    padding: 0,
-    backgroundColor: "transparent",
-    borderColor: "transparent",
-  },
-});
+import { IconButton } from "@mui/material";
 
 const Search = () => {
-  const classes = useStyles();
-
   const [results, setResults] = useState(null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(null);
@@ -133,14 +98,16 @@ const Search = () => {
     );
   } else if (error) {
     displayResults = (
-      <div className={classes.error}>
-        <h4 className={classes.errorInfo}>{error}</h4>
+      <div className="max-w-4xl mx-auto">
+        <h4 className="text-center text-white m-2">{error}</h4>
       </div>
     );
   } else if (results && !results.length) {
-    displayResults = <div className={classes.noResults}>No results found</div>;
+    displayResults = (
+      <div className="text-white text-center">No results found</div>
+    );
   } else {
-    displayResults = <div className={classes.results}>{searchResults}</div>;
+    displayResults = <div className="w-full">{searchResults}</div>;
   }
 
   return (
@@ -163,9 +130,9 @@ const Search = () => {
                 <IconButton
                   color="secondary"
                   onClick={() => history.push("/pibox")}
-                  className={classes.closeIconContainer}
+                  className="ml-2 p-0 bg-transparent border-transparent"
                 >
-                  <CloseIcon className={classes.closeIcon} />
+                  <CloseIcon className="w-11 h-11 text-white" />
                 </IconButton>
               </div>
             </div>

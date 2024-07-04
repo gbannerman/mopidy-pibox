@@ -6,31 +6,10 @@ import {
   voteToSkipTrack,
   PiboxError,
 } from "services/mopidy";
-import { makeStyles } from "@material-ui/core/styles";
-import { Card } from "@material-ui/core";
+import { Card } from "@mui/material";
 import { useSession } from "hooks/session.js";
 
-const useStyles = makeStyles({
-  root: {
-    maxWidth: "400px",
-    margin: "0 auto 30px",
-  },
-  title: {
-    margin: "0px 10px",
-    fontWeight: "400",
-    color: "#757575",
-    borderBottom: "1px solid #d5d0d0",
-  },
-  more: {
-    margin: 10,
-    textAlign: "center",
-    padding: 15,
-  },
-});
-
 const Tracklist = ({ display, readOnly = false }) => {
-  const classes = useStyles();
-
   const { skipThreshold } = useSession();
 
   const [tracklist, setTracklist] = useState([]);
@@ -100,15 +79,15 @@ const Tracklist = ({ display, readOnly = false }) => {
 
   return (
     <>
-      <div className={classes.root}>
+      <div className="max-w-[400px] mx-auto mb-7 mt-0">
         {queueLength > 0 && (
-          <div className={classes.title}>
+          <div className="my-0 mx-2 font-normal text-sm text-gray-400 border-b border-gray-200">
             {queueLength} song{queueLength !== 1 ? "s" : ""} queued
           </div>
         )}
         {tracklistItems}
         {tracksNotShown > 0 && (
-          <Card className={classes.more}>+ {tracksNotShown} more</Card>
+          <Card className="m-2 text-center py-4">+ {tracksNotShown} more</Card>
         )}
       </div>
     </>

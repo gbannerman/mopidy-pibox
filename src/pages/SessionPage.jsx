@@ -1,52 +1,10 @@
 import React from "react";
 import { endSession } from "services/mopidy";
-import { Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Button } from "@mui/material";
 import { useSession } from "hooks/session";
 import logo from "res/logo.png";
 
-const useStyles = makeStyles({
-  root: {
-    height: "100%",
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "stretch",
-    padding: "8px",
-  },
-  button: {
-    margin: "40px 0px",
-    alignSelf: "center",
-  },
-  sessionStatistic: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    padding: "10px",
-    borderBottom: "1px solid #ccc",
-  },
-  sessionStatisticLabel: {
-    fontWeight: "bold",
-    color: "rgba(0, 0, 0, 0.87)",
-  },
-  sessionStatisticValue: {
-    textAlign: "right",
-  },
-  logoSection: {
-    textAlign: "center",
-  },
-  logo: {
-    width: "70px",
-    height: "auto",
-    margin: "5px",
-  },
-});
-
 const SessionPage = () => {
-  const classes = useStyles();
-
   const {
     playlistName,
     skipThreshold,
@@ -56,28 +14,40 @@ const SessionPage = () => {
   } = useSession();
 
   return (
-    <div className={classes.root}>
-      <div className={classes.logoSection}>
-        <h2>pibox</h2>
-        <img className={classes.logo} alt="logo" src={logo} />
+    <div className="w-full h-full flex flex-col justify-between items-stretch p-2">
+      <div className="text-center">
+        <h2 className="font-bold text-xl">pibox</h2>
+        <img className="w-[70px] h-auto mx-auto my-2" alt="logo" src={logo} />
       </div>
       <div>
         <SessionStatistic
           label="Selected Playlist"
           value={
-            <>
-              {playlistName}{" "}
-              <span>({remainingPlaylistTracks.length} tracks remaining)</span>
-            </>
+            <p className="text-right leading-tight">
+              {playlistName} <br />
+              <span className="text-gray-400">
+                ({remainingPlaylistTracks.length} tracks remaining)
+              </span>
+            </p>
           }
         />
-        <SessionStatistic label="Tracks Played" value={playedTracks.length} />
-        <SessionStatistic label="Started" value={startedAt.fromNow()} />
-        <SessionStatistic label="Skip Threshold" value={skipThreshold} />
+        <SessionStatistic
+          label="Tracks Played"
+          value={<p className="text-right">{playedTracks.length}</p>}
+        />
+        <SessionStatistic
+          label="Started"
+          value={<p className="text-right">{startedAt.fromNow()}</p>}
+        />
+        <SessionStatistic
+          label="Skip Threshold"
+          value={<p className="text-right">{skipThreshold}</p>}
+        />
       </div>
       <Button
-        className={classes.button}
+        className="my-10 mx-0 self-center"
         variant="contained"
+        color="error"
         onClick={endSession}
       >
         End Session
@@ -87,12 +57,10 @@ const SessionPage = () => {
 };
 
 function SessionStatistic({ label, value }) {
-  const { sessionStatistic, sessionStatisticLabel, sessionStatisticValue } =
-    useStyles();
   return (
-    <div className={sessionStatistic}>
-      <p className={sessionStatisticLabel}>{label}:</p>
-      <p className={sessionStatisticValue}>{value}</p>
+    <div className="flex justify-between items-center w-full p-2 min-h-16 border-b border-gray-200">
+      <p className="font-bold text-gray-400">{label}:</p>
+      {value}
     </div>
   );
 }

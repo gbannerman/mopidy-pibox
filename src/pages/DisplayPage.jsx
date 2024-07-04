@@ -2,62 +2,24 @@ import React from "react";
 import NowPlaying from "components/playback/NowPlaying";
 import Tracklist from "components/tracklist/Tracklist";
 import QRCode from "react-qr-code";
-import { makeStyles } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    cursor: "none",
-    padding: "20px",
-    height: "100vh",
-  },
-  session: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    flex: "1 1 100%",
-  },
-  nowPlaying: {
-    flex: "0 1 50%",
-  },
-  join: {
-    flex: "1 1 auto",
-    fontSize: "1.4rem",
-    display: "flex",
-    alignItems: "end",
-    justifyContent: "space-between",
-  },
-  joinLink: {
-    color: theme.palette.secondary.main,
-  },
-  qrCode: {
-    height: "auto",
-    maxWidth: 100,
-    width: "100%",
-    display: "flex",
-  },
-}));
 
 const DisplayPage = () => {
-  const classes = useStyles();
-
   const joinLink = new URL(window.location);
   joinLink.pathname = "pibox/";
 
   return (
-    <div className={classes.root}>
-      <div className={classes.session}>
-        <div className={classes.nowPlaying}>
+    <div className="flex flex-col h-screen p-5 cursor-none">
+      <div className="flex flex-row items-center flex-1">
+        <div className="flex-grow-0 flex-shrink-1 w-1/2">
           <NowPlaying />
         </div>
         <Tracklist display={5} readOnly />
       </div>
-      <div className={classes.join}>
+      <div className="flex flex-1 text-2xl items-end justify-between">
         <div>
-          <a className={classes.joinLink}>{joinLink.toString()}</a>
+          <a className="">{joinLink.toString()}</a>
         </div>
-        <div className={classes.qrCode}>
+        <div className="h-auto max-w-24 w-full flex">
           <QRCode
             size={256}
             style={{ height: "auto", maxWidth: "100%", width: "100%" }}

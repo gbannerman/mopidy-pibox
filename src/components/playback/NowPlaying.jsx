@@ -13,48 +13,9 @@ import {
 } from "services/mopidy";
 import NothingPlaying from "./NothingPlaying";
 import { useAdmin } from "hooks/admin";
-import { makeStyles } from "@material-ui/core/styles";
 import { useSession } from "hooks/session";
 
-const useStyles = makeStyles({
-  heading: {
-    fontSize: "14px",
-    fontWeight: "400",
-    color: "#757575",
-    textAlign: "center",
-  },
-  detail: {
-    display: "flex",
-    justifyContent: "space-evenly",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  info: {
-    paddingTop: "15px",
-    flexBasis: "auto",
-    textAlign: "center",
-    margin: "10px",
-  },
-  primaryInfo: {
-    fontSize: "20px",
-  },
-  secondaryInfo: {
-    fontSize: "16px",
-    fontWeight: "500",
-    color: "#757575",
-  },
-  artwork: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    position: "relative",
-  },
-});
-
 const NowPlaying = () => {
-  const classes = useStyles();
-
   const { playlistName } = useSession();
 
   const [artworkUrl, setArtworkUrl] = useState(null);
@@ -98,10 +59,12 @@ const NowPlaying = () => {
   }
 
   return (
-    <div>
-      <h3 className={classes.heading}>Playing from: {playlistName} </h3>
-      <div className={classes.detail}>
-        <div className={classes.artwork}>
+    <div className="px-2">
+      <h3 className="text-sm font-normal text-gray-400 text-center py-1">
+        Playing from: {playlistName}{" "}
+      </h3>
+      <div className="flex flex-col items-center justify-evenly">
+        <div className="flex flex-col items-center justify-end relative">
           <Thumbnail url={artworkUrl} />
           {isAdmin && (
             <PlaybackControls
@@ -111,12 +74,14 @@ const NowPlaying = () => {
             />
           )}
         </div>
-        <div className={classes.info}>
-          <h2 className={classes.primaryInfo}>{track.name}</h2>
-          <h3 className={classes.secondaryInfo}>
+        <div className="pt-7 basis-auto text-center m-2 max-w-full">
+          <h2 className="text-xl font-bold py-1">{track.name}</h2>
+          <h3 className="text-base font-medium text-gray-400 py-1">
             <ArtistSentence artists={track.artists} />
           </h3>
-          <h3 className={classes.secondaryInfo}>{track.album.name}</h3>
+          <h3 className="text-base font-medium text-gray-400 py-1 text-ellipsis whitespace-nowrap overflow-x-hidden">
+            {track.album.name}
+          </h3>
         </div>
       </div>
     </div>

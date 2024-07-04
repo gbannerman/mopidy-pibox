@@ -6,30 +6,11 @@ import {
   FormControl,
   Checkbox,
   FormControlLabel,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+} from "@mui/material";
 import { useConfig } from "hooks/config";
-import { Autocomplete } from "@material-ui/lab";
-
-const useStyles = makeStyles({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    margin: "0 auto",
-    height: "80%",
-    width: "80%",
-  },
-  selectField: {
-    margin: 0,
-    width: "100%",
-  },
-});
+import { Autocomplete } from "@mui/lab";
 
 const NewSessionPage = ({ onStartSessionClick }) => {
-  const classes = useStyles();
-
   const { defaultPlaylist, defaultSkipThreshold } = useConfig();
 
   const [playlists, setPlaylists] = useState([]);
@@ -61,8 +42,11 @@ const NewSessionPage = ({ onStartSessionClick }) => {
   };
 
   return (
-    <form className={classes.root} onSubmit={handleSessionClick}>
-      <h2 className="no-song-heading">pibox</h2>
+    <form
+      className="flex flex-col items-center justify-evenly mx-auto h-4/5 w-4/5"
+      onSubmit={handleSessionClick}
+    >
+      <h2 className="font-bold text-xl">pibox</h2>
 
       <TextField
         fullWidth
@@ -76,7 +60,10 @@ const NewSessionPage = ({ onStartSessionClick }) => {
       <FormControl fullWidth>
         <Autocomplete
           options={playlists}
-          className={classes.selectField}
+          sx={{
+            margin: 0,
+            width: "100%",
+          }}
           getOptionLabel={(playlist) => playlist.name}
           style={{ width: "100%" }}
           renderInput={(params) => (
@@ -92,6 +79,7 @@ const NewSessionPage = ({ onStartSessionClick }) => {
           <Checkbox
             name="automaticallyStartPlaying"
             checked={automaticallyStartPlaying}
+            color="secondary"
             onChange={(event) =>
               setAutomaticallyStartPlaying(event.target.checked)
             }

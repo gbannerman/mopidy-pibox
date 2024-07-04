@@ -105,6 +105,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
     def __start_playing(self):
         if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
             self.core.playback.play().get()
+            self.logger.info("Pibox started playback")
 
     def __should_play_whats_new_pussycat(self, tl_track):
         tracklist = self.core.tracklist.get_tracks().get()
