@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "wouter";
 import SearchIcon from "@mui/icons-material/Search";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { IconButton } from "@mui/material";
@@ -33,7 +33,7 @@ const NavigationBar = () => {
             pibox
           </h2>
         ) : (
-          <Link className="Link" to="/pibox/session">
+          <Link className="Link" to="/session">
             <IconButton color="secondary">
               <SettingsIcon fontSize="large" />
             </IconButton>
@@ -41,7 +41,7 @@ const NavigationBar = () => {
         )}
       </li>
       <li className="flex-shrink">
-        <Link className="Link" to="/pibox/search">
+        <Link className="Link" to="/search">
           <IconButton color="secondary">
             <SearchIcon fontSize="large" />
           </IconButton>

@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter as Router } from "react-router-dom";
+import { Router } from "wouter";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { initialiseFingerprint } from "services/fingerprint";
@@ -17,7 +17,7 @@ const initialise = async () => {
   const root = createRoot(document.getElementById("root"));
 
   root.render(
-    <Router>
+    <Router base="/pibox">
       <Root />
     </Router>,
   );

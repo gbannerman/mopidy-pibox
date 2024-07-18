@@ -3,7 +3,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import BounceLoader from "react-spinners/BounceLoader";
 import { teal, pink } from "@mui/material/colors";
 import HomePage from "pages/HomePage";
-import { Route, Switch, Redirect, useHistory } from "react-router-dom";
+import { Route, Switch, Redirect, useLocation } from "wouter";
 import dayjs from "dayjs";
 import {
   getCurrentSession,
@@ -39,7 +39,7 @@ const App = () => {
 
   const [connected, setConnected] = useState(false);
 
-  const history = useHistory();
+  const [_, navigate] = useLocation();
 
   const admin = useAdminContext();
 
@@ -89,7 +89,7 @@ const App = () => {
       selectedPlaylist,
       automaticallyStartPlaying,
     );
-    history.push("/pibox");
+    navigate("/");
   };
 
   if (!connected || sessionFetching || configFetching) {
@@ -138,17 +138,14 @@ const App = () => {
               <SnackbarProvider>
                 <div className="Root">
                   <Switch>
-                    {admin.isAdmin ? (
-                      <Route path="/pibox/session">
+                    <Route path="/session">
+                      {admin.isAdmin ? (
                         <SessionPage session={session} />
-                      </Route>
-                    ) : (
-                      <Route
-                        path="/pibox/session"
-                        render={() => <Redirect to="/pibox" />}
-                      />
-                    )}
-                    <Route path="/pibox/display">
+                      ) : (
+                        <Redirect to="/" replace />
+                      )}
+                    </Route>
+                    <Route path="/display">
                       <DisplayPage session={session} />
                     </Route>
                     <Route>

@@ -4,7 +4,7 @@ import tailwindcss from "tailwindcss";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/pibox/",
+  base: "/pibox",
   plugins: [
     react({
       jsxRuntime: "classic",

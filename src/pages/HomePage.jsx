@@ -1,5 +1,5 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route } from "wouter";
 import NowPlaying from "components/playback/NowPlaying";
 import Tracklist from "components/tracklist/Tracklist";
 import NavigationBar from "components/NavigationBar";
@@ -11,7 +11,7 @@ const Home = () => {
       <NavigationBar />
       <NowPlaying />
       <Tracklist display={3} />
-      <Route path="/pibox/search" component={SearchOverlay} />
+      <Route path="/search" component={SearchOverlay} />
     </div>
   );
 };

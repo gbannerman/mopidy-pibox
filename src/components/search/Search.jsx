@@ -3,7 +3,7 @@ import SearchBox from "./SearchBox.jsx";
 import SearchResultItem from "./SearchResultItem.jsx";
 import { Transition } from "react-transition-group";
 import { searchLibrary, queueTrack, playIfStopped } from "services/mopidy.js";
-import { useHistory } from "react-router-dom";
+import { useLocation } from "wouter";
 import { useSnackbar } from "notistack";
 import BounceLoader from "react-spinners/BounceLoader";
 import CloseIcon from "@mui/icons-material/Close";
@@ -17,7 +17,7 @@ const Search = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const history = useHistory();
+  const [_, navigate] = useLocation();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -32,7 +32,7 @@ const Search = () => {
         enqueueSnackbar(`${track.name} added to queue`, { variant: "success" });
       }
 
-      history.push("/pibox");
+      navigate("/");
     } catch (e) {
       enqueueSnackbar(e.message, { variant: "error" });
     }
@@ -129,7 +129,7 @@ const Search = () => {
                 />
                 <IconButton
                   color="secondary"
-                  onClick={() => history.push("/pibox")}
+                  onClick={() => navigate("/")}
                   className="ml-2 p-0 bg-transparent border-transparent"
                 >
                   <CloseIcon className="w-11 h-11 text-white" />
