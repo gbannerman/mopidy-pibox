@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import SearchBox from "./SearchBox.jsx";
 import SearchResultItem from "./SearchResultItem.jsx";
 import { Transition } from "react-transition-group";
@@ -14,6 +14,7 @@ const Search = () => {
   const [results, setResults] = useState(null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(null);
+  const ref = useRef();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -112,7 +113,7 @@ const Search = () => {
 
   return (
     <div className="search">
-      <Transition appear={true} in={true} timeout={100}>
+      <Transition appear={true} in={true} timeout={50} nodeRef={ref}>
         {(state) => (
           <div>
             <div
@@ -120,6 +121,7 @@ const Search = () => {
                 ...defaultStyleBar,
                 ...transitionStylesBar[state],
               }}
+              ref={ref}
             >
               <div style={{ margin: "10px", display: "flex" }}>
                 <SearchBox
