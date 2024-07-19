@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import BounceLoader from "react-spinners/BounceLoader";
-import { teal, pink } from "@mui/material/colors";
 import HomePage from "pages/HomePage";
 import { Route, Switch, Redirect, useLocation } from "wouter";
 import dayjs from "dayjs";
@@ -14,22 +12,12 @@ import {
   getConfig,
   onTrackPlaybackEnded,
 } from "services/mopidy.js";
-import { SnackbarProvider } from "notistack";
 import SessionPage from "pages/SessionPage.jsx";
 import { AdminContext, useAdminContext } from "hooks/admin.js";
-import CssBaseline from "@mui/material/CssBaseline";
 import NewSessionPage from "pages/NewSessionPage";
 import { SessionContext } from "hooks/session";
 import DisplayPage from "pages/DisplayPage";
 import { ConfigContext } from "hooks/config";
-import { StyledEngineProvider } from "@mui/material/styles";
-
-const theme = createTheme({
-  palette: {
-    primary: teal,
-    secondary: pink,
-  },
-});
 
 const App = () => {
   const [session, setSession] = useState(null);
@@ -105,61 +93,51 @@ const App = () => {
 
   if (!session?.started) {
     return (
-      <StyledEngineProvider injectFirst>
-        <ConfigContext.Provider value={config}>
-          <CssBaseline />
-          <ThemeProvider theme={theme}>
-            <SnackbarProvider>
-              <div className="Root">
-                <NewSessionPage onStartSessionClick={createSession} />
-              </div>
-            </SnackbarProvider>
-          </ThemeProvider>
-        </ConfigContext.Provider>
-      </StyledEngineProvider>
+      <BaseProviders admin={admin} config={config}>
+        <NewSessionPage onStartSessionClick={createSession} />
+      </BaseProviders>
     );
   }
 
   return (
-    <StyledEngineProvider injectFirst>
-      <AdminContext.Provider value={admin}>
-        <ConfigContext.Provider value={config}>
-          <SessionContext.Provider
-            value={{
-              playlistName: session.playlist.name,
-              skipThreshold: session.skipThreshold,
-              startedAt: dayjs(session.startTime),
-              playedTracks: session.playedTracks,
-              remainingPlaylistTracks: session.remainingPlaylistTracks,
-            }}
-          >
-            <CssBaseline />
-            <ThemeProvider theme={theme}>
-              <SnackbarProvider>
-                <div className="Root">
-                  <Switch>
-                    <Route path="/session">
-                      {admin.isAdmin ? (
-                        <SessionPage session={session} />
-                      ) : (
-                        <Redirect to="/" replace />
-                      )}
-                    </Route>
-                    <Route path="/display">
-                      <DisplayPage session={session} />
-                    </Route>
-                    <Route>
-                      <HomePage session={session} />
-                    </Route>
-                  </Switch>
-                </div>
-              </SnackbarProvider>
-            </ThemeProvider>
-          </SessionContext.Provider>
-        </ConfigContext.Provider>
-      </AdminContext.Provider>
-    </StyledEngineProvider>
+    <BaseProviders admin={admin} config={config}>
+      <SessionContext.Provider
+        value={{
+          playlistName: session.playlist.name,
+          skipThreshold: session.skipThreshold,
+          startedAt: dayjs(session.startTime),
+          playedTracks: session.playedTracks,
+          remainingPlaylistTracks: session.remainingPlaylistTracks,
+        }}
+      >
+        <Switch>
+          <Route path="/session">
+            {admin.isAdmin ? (
+              <SessionPage session={session} />
+            ) : (
+              <Redirect to="/" replace />
+            )}
+          </Route>
+          <Route path="/display">
+            <DisplayPage session={session} />
+          </Route>
+          <Route>
+            <HomePage session={session} />
+          </Route>
+        </Switch>
+      </SessionContext.Provider>
+    </BaseProviders>
   );
 };
+
+function BaseProviders({ children, admin, config }) {
+  return (
+    <AdminContext.Provider value={admin}>
+      <ConfigContext.Provider value={config}>
+        <div className="Root">{children}</div>
+      </ConfigContext.Provider>
+    </AdminContext.Provider>
+  );
+}
 
 export default App;
