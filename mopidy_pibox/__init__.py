@@ -9,7 +9,7 @@ from . import api
 from . import socket
 from .routing import ClientRoutingHandler
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 
 
 def get_http_handlers(core, config, frontend, static_directory_path):
