@@ -6,9 +6,9 @@ import {
   FormControl,
   Checkbox,
   FormControlLabel,
+  Autocomplete,
 } from "@mui/material";
 import { useConfig } from "hooks/config";
-import { Autocomplete } from "@mui/lab";
 
 const NewSessionPage = ({ onStartSessionClick }) => {
   const { defaultPlaylist, defaultSkipThreshold } = useConfig();
