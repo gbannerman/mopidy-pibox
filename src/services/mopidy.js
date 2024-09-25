@@ -73,9 +73,7 @@ const connectToPibox = (websocketUrl) => {
 };
 
 export const initialiseMopidy = async () => {
-  // eslint-disable-next-line no-restricted-globals
   const hostname = location.hostname;
-  // eslint-disable-next-line no-restricted-globals
   const port = location.port ? `:${location.port}` : "";
   const protocol =
     typeof document !== "undefined" && document.location.protocol === "https:"
@@ -201,7 +199,7 @@ export const voteToSkipTrack = async (uri) => {
       fingerprint,
     });
     return result.data;
-  } catch (error) {
+  } catch {
     throw new PiboxError("User has already voted on this track");
   }
 };

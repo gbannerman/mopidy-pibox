@@ -4,13 +4,13 @@
   "type": "module",
   "private": true,
   "dependencies": {
-    "axios": "1.7.7",
-    "dayjs": "1.11.13",
-    "eslint-plugin-react": "7.36.1",
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
     "@mui/icons-material": "6.1.1",
     "@mui/material": "6.1.1",
+    "axios": "1.7.7",
+    "dayjs": "1.11.13",
+    "eslint-plugin-react": "7.36.1",
     "events": "3.3.0",
     "fingerprintjs2": "2.1.4",
     "mdi-material-ui": "7.9.2",
@@ -27,18 +27,20 @@
     "start": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "lint": "eslint src/ --ext .jsx,.js"
+    "lint": "eslint src"
   },
   "devDependencies": {
+    "@eslint/js": "9.11.1",
     "@vitejs/plugin-react": "4.3.1",
-    "eslint": "8.57.0",
+    "autoprefixer": "10.4.20",
+    "eslint": "9.11.1",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",
-    "prettier": "3.3.3",
-    "vite": "5.4.8",
-    "autoprefixer": "10.4.20",
+    "globals": "15.9.0",
     "postcss": "8.4.47",
-    "tailwindcss": "3.4.13"
+    "prettier": "3.3.3",
+    "tailwindcss": "3.4.13",
+    "vite": "5.4.8"
   },
   "proxy": "https://party.gavinb.site",
   "homepage": "/pibox",
