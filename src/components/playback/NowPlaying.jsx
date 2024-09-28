@@ -16,7 +16,7 @@ import { useAdmin } from "hooks/admin";
 import { useSession } from "hooks/session";
 
 const NowPlaying = () => {
-  const { playlistName } = useSession();
+  const { playlistNames } = useSession();
 
   const [artworkUrl, setArtworkUrl] = useState(null);
   const [track, setTrack] = useState(null);
@@ -61,7 +61,9 @@ const NowPlaying = () => {
   return (
     <div className="px-2">
       <h3 className="text-sm font-normal text-gray-400 text-center py-1">
-        Playing from: {playlistName}{" "}
+        {playlistNames.length === 1
+          ? `Playing from: ${playlistNames[0]}`
+          : `Playing from ${playlistNames.length} playlist${playlistNames.length > 1 ? "s" : ""}`}
       </h3>
       <div className="flex flex-col items-center justify-evenly">
         <div className="flex flex-col items-center justify-end relative">

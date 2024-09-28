@@ -48,14 +48,14 @@ const App = () => {
       setConfigFetching(false);
     };
 
-    const cleanupSessionStarted = onSessionStarted(async () => {
+    const cleanupSessionStarted = onSessionStarted((session) => {
+      setSession(session);
+    });
+    const cleanupTrackPlaybackEnded = onTrackPlaybackEnded(() => {
       updateCurrentSession();
     });
-    const cleanupTrackPlaybackEnded = onTrackPlaybackEnded(async () => {
-      updateCurrentSession();
-    });
-    const cleanupSessionEnded = onSessionEnded(async () => {
-      updateCurrentSession();
+    const cleanupSessionEnded = onSessionEnded(() => {
+      setSession(null);
     });
     fetchConfig();
     updateCurrentSession();
@@ -69,12 +69,12 @@ const App = () => {
 
   const createSession = async ({
     votesToSkip,
-    selectedPlaylist,
+    selectedPlaylists,
     automaticallyStartPlaying,
   }) => {
     await startSession(
       votesToSkip,
-      selectedPlaylist,
+      selectedPlaylists,
       automaticallyStartPlaying,
     );
     navigate("/");
@@ -103,7 +103,7 @@ const App = () => {
     <BaseProviders admin={admin} config={config}>
       <SessionContext.Provider
         value={{
-          playlistName: session.playlist.name,
+          playlistNames: session.playlists.map((p) => p.name),
           skipThreshold: session.skipThreshold,
           startedAt: dayjs(session.startTime),
           playedTracks: session.playedTracks,

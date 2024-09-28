@@ -5,28 +5,20 @@ import logging
 class Pibox:
     def __init__(self):
         super().__init__()
-        self.started = False
-        self.start_time = None
-        self.skip_threshold = 1
-        self.playlist = None
-        self.denylist = ["spotify:track:0afhq8XCExXpqazXczTSve"]
-        self.played_tracks = []
-        self.remaining_playlist_tracks = []
-        self.votes = {}
-        self.has_voted = {}
+        self.__initialise()
 
         self.logger = logging.getLogger(__name__)
 
-    def start_session(self, skip_threshold, playlist):
+    def start_session(self, skip_threshold, playlists):
         self.started = True
         self.start_time = datetime.now(timezone.utc)
 
         self.skip_threshold = skip_threshold
-        self.playlist = playlist
+        self.playlists = playlists
 
-        playlist_name = playlist["name"]
+        playlist_names = ",".join([playlist["name"] for playlist in playlists])
         self.logger.info(
-            f"Started Pibox session with skip threshold {skip_threshold} and playlist {playlist_name}"
+            f"Started Pibox session with skip threshold {skip_threshold} and {len(playlists)} playlists: {playlist_names}"
         )
 
     def get_votes_for_track(self, track):
@@ -52,15 +44,7 @@ class Pibox:
         self.denylist.append(track.uri)
 
     def end_session(self):
-        self.started = False
-        self.start_time = None
-        self.skip_threshold = 1
-        self.playlist = None
-        self.denylist = ["spotify:track:0afhq8XCExXpqazXczTSve"]
-        self.played_tracks = []
-        self.remaining_playlist_tracks = []
-        self.votes = {}
-        self.has_voted = {}
+        self.__initialise()
 
         self.logger.info("Ended Pibox session")
 
@@ -69,7 +53,18 @@ class Pibox:
             "started": self.started,
             "startTime": (self.start_time.isoformat() if self.start_time else None),
             "skipThreshold": self.skip_threshold,
-            "playlist": self.playlist,
+            "playlists": self.playlists,
             "playedTracks": self.played_tracks,
             "remainingPlaylistTracks": self.remaining_playlist_tracks,
         }
+
+    def __initialise(self):
+        self.started = False
+        self.start_time = None
+        self.skip_threshold = 1
+        self.playlists = []
+        self.denylist = ["spotify:track:0afhq8XCExXpqazXczTSve"]
+        self.played_tracks = []
+        self.remaining_playlist_tracks = []
+        self.votes = {}
+        self.has_voted = {}

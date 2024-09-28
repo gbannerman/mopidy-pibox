@@ -23,10 +23,10 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
         self.core.tracklist.set_consume(value=True)
 
-    def start_session(self, skip_threshold, playlist, auto_start):
-        self.pibox.start_session(skip_threshold, playlist)
+    def start_session(self, skip_threshold, playlists, auto_start):
+        self.pibox.start_session(skip_threshold, playlists)
         if auto_start:
-            self.__queue_song_from_session_playlist()
+            self.__queue_song_from_session_playlists()
             self.__start_playing()
 
     def track_playback_ended(self, tl_track, time_position):
@@ -40,7 +40,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             self.logger.info("Meow")
             self.__start_playing()
         elif self.core.tracklist.get_length().get() == 0:
-            self.__queue_song_from_session_playlist()
+            self.__queue_song_from_session_playlists()
             self.__start_playing()
 
     def get_queued_tracks(self, user_fingerprint):
@@ -66,11 +66,15 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
         self.pibox.end_session()
 
-    def __queue_song_from_session_playlist(self):
-        playlist = self.__get_session_playlist()
-        shuffle(playlist)
+    def __queue_song_from_session_playlists(self):
+        self.logger.info("Pibox is trying to queue a song")
 
-        remaining_playlist = [ref for ref in playlist if self.__can_play(ref.uri)]
+        playlist_items = self.__get_session_playlist_items()
+        shuffle(playlist_items)
+
+        remaining_playlist = list(
+            set([ref for ref in playlist_items if self.__can_play(ref.uri)])
+        )
         self.__update_remaining_playlist_tracks(remaining_playlist)
 
         if len(remaining_playlist) == 0:
@@ -83,11 +87,15 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core.tracklist.add(uris=[next_track.uri], at_position=0).get()
         self.logger.info("Pibox auto-added " + next_track.name + " to tracklist")
 
-    def __get_session_playlist(self):
+    def __get_session_playlist_items(self):
         if self.config["offline"]:
             return self.core.library.browse(uri="local:directory?type=track").get()
         else:
-            return self.core.playlists.get_items(self.pibox.playlist["uri"]).get()
+            return [
+                track
+                for playlist in self.pibox.playlists
+                for track in self.core.playlists.get_items(playlist["uri"]).get()
+            ]
 
     def __update_played_tracks(self, tl_track):
         self.pibox.played_tracks.append(tl_track.track.uri)

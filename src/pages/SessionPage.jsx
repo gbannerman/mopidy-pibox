@@ -6,7 +6,7 @@ import logo from "res/logo.png";
 
 const SessionPage = () => {
   const {
-    playlistName,
+    playlistNames,
     skipThreshold,
     startedAt,
     playedTracks,
@@ -21,14 +21,18 @@ const SessionPage = () => {
       </div>
       <div>
         <SessionStatistic
-          label="Selected Playlist"
+          label="Selected Playlists"
           value={
-            <p className="text-right leading-tight">
-              {playlistName} <br />
-              <span className="text-gray-400">
+            <div className="flex flex-col justify-end">
+              {playlistNames.map((name) => (
+                <p key={name} className="text-right leading-tight">
+                  {name}
+                </p>
+              ))}
+              <span className="text-gray-400 text-right">
                 ({remainingPlaylistTracks.length} tracks remaining)
               </span>
-            </p>
+            </div>
           }
         />
         <SessionStatistic

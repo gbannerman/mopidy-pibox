@@ -65,10 +65,10 @@ class SessionHandler(PiboxHandler):
     def post(self):
         data = self._get_body()
         skip_threshold = data["skipThreshold"]
-        playlist = data["playlist"]
+        playlists = data["playlists"]
         auto_start = data.get("autoStart", True)
 
-        self.frontend.start_session(skip_threshold, playlist, auto_start)
+        self.frontend.start_session(skip_threshold, playlists, auto_start)
         session = self.frontend.pibox.to_json().get()
 
         socket.PiboxWebSocket.send(

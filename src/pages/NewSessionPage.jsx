@@ -8,6 +8,8 @@ import {
   FormControlLabel,
   Autocomplete,
 } from "@mui/material";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useConfig } from "hooks/config";
 
 const NewSessionPage = ({ onStartSessionClick }) => {
@@ -17,13 +19,13 @@ const NewSessionPage = ({ onStartSessionClick }) => {
   const [votesToSkip, setVotesToSkip] = useState(`${defaultSkipThreshold}`);
   const [automaticallyStartPlaying, setAutomaticallyStartPlaying] =
     useState(true);
-  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [selectedPlaylists, setSelectedPlaylists] = useState([]);
 
   useEffect(() => {
     const updatePlaylists = async () => {
       const playlists = await getPlaylists();
       setPlaylists(playlists);
-      setSelectedPlaylist(playlists.find((p) => p.uri === defaultPlaylist));
+      setSelectedPlaylists(playlists.filter((p) => p.uri === defaultPlaylist));
     };
 
     updatePlaylists();
@@ -32,10 +34,10 @@ const NewSessionPage = ({ onStartSessionClick }) => {
   const handleSessionClick = (event) => {
     event.preventDefault();
     onStartSessionClick({
-      selectedPlaylist: {
+      selectedPlaylists: selectedPlaylists.map((selectedPlaylist) => ({
         name: selectedPlaylist.name,
         uri: selectedPlaylist.uri,
-      },
+      })),
       votesToSkip,
       automaticallyStartPlaying,
     });
@@ -59,6 +61,8 @@ const NewSessionPage = ({ onStartSessionClick }) => {
 
       <FormControl fullWidth>
         <Autocomplete
+          multiple
+          disableCloseOnSelect
           options={playlists}
           sx={{
             margin: 0,
@@ -67,10 +71,24 @@ const NewSessionPage = ({ onStartSessionClick }) => {
           getOptionLabel={(playlist) => playlist.name}
           style={{ width: "100%" }}
           renderInput={(params) => (
-            <TextField {...params} label="Playlist" variant="outlined" />
+            <TextField {...params} label="Playlists" variant="outlined" />
           )}
-          value={selectedPlaylist}
-          onChange={(_event, value) => setSelectedPlaylist(value)}
+          renderOption={(props, option, { selected }) => {
+            const { key, ...optionProps } = props;
+            return (
+              <li key={key} {...optionProps}>
+                <Checkbox
+                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                  checkedIcon={<CheckBoxIcon fontSize="small" />}
+                  style={{ marginRight: 8 }}
+                  checked={selected}
+                />
+                {option.name}
+              </li>
+            );
+          }}
+          value={selectedPlaylists}
+          onChange={(_event, value) => setSelectedPlaylists(value)}
         />
       </FormControl>
 
@@ -91,7 +109,7 @@ const NewSessionPage = ({ onStartSessionClick }) => {
       <Button
         type="submit"
         variant="contained"
-        disabled={!votesToSkip || !selectedPlaylist}
+        disabled={!votesToSkip || !selectedPlaylists.length}
         color="primary"
       >
         Start

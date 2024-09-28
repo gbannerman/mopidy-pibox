@@ -105,7 +105,10 @@ class TestSessionHandler(TestPiboxHandlerBase):
                 "started": True,
                 "startTime": start_time,
                 "skipThreshold": 3,
-                "playlist": {"name": "test", "uri": "dummy:playlist1"},
+                "playlists": [
+                    {"name": "test", "uri": "dummy:playlist1"},
+                    {"name": "test2", "uri": "dummy:playlist2"},
+                ],
                 "playedTracks": ["dummy:track1", "dummy:track2"],
                 "remainingPlaylistTracks": ["dummy:track3", "dummy:track4"],
             },
@@ -119,7 +122,13 @@ class TestSessionHandler(TestPiboxHandlerBase):
         self.assertEqual(body["started"], True)
         self.assertEqual(body["startTime"], start_time)
         self.assertEqual(body["skipThreshold"], 3)
-        self.assertEqual(body["playlist"], {"name": "test", "uri": "dummy:playlist1"})
+        self.assertEqual(
+            body["playlists"],
+            [
+                {"name": "test", "uri": "dummy:playlist1"},
+                {"name": "test2", "uri": "dummy:playlist2"},
+            ],
+        )
         self.assertEqual(body["playedTracks"], ["dummy:track1", "dummy:track2"])
         self.assertEqual(
             body["remainingPlaylistTracks"], ["dummy:track3", "dummy:track4"]
@@ -127,7 +136,10 @@ class TestSessionHandler(TestPiboxHandlerBase):
 
     def test_post(self):
         skip_threshold = 3
-        playlist = {"name": "test", "uri": "dummy:playlist1"}
+        playlists = [
+            {"name": "test", "uri": "dummy:playlist1"},
+            {"name": "test2", "uri": "dummy:playlist2"},
+        ]
         auto_start = False
 
         response = self.fetch(
@@ -136,7 +148,7 @@ class TestSessionHandler(TestPiboxHandlerBase):
             body=json.dumps(
                 {
                     "skipThreshold": skip_threshold,
-                    "playlist": playlist,
+                    "playlists": playlists,
                     "autoStart": auto_start,
                 }
             ),
@@ -145,7 +157,7 @@ class TestSessionHandler(TestPiboxHandlerBase):
         self.assertEqual(response.code, 200)
 
         self.frontend.start_session.assert_called_once_with(
-            skip_threshold, playlist, auto_start
+            skip_threshold, playlists, auto_start
         )
 
 
