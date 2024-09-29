@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import BounceLoader from "react-spinners/BounceLoader";
 import HomePage from "pages/HomePage";
 import { Route, Switch, Redirect, useLocation } from "wouter";
 import { onConnectionChanged, startSession } from "services/mopidy.js";
@@ -9,6 +8,7 @@ import NewSessionPage from "pages/NewSessionPage";
 import DisplayPage from "pages/DisplayPage";
 import { useConfig } from "hooks/config";
 import { useSessionStarted } from "hooks/session";
+import { LoadingScreen } from "components/common/LoadingScreen";
 
 const App = () => {
   const { sessionStarted, sessionStartedLoading, refetchSessionStarted } =
@@ -42,10 +42,7 @@ const App = () => {
   if (!connected || sessionStartedLoading || configLoading) {
     return (
       <div className="Root">
-        <div className="loading">
-          <h1>pibox</h1>
-          <BounceLoader size={44} color="#00796B" />
-        </div>
+        <LoadingScreen />
       </div>
     );
   }

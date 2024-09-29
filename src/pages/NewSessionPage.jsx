@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { getPlaylists } from "services/mopidy";
 import {
   TextField,
   Button,
@@ -11,29 +10,26 @@ import {
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useConfig } from "hooks/config";
+import { usePlaylists } from "hooks/playlists";
+import { LoadingScreen } from "components/common/LoadingScreen";
 
 const NewSessionPage = ({ onStartSessionClick }) => {
   const {
     config: { defaultPlaylists, defaultSkipThreshold },
   } = useConfig();
-
-  const [playlists, setPlaylists] = useState([]);
   const [votesToSkip, setVotesToSkip] = useState(`${defaultSkipThreshold}`);
   const [automaticallyStartPlaying, setAutomaticallyStartPlaying] =
     useState(true);
   const [selectedPlaylists, setSelectedPlaylists] = useState([]);
 
-  useEffect(() => {
-    const updatePlaylists = async () => {
-      const playlists = await getPlaylists();
-      setPlaylists(playlists);
-      setSelectedPlaylists(
-        playlists.filter((p) => defaultPlaylists.includes(p.uri)),
-      );
-    };
+  const { playlists, playlistsLoading } = usePlaylists();
 
-    updatePlaylists();
-  }, []);
+  useEffect(() => {
+    if (!playlists || !defaultPlaylists) return;
+    setSelectedPlaylists(
+      playlists.filter((p) => defaultPlaylists.includes(p.uri)),
+    );
+  }, [playlists]);
 
   const handleSessionClick = (event) => {
     event.preventDefault();
@@ -46,6 +42,10 @@ const NewSessionPage = ({ onStartSessionClick }) => {
       automaticallyStartPlaying,
     });
   };
+
+  if (playlistsLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <form
