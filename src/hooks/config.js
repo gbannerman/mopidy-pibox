@@ -1,7 +1,7 @@
 import React from "react";
 
 const defaultConfigContext = {
-  defaultPlaylist: null,
+  defaultPlaylists: [],
   defaultSkipThreshold: null,
   offline: false,
 };

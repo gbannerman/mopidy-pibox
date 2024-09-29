@@ -22,7 +22,10 @@ def _config():
         "pibox": {
             "enabled": True,
             "offline": False,
-            "default_playlist": "dummy:user:someuser:playlist1",
+            "default_playlists": [
+                "dummy:user:someuser:playlist1",
+                "dummy:user:someuser:playlist2",
+            ],
             "default_skip_threshold": 10,
         },
     }
@@ -169,7 +172,10 @@ class TestConfigHandler(TestPiboxHandlerBase):
         self.assertEqual(response.code, 200)
 
         self.assertEqual(body["offline"], False)
-        self.assertEqual(body["defaultPlaylist"], "dummy:user:someuser:playlist1")
+        self.assertEqual(
+            body["defaultPlaylists"],
+            ["dummy:user:someuser:playlist1", "dummy:user:someuser:playlist2"],
+        )
         self.assertEqual(body["defaultSkipThreshold"], 10)
 
 

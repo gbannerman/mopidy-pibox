@@ -97,7 +97,7 @@ class ConfigHandler(tornado.web.RequestHandler):
         self.write(
             {
                 "offline": pibox_config.get("offline"),
-                "defaultPlaylist": pibox_config.get("default_playlist"),
+                "defaultPlaylists": list(pibox_config.get("default_playlists")),
                 "defaultSkipThreshold": pibox_config.get("default_skip_threshold"),
             }
         )

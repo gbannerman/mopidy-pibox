@@ -61,20 +61,21 @@ Mopidy-Pibox to your Mopidy configuration file::
 
     [pibox]
     enabled = true
-    default_playlist = spotify:playlist:79inBfAlnfUB7i5kRthmWL
-    default_skip_threshold = 3
     offline = false
+    default_skip_threshold = 3
+    default_playlists =
+      spotify:playlist:79inBfAlnfUB7i5kRthmWL
 
 The following configuration values are available:
 
 - ``pibox/enabled``: If the pibox extension should be enabled or not.
   Defaults to ``true``.
 
-- ``pibox/default_playlist``: The default playlist URI to play from when starting a new session. Defaults to `a Spotify playlist of great party songs <https://open.spotify.com/playlist/79inBfAlnfUB7i5kRthmWL?si=e8a5da23f91048c2>`_. Save it to your Spotify library!
+- ``pibox/offline``: If the extension should be used offline. Defaults to false.
 
 - ``pibox/default_skip_threshold``: The default number of votes required to skip a track. Defaults to 3.
 
-- ``pibox/offline``: If the extension should be used offline. Defaults to false.
+- ``pibox/default_playlists``: The URIs of the default playlists to play from when starting a new session. Defaults to `a Spotify playlist of great party songs <https://open.spotify.com/playlist/79inBfAlnfUB7i5kRthmWL?si=e8a5da23f91048c2>`_. Save it to your Spotify library!
 
 
 Project resources

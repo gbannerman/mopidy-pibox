@@ -62,7 +62,9 @@ class Extension(ext.Extension):
 
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
-        schema["default_playlist"] = config.String()
+        schema["default_playlists"] = config.List(
+            optional=True, unique=True, subtype=config.String()
+        )
         schema["default_skip_threshold"] = config.Integer(minimum=1)
         schema["offline"] = config.Boolean(optional=True)
         return schema
