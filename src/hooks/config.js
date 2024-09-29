@@ -1,11 +1,16 @@
-import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getConfig } from "services/mopidy";
 
-const defaultConfigContext = {
-  defaultPlaylists: [],
-  defaultSkipThreshold: null,
-  offline: false,
+export const useConfig = () => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["config"],
+    queryFn: getConfig,
+    staleTime: Infinity,
+  });
+
+  return {
+    config: data,
+    configLoading: isLoading,
+    error,
+  };
 };
-
-export const ConfigContext = React.createContext(defaultConfigContext);
-
-export const useConfig = () => React.useContext(ConfigContext);

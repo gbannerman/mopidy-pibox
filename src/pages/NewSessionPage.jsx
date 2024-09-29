@@ -13,7 +13,9 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useConfig } from "hooks/config";
 
 const NewSessionPage = ({ onStartSessionClick }) => {
-  const { defaultPlaylists, defaultSkipThreshold } = useConfig();
+  const {
+    config: { defaultPlaylists, defaultSkipThreshold },
+  } = useConfig();
 
   const [playlists, setPlaylists] = useState([]);
   const [votesToSkip, setVotesToSkip] = useState(`${defaultSkipThreshold}`);
