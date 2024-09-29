@@ -1,34 +1,24 @@
 import React, { useState, useEffect } from "react";
 import BounceLoader from "react-spinners/BounceLoader";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import HomePage from "pages/HomePage";
 import { Route, Switch, Redirect, useLocation } from "wouter";
-import dayjs from "dayjs";
 import {
-  getCurrentSession,
-  onSessionStarted,
-  onSessionEnded,
   onConnectionChanged,
   startSession,
   getConfig,
-  onTrackPlaybackEnded,
 } from "services/mopidy.js";
 import SessionPage from "pages/SessionPage.jsx";
 import { AdminContext, useAdminContext } from "hooks/admin.js";
 import NewSessionPage from "pages/NewSessionPage";
-import { SessionContext } from "hooks/session";
 import DisplayPage from "pages/DisplayPage";
 import { ConfigContext } from "hooks/config";
-
-const queryClient = new QueryClient();
+import { useSessionStarted } from "hooks/session";
 
 const App = () => {
-  const [session, setSession] = useState(null);
   const [config, setConfig] = useState(null);
-  const [sessionFetching, setSessionFetching] = useState(true);
   const [configFetching, setConfigFetching] = useState(true);
-
+  const { sessionStarted, sessionStartedLoading, refetchSessionStarted } =
+    useSessionStarted();
   const [connected, setConnected] = useState(false);
 
   const [_, navigate] = useLocation();
@@ -36,39 +26,18 @@ const App = () => {
   const admin = useAdminContext();
 
   useEffect(() => {
-    onConnectionChanged(setConnected);
+    const cleanup = onConnectionChanged(setConnected);
+    return () => cleanup();
   }, []);
 
   useEffect(() => {
-    const updateCurrentSession = async () => {
-      const currentSession = await getCurrentSession();
-      setSession(currentSession);
-      setSessionFetching(false);
-    };
-
     const fetchConfig = async () => {
       const config = await getConfig();
       setConfig(config);
       setConfigFetching(false);
     };
 
-    const cleanupSessionStarted = onSessionStarted((session) => {
-      setSession(session);
-    });
-    const cleanupTrackPlaybackEnded = onTrackPlaybackEnded(() => {
-      updateCurrentSession();
-    });
-    const cleanupSessionEnded = onSessionEnded(() => {
-      setSession(null);
-    });
     fetchConfig();
-    updateCurrentSession();
-
-    return () => {
-      cleanupSessionStarted();
-      cleanupSessionEnded();
-      cleanupTrackPlaybackEnded();
-    };
   }, []);
 
   const createSession = async ({
@@ -81,10 +50,11 @@ const App = () => {
       selectedPlaylists,
       automaticallyStartPlaying,
     );
+    refetchSessionStarted();
     navigate("/");
   };
 
-  if (!connected || sessionFetching || configFetching) {
+  if (!connected || sessionStartedLoading || configFetching) {
     return (
       <div className="Root">
         <div className="loading">
@@ -95,7 +65,7 @@ const App = () => {
     );
   }
 
-  if (!session?.started) {
+  if (!sessionStarted) {
     return (
       <BaseProviders admin={admin} config={config}>
         <NewSessionPage onStartSessionClick={createSession} />
@@ -105,45 +75,28 @@ const App = () => {
 
   return (
     <BaseProviders admin={admin} config={config}>
-      <SessionContext.Provider
-        value={{
-          playlistNames: session.playlists.map((p) => p.name),
-          skipThreshold: session.skipThreshold,
-          startedAt: dayjs(session.startTime),
-          playedTracks: session.playedTracks,
-          remainingPlaylistTracks: session.remainingPlaylistTracks,
-        }}
-      >
-        <Switch>
-          <Route path="/session">
-            {admin.isAdmin ? (
-              <SessionPage session={session} />
-            ) : (
-              <Redirect to="/" replace />
-            )}
-          </Route>
-          <Route path="/display">
-            <DisplayPage session={session} />
-          </Route>
-          <Route>
-            <HomePage session={session} />
-          </Route>
-        </Switch>
-      </SessionContext.Provider>
+      <Switch>
+        <Route path="/session">
+          {admin.isAdmin ? <SessionPage /> : <Redirect to="/" replace />}
+        </Route>
+        <Route path="/display">
+          <DisplayPage />
+        </Route>
+        <Route>
+          <HomePage />
+        </Route>
+      </Switch>
     </BaseProviders>
   );
 };
 
 function BaseProviders({ children, admin, config }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AdminContext.Provider value={admin}>
-        <ConfigContext.Provider value={config}>
-          <div className="Root">{children}</div>
-        </ConfigContext.Provider>
-      </AdminContext.Provider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <AdminContext.Provider value={admin}>
+      <ConfigContext.Provider value={config}>
+        <div className="Root">{children}</div>
+      </ConfigContext.Provider>
+    </AdminContext.Provider>
   );
 }
 

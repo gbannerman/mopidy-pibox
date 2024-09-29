@@ -8,12 +8,16 @@ import { teal, pink } from "@mui/material/colors";
 import { SnackbarProvider } from "notistack";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider } from "@mui/material/styles";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { initialiseFingerprint } from "services/fingerprint";
 import { initialiseMopidy } from "services/mopidy";
 import Root from "./Root";
 import "./index.css";
 
 dayjs.extend(relativeTime);
+
+const queryClient = new QueryClient();
 
 const theme = createTheme({
   palette: {
@@ -34,7 +38,10 @@ const initialise = async () => {
         <CssBaseline />
         <ThemeProvider theme={theme}>
           <SnackbarProvider>
-            <Root />
+            <QueryClientProvider client={queryClient}>
+              <Root />
+              <ReactQueryDevtools />
+            </QueryClientProvider>
           </SnackbarProvider>
         </ThemeProvider>
       </StyledEngineProvider>

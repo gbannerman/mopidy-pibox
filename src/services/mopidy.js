@@ -134,6 +134,7 @@ export const getPlaylists = async () => {
 };
 
 export const queueTrack = async (selectedTrack) => {
+  // TODO: This could be checked up front using playedTracks and indicated in the search results
   const history = await getHistory();
 
   if (history.filter((uri) => uri === selectedTrack.uri).length > 0) {
@@ -230,8 +231,8 @@ export const skipCurrentTrack = async () => {
   await mopidy.playback.next();
 };
 
-export const onConnectionChanged = (callback) =>
-  mopidy.on("state", (event) => {
+export const onConnectionChanged = (callback) => {
+  const fn = (event) => {
     switch (event) {
       case "state:online":
         callback(true);
@@ -240,7 +241,10 @@ export const onConnectionChanged = (callback) =>
       default:
         callback(false);
     }
-  });
+  };
+  mopidy.on("state", fn);
+  return () => mopidy.off("state", fn);
+};
 
 export const onPlaybackChanged = (callback) => {
   const fn = (playback) => callback(playback.new_state);
@@ -254,10 +258,10 @@ export const onTracklistChanged = (callback) => {
   return () => mopidy.off("event:tracklistChanged", fn);
 };
 
-export const onTrackPlaybackEnded = (callback) => {
+export const onTrackPlaybackStarted = (callback) => {
   const fn = () => callback();
-  mopidy.on("event:trackPlaybackEnded", fn);
-  return () => mopidy.off("event:trackPlaybackEnded", fn);
+  mopidy.on("event:trackPlaybackStarted", fn);
+  return () => mopidy.off("event:trackPlaybackStarted", fn);
 };
 
 export const onSessionStarted = (callback) => {

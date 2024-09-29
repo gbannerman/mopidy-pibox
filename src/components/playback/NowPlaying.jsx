@@ -13,10 +13,10 @@ import {
 } from "services/mopidy";
 import NothingPlaying from "./NothingPlaying";
 import { useAdmin } from "hooks/admin";
-import { useSession } from "hooks/session";
+import { useSessionDetails } from "hooks/session";
 
 const NowPlaying = () => {
-  const { playlistNames } = useSession();
+  const { session, sessionLoading } = useSessionDetails();
 
   const [artworkUrl, setArtworkUrl] = useState(null);
   const [track, setTrack] = useState(null);
@@ -60,11 +60,9 @@ const NowPlaying = () => {
 
   return (
     <div className="px-2">
-      <h3 className="text-sm font-normal text-gray-400 text-center py-1">
-        {playlistNames.length === 1
-          ? `Playing from: ${playlistNames[0]}`
-          : `Playing from ${playlistNames.length} playlist${playlistNames.length > 1 ? "s" : ""}`}
-      </h3>
+      {!sessionLoading && session && (
+        <PlayingFrom playlistNames={session.playlistNames} />
+      )}
       <div className="flex flex-col items-center justify-evenly">
         <div className="flex flex-col items-center justify-end relative">
           <Thumbnail url={artworkUrl} />
@@ -89,5 +87,15 @@ const NowPlaying = () => {
     </div>
   );
 };
+
+function PlayingFrom({ playlistNames }) {
+  return (
+    <h3 className="text-sm font-normal text-gray-400 text-center py-1">
+      {playlistNames.length === 1
+        ? `Playing from: ${playlistNames[0]}`
+        : `Playing from ${playlistNames.length} playlist${playlistNames.length > 1 ? "s" : ""}`}
+    </h3>
+  );
+}
 
 export default NowPlaying;

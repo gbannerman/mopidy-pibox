@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import TracklistItem from "./TracklistItem.jsx";
 import { voteToSkipTrack, PiboxError } from "services/mopidy";
 import { Card } from "@mui/material";
-import { useSession } from "hooks/session.js";
+import { useSessionDetails } from "hooks/session.js";
 import { useTracklist } from "hooks/tracklist.js";
 
 const Tracklist = ({ display, readOnly = false }) => {
-  const { skipThreshold } = useSession();
+  const { session } = useSessionDetails();
   const [votePending, setVotePending] = useState(false);
 
   const { tracklist, refetchTracklist } = useTracklist();
@@ -35,6 +35,8 @@ const Tracklist = ({ display, readOnly = false }) => {
 
   const queueLength = tracklist.length - 1;
   const tracksNotShown = queueLength - display;
+
+  const skipThreshold = session?.skipThreshold ?? 0;
 
   const tracklistItems = tracklist
     .slice(1, 1 + display)

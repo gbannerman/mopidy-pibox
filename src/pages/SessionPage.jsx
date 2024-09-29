@@ -1,17 +1,19 @@
 import React from "react";
 import { endSession } from "services/mopidy";
 import { Button } from "@mui/material";
-import { useSession } from "hooks/session";
+import { useSessionDetails } from "hooks/session";
 import logo from "res/logo.png";
 
 const SessionPage = () => {
   const {
-    playlistNames,
-    skipThreshold,
-    startedAt,
-    playedTracks,
-    remainingPlaylistTracks,
-  } = useSession();
+    session: {
+      playlistNames,
+      skipThreshold,
+      startedAt,
+      playedTracks,
+      remainingPlaylistTracks,
+    },
+  } = useSessionDetails();
 
   return (
     <div className="w-full h-full flex flex-col justify-between items-stretch p-2">
