@@ -1,43 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TracklistItem from "./TracklistItem.jsx";
-import {
-  getTracklist,
-  onTracklistChanged,
-  voteToSkipTrack,
-  PiboxError,
-} from "services/mopidy";
+import { voteToSkipTrack, PiboxError } from "services/mopidy";
 import { Card } from "@mui/material";
 import { useSession } from "hooks/session.js";
+import { useTracklist } from "hooks/tracklist.js";
 
 const Tracklist = ({ display, readOnly = false }) => {
   const { skipThreshold } = useSession();
-
-  const [tracklist, setTracklist] = useState([]);
   const [votePending, setVotePending] = useState(false);
 
-  const updateTracklist = async () => {
-    const tracklist = await getTracklist();
-    setTracklist(tracklist);
-  };
+  const { tracklist, refetchTracklist } = useTracklist();
 
-  useEffect(() => {
-    const cleanup = onTracklistChanged(async () => {
-      updateTracklist();
-    });
-    updateTracklist();
-
-    return cleanup;
-  }, []);
+  if (!tracklist) {
+    return null;
+  }
 
   const generateSkipHandler = (track) => async () => {
     const trackUri = track.info.uri;
     const setTrackAsVoted = () => {
-      updateTracklist();
-      setTracklist(
-        [...tracklist].map((t) =>
-          t.info.uri === trackUri ? { ...t, voted: true } : t,
-        ),
-      );
+      refetchTracklist();
     };
 
     setVotePending(true);

@@ -63,6 +63,12 @@ const connectToPibox = (websocketUrl) => {
         });
         break;
 
+      case "VOTE_ADDED":
+        event = new CustomEvent("pibox:voteAdded", {
+          detail: data.payload,
+        });
+        break;
+
       default:
         console.warn("Default pibox websocket statement hit");
         break;
@@ -243,10 +249,7 @@ export const onPlaybackChanged = (callback) => {
 };
 
 export const onTracklistChanged = (callback) => {
-  const fn = async () => {
-    const tracklist = await getTracklist();
-    callback(tracklist);
-  };
+  const fn = () => callback();
   mopidy.on("event:tracklistChanged", fn);
   return () => mopidy.off("event:tracklistChanged", fn);
 };
@@ -267,4 +270,10 @@ export const onSessionEnded = (callback) => {
   const fn = () => callback();
   document.addEventListener("pibox:sessionEnd", fn);
   return () => document.removeEventListener("pibox:sessionEnd", fn);
+};
+
+export const onVoteAdded = (callback) => {
+  const fn = (event) => callback(event.detail);
+  document.addEventListener("pibox:voteAdded", fn);
+  return () => document.removeEventListener("pibox:voteAdded", fn);
 };

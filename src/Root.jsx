@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import BounceLoader from "react-spinners/BounceLoader";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import HomePage from "pages/HomePage";
 import { Route, Switch, Redirect, useLocation } from "wouter";
 import dayjs from "dayjs";
@@ -18,6 +20,8 @@ import NewSessionPage from "pages/NewSessionPage";
 import { SessionContext } from "hooks/session";
 import DisplayPage from "pages/DisplayPage";
 import { ConfigContext } from "hooks/config";
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const [session, setSession] = useState(null);
@@ -132,11 +136,14 @@ const App = () => {
 
 function BaseProviders({ children, admin, config }) {
   return (
-    <AdminContext.Provider value={admin}>
-      <ConfigContext.Provider value={config}>
-        <div className="Root">{children}</div>
-      </ConfigContext.Provider>
-    </AdminContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <AdminContext.Provider value={admin}>
+        <ConfigContext.Provider value={config}>
+          <div className="Root">{children}</div>
+        </ConfigContext.Provider>
+      </AdminContext.Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 

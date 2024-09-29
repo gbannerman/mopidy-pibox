@@ -55,6 +55,11 @@ class VoteHandler(PiboxHandler):
         else:
             self.frontend.add_vote_for_user_on_queued_track(fingerprint, track)
 
+            socket.PiboxWebSocket.send(
+                "VOTE_ADDED",
+                {},
+            )
+
             self.set_status(200)
 
 

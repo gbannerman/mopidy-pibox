@@ -2,11 +2,13 @@ import globals from "globals";
 import js from "@eslint/js";
 import reactPlugin from "eslint-plugin-react";
 import eslintPlugin from "eslint-plugin-prettier/recommended";
+import queryPlugin from "@tanstack/eslint-plugin-query";
 
 export default [
   js.configs.recommended,
   reactPlugin.configs.flat.recommended,
   eslintPlugin,
+  ...queryPlugin.configs["flat/recommended"],
   {
     files: ["**/*.js", "**/*.jsx"],
 
