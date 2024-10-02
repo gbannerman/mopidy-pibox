@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Button,
@@ -17,40 +17,50 @@ const NewSessionPage = ({ onStartSessionClick }) => {
   const {
     config: { defaultPlaylists, defaultSkipThreshold },
   } = useConfig();
-  const [votesToSkip, setVotesToSkip] = useState(`${defaultSkipThreshold}`);
-  const [automaticallyStartPlaying, setAutomaticallyStartPlaying] =
-    useState(true);
-  const [selectedPlaylists, setSelectedPlaylists] = useState([]);
-
   const { playlists, playlistsLoading } = usePlaylists();
-
-  useEffect(() => {
-    if (!playlists || !defaultPlaylists) return;
-    setSelectedPlaylists(
-      playlists.filter((p) => defaultPlaylists.includes(p.uri)),
-    );
-  }, [playlists]);
-
-  const handleSessionClick = (event) => {
-    event.preventDefault();
-    onStartSessionClick({
-      selectedPlaylists: selectedPlaylists.map((selectedPlaylist) => ({
-        name: selectedPlaylist.name,
-        uri: selectedPlaylist.uri,
-      })),
-      votesToSkip,
-      automaticallyStartPlaying,
-    });
-  };
 
   if (playlistsLoading) {
     return <LoadingScreen />;
   }
 
+  const initialPlaylists = playlists.filter((p) =>
+    defaultPlaylists.includes(p.uri),
+  );
+
+  return (
+    <NewSessionForm
+      initialSkipThreshold={defaultSkipThreshold}
+      initialPlaylists={initialPlaylists}
+      availablePlaylists={playlists}
+      onSubmit={onStartSessionClick}
+    />
+  );
+};
+
+function NewSessionForm({
+  onSubmit,
+  initialSkipThreshold,
+  initialPlaylists,
+  availablePlaylists,
+}) {
+  const [votesToSkip, setVotesToSkip] = useState(`${initialSkipThreshold}`);
+  const [automaticallyStartPlaying, setAutomaticallyStartPlaying] =
+    useState(true);
+  const [selectedPlaylists, setSelectedPlaylists] = useState(initialPlaylists);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSubmit({
+      selectedPlaylists,
+      votesToSkip,
+      automaticallyStartPlaying,
+    });
+  };
+
   return (
     <form
       className="flex flex-col items-center justify-evenly mx-auto h-4/5 w-4/5"
-      onSubmit={handleSessionClick}
+      onSubmit={handleSubmit}
     >
       <h2 className="font-bold text-xl">pibox</h2>
 
@@ -67,7 +77,7 @@ const NewSessionPage = ({ onStartSessionClick }) => {
         <Autocomplete
           multiple
           disableCloseOnSelect
-          options={playlists}
+          options={availablePlaylists}
           sx={{
             margin: 0,
             width: "100%",
@@ -120,6 +130,6 @@ const NewSessionPage = ({ onStartSessionClick }) => {
       </Button>
     </form>
   );
-};
+}
 
 export default NewSessionPage;
