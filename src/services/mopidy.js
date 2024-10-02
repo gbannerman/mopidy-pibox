@@ -235,10 +235,10 @@ export const onTracklistChanged = (callback) => {
   return () => mopidy.off("event:tracklistChanged", fn);
 };
 
-export const onTrackPlaybackStarted = (callback) => {
+export const onTrackPlaybackEnded = (callback) => {
   const fn = () => callback();
-  mopidy.on("event:trackPlaybackStarted", fn);
-  return () => mopidy.off("event:trackPlaybackStarted", fn);
+  mopidy.on("event:trackPlaybackEnded", fn);
+  return () => mopidy.off("event:trackPlaybackEnded", fn);
 };
 
 export const onSessionStarted = (callback) => {

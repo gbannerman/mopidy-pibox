@@ -13,9 +13,7 @@ const NowPlaying = () => {
   const { isAdmin } = useAdmin();
   const { currentTrack, playbackState, artworkUrl } = useNowPlaying();
 
-  if (!currentTrack) {
-    return <NothingPlaying />;
-  }
+  if (!currentTrack) return <NothingPlaying />;
 
   return (
     <div className="px-2">

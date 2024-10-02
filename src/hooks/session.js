@@ -5,7 +5,7 @@ import {
   getCurrentSession,
   onSessionEnded,
   onSessionStarted,
-  onTrackPlaybackStarted,
+  onTrackPlaybackEnded,
 } from "services/mopidy";
 
 let sessionDetailsSubscriptionInitialised = false;
@@ -25,7 +25,7 @@ export const useSessionDetails = () => {
       return;
     }
 
-    const cleanupTracklistChanged = onTrackPlaybackStarted(() => {
+    const cleanupTracklistChanged = onTrackPlaybackEnded(() => {
       queryClient.invalidateQueries({
         queryKey: ["session", "sessionDetails"],
       });

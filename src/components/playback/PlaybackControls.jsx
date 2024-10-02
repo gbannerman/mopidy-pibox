@@ -5,14 +5,16 @@ import PlayIcon from "@mui/icons-material/PlayArrow";
 import SkipNext from "@mui/icons-material/SkipNext";
 
 const PlaybackControls = ({ playbackState, onPlayPauseClick, onSkipClick }) => {
-  if (playbackState === "stopped") {
-    return null;
-  }
+  const isStopped = playbackState === "stopped";
 
   return (
     <div className="absolute -bottom-8 w-36 flex justify-between">
       <Fab
-        sx={{ width: 65, height: 65 }}
+        sx={{
+          width: 65,
+          height: 65,
+          visibility: isStopped ? "hidden" : "visible",
+        }}
         color="primary"
         onClick={onPlayPauseClick}
       >

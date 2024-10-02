@@ -1,4 +1,8 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import { useEffect } from "react";
 import {
   getArtwork,
@@ -32,6 +36,7 @@ export const useNowPlaying = () => {
     },
     enabled: !!currentTrack,
     staleTime: 30000,
+    placeholderData: keepPreviousData,
   });
 
   const queryClient = useQueryClient();
@@ -42,7 +47,9 @@ export const useNowPlaying = () => {
     }
 
     const cleanup = onPlaybackChanged(async () => {
-      queryClient.invalidateQueries({ queryKey: ["currentTrack"] });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["currentTrack"] });
+      }, 1500);
       queryClient.invalidateQueries({ queryKey: ["playbackState"] });
     });
 
