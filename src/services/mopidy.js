@@ -87,14 +87,6 @@ export const getArtwork = (uri) =>
     });
   });
 
-export const getHistory = async () => {
-  const history = await mopidy.history.getHistory();
-  const session = await getCurrentSession();
-
-  const sessionHistory = history.filter((x) => x[0] >= session.startTime);
-  return sessionHistory.map((tuple) => tuple[1].uri);
-};
-
 export const getConfig = async () => {
   const result = await axios.get("/pibox/config");
   return result.data;
@@ -111,10 +103,9 @@ export const getPlaylists = async () => {
 };
 
 export const queueTrack = async (selectedTrack) => {
-  // TODO: This could be checked up front using playedTracks and indicated in the search results
-  const history = await getHistory();
+  const { playedTracks } = await getCurrentSession();
 
-  if (history.filter((uri) => uri === selectedTrack.uri).length > 0) {
+  if (playedTracks.includes(selectedTrack.uri)) {
     throw new PiboxError("Track has already been played");
   }
 
