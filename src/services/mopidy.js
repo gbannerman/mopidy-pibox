@@ -4,7 +4,6 @@ import { getFingerprint } from "./fingerprint";
 import { BACKEND_PRIORITY_ORDER } from "components/search/Search";
 
 let mopidy = null;
-let connected = false;
 
 export class PiboxError extends Error {
   constructor(message) {
@@ -17,26 +16,6 @@ const connectToMopidy = (webSocketUrl) =>
   new Promise((resolve) => {
     mopidy = new MopidyConnection({
       webSocketUrl,
-    });
-
-    mopidy.on("state", (event) => {
-      console.debug(`Mopidy state change: ${event}`);
-    });
-
-    mopidy.on("state:online", () => {
-      connected = true;
-    });
-
-    mopidy.on("state:offline", () => {
-      connected = false;
-    });
-
-    mopidy.on("reconnectionPending", () => {
-      connected = false;
-    });
-
-    mopidy.on("reconnecting", () => {
-      connected = false;
     });
 
     resolve(mopidy);
@@ -90,8 +69,6 @@ export const initialiseMopidy = async () => {
   connectToPibox(`${baseWebsocketUrl}/pibox/ws`);
   return mopidy;
 };
-
-export const isConnected = () => connected;
 
 export const getTracklist = async () => {
   const result = await axios.get("/pibox/api/tracklist/");
