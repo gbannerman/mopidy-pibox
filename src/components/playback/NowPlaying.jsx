@@ -1,60 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import Thumbnail from "components/common/Thumbnail";
 import ArtistSentence from "components/common/ArtistSentence";
 import PlaybackControls from "./PlaybackControls";
-import { useEffect } from "react";
-import {
-  getArtwork,
-  getCurrentTrack,
-  onPlaybackChanged,
-  getPlaybackState,
-  togglePlaybackState,
-  skipCurrentTrack,
-} from "services/mopidy";
+import { togglePlaybackState, skipCurrentTrack } from "services/mopidy";
 import NothingPlaying from "./NothingPlaying";
 import { useAdmin } from "hooks/admin";
 import { useSessionDetails } from "hooks/session";
+import { useNowPlaying } from "hooks/nowPlaying";
 
 const NowPlaying = () => {
   const { session, sessionLoading } = useSessionDetails();
-
-  const [artworkUrl, setArtworkUrl] = useState(null);
-  const [track, setTrack] = useState(null);
-  const [playbackState, setPlaybackState] = useState("stopped");
   const { isAdmin } = useAdmin();
+  const { currentTrack, playbackState, artworkUrl } = useNowPlaying();
 
-  useEffect(() => {
-    const updateCurrentTrack = async () => {
-      const currentTrack = await getCurrentTrack();
-      setTrack(currentTrack);
-    };
-
-    const updatePlaybackState = async () => {
-      const playbackState = await getPlaybackState();
-      setPlaybackState(playbackState);
-    };
-
-    const cleanup = onPlaybackChanged(async () => {
-      updateCurrentTrack();
-      updatePlaybackState();
-    });
-    updateCurrentTrack();
-    updatePlaybackState();
-
-    return cleanup;
-  }, []);
-
-  useEffect(() => {
-    const updateArtwork = async () => {
-      if (track) {
-        const artwork = await getArtwork(track.uri);
-        setArtworkUrl(artwork);
-      }
-    };
-    updateArtwork();
-  }, [setArtworkUrl, track]);
-
-  if (!track) {
+  if (!currentTrack) {
     return <NothingPlaying />;
   }
 
@@ -75,12 +34,12 @@ const NowPlaying = () => {
           )}
         </div>
         <div className="pt-7 basis-auto text-center m-2 max-w-full">
-          <h2 className="text-xl font-bold py-1">{track.name}</h2>
+          <h2 className="text-xl font-bold py-1">{currentTrack.name}</h2>
           <h3 className="text-base font-medium text-gray-400 py-1">
-            <ArtistSentence artists={track.artists} />
+            <ArtistSentence artists={currentTrack.artists} />
           </h3>
           <h3 className="text-base font-medium text-gray-400 py-1 text-ellipsis whitespace-nowrap overflow-x-hidden">
-            {track.album.name}
+            {currentTrack.album.name}
           </h3>
         </div>
       </div>
