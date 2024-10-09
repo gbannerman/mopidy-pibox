@@ -72,9 +72,17 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         playlist_items = self.__get_session_playlist_items()
         shuffle(playlist_items)
 
-        remaining_playlist = list(
-            set([ref for ref in playlist_items if self.__can_play(ref.uri)])
-        )
+        seen = set()
+
+        remaining_playlist = [
+            ref
+            for ref in playlist_items
+            if (
+                self.__can_play(ref.uri)
+                and ref.uri not in seen
+                and not seen.add(ref.uri)
+            )
+        ]
         self.__update_remaining_playlist_tracks(remaining_playlist)
 
         if len(remaining_playlist) == 0:
@@ -83,6 +91,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             return
 
         next_track = remaining_playlist[0]
+        print(next_track)
 
         self.core.tracklist.add(uris=[next_track.uri], at_position=0).get()
         self.logger.info("Pibox auto-added " + next_track.name + " to tracklist")

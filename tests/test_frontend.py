@@ -63,7 +63,7 @@ class TestPiboxFrontend(unittest.TestCase):
         current_track = self.core.playback.get_current_track().get()
         playback_state = self.core.playback.get_state().get()
 
-        assert current_track.uri == "dummy:d"
+        assert current_track.uri == "dummy:c"
         assert playback_state == core.PlaybackState.PLAYING
 
     def test_start_session_doesnt_play_music_if_autostart_disabled(self):
@@ -85,7 +85,7 @@ class TestPiboxFrontend(unittest.TestCase):
         current_track = self.core.playback.get_current_track().get()
         playback_state = self.core.playback.get_state().get()
 
-        assert current_track.uri == "dummy:d"
+        assert current_track.uri == "dummy:c"
         assert playback_state == core.PlaybackState.PLAYING
 
     def test_when_track_ends_skips_songs_which_have_already_been_played(self):
@@ -97,7 +97,7 @@ class TestPiboxFrontend(unittest.TestCase):
         current_track = self.core.playback.get_current_track().get()
         playback_state = self.core.playback.get_state().get()
 
-        assert current_track.uri == "dummy:d"
+        assert current_track.uri == "dummy:b"
         assert playback_state == core.PlaybackState.PLAYING
 
     def test_when_track_ends_plays_song_from_non_exhausted_session_playlists(self):
@@ -153,7 +153,7 @@ class TestPiboxFrontend(unittest.TestCase):
         current_track = self.core.playback.get_current_track().get()
         playback_state = self.core.playback.get_state().get()
 
-        assert current_track.uri == "dummy:d"
+        assert current_track.uri == "dummy:c"
         assert playback_state == core.PlaybackState.PLAYING
 
     def test_when_track_ends_resets_session_when_playlist_exhausted(self):
