@@ -1,4 +1,4 @@
-.. image:: https://raw.githubusercontent.com/gbannerman/mopidy-pibox/update-readme/docs/screenshots/pibox-header.png
+.. image:: https://raw.githubusercontent.com/gbannerman/mopidy-pibox/main/docs/screenshots/pibox-header.png
 
 ****************************
 Mopidy-Pibox
@@ -19,13 +19,13 @@ Features
 ========
 - Search for and queue songs using any Mopidy backend
 - Vote to skip queued tracks
-- Plays from a predefined playlist if no tracks are queued
+- Plays from predefined playlists if no tracks are queued
 - Prevents tracks from being queued again after they have been played or skipped
 - Admins controls to pause/resume playback or skip current track
 - Display view for showing on a TV or monitor
 - Can be used offline without an internet connection using Mopidy-Local_
 
-.. image:: https://raw.githubusercontent.com/gbannerman/mopidy-pibox/update-readme/docs/screenshots/pibox-mobile.png
+.. image:: https://raw.githubusercontent.com/gbannerman/mopidy-pibox/main/docs/screenshots/pibox-mobile.png
 
 .. _Mopidy-Local: https://mopidy.com/ext/local/
 
