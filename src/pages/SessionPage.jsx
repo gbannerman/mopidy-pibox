@@ -3,6 +3,7 @@ import { endSession } from "services/mopidy";
 import { Button } from "@mui/material";
 import { useSessionDetails } from "hooks/session";
 import logo from "res/logo.png";
+import { useConfig } from "hooks/config";
 
 const SessionPage = () => {
   const {
@@ -15,6 +16,10 @@ const SessionPage = () => {
     },
   } = useSessionDetails();
 
+  const {
+    config: { offline },
+  } = useConfig();
+
   return (
     <div className="w-full h-full flex flex-col justify-between items-stretch p-2">
       <div className="text-center">
@@ -26,11 +31,15 @@ const SessionPage = () => {
           label="Selected Playlists"
           value={
             <div className="flex flex-col justify-end">
-              {playlistNames.map((name) => (
-                <p key={name} className="text-right leading-tight">
-                  {name}
-                </p>
-              ))}
+              {offline ? (
+                <p className="text-right leading-tight">Local library</p>
+              ) : (
+                playlistNames.map((name) => (
+                  <p key={name} className="text-right leading-tight">
+                    {name}
+                  </p>
+                ))
+              )}
               <span className="text-gray-400 text-right">
                 ({remainingPlaylistTracks.length} tracks remaining)
               </span>

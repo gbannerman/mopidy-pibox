@@ -7,10 +7,14 @@ import NothingPlaying from "./NothingPlaying";
 import { useAdmin } from "hooks/admin";
 import { useSessionDetails } from "hooks/session";
 import { useNowPlaying } from "hooks/nowPlaying";
+import { useConfig } from "hooks/config";
 
 const NowPlaying = () => {
   const { session, sessionLoading } = useSessionDetails();
   const { isAdmin } = useAdmin();
+  const {
+    config: { offline },
+  } = useConfig();
   const { currentTrack, playbackState, artworkUrl } = useNowPlaying();
 
   if (!currentTrack) return <NothingPlaying />;
@@ -18,7 +22,7 @@ const NowPlaying = () => {
   return (
     <div className="px-2">
       {!sessionLoading && session && (
-        <PlayingFrom playlistNames={session.playlistNames} />
+        <PlayingFrom offline={offline} playlistNames={session.playlistNames} />
       )}
       <div className="flex flex-col items-center justify-evenly">
         <div className="flex flex-col items-center justify-end relative">
@@ -45,14 +49,20 @@ const NowPlaying = () => {
   );
 };
 
-function PlayingFrom({ playlistNames }) {
+function PlayingFrom({ offline, playlistNames }) {
   return (
     <h3 className="text-sm font-normal text-gray-400 text-center py-1">
-      {playlistNames.length === 1
-        ? `Playing from: ${playlistNames[0]}`
-        : `Playing from ${playlistNames.length} playlist${playlistNames.length > 1 ? "s" : ""}`}
+      {getPlayingFromText(offline, playlistNames)}
     </h3>
   );
+}
+
+function getPlayingFromText(offline, playlistNames) {
+  if (offline) return "Playing from local library";
+
+  return playlistNames.length === 1
+    ? `Playing from: ${playlistNames[0]}`
+    : `Playing from ${playlistNames.length} playlist${playlistNames.length > 1 ? "s" : ""}`;
 }
 
 export default NowPlaying;

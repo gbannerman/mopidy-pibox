@@ -70,7 +70,7 @@ class SessionHandler(PiboxHandler):
     def post(self):
         data = self._get_body()
         skip_threshold = data["skipThreshold"]
-        playlists = data["playlists"]
+        playlists = data.get("playlists", [])
         auto_start = data.get("autoStart", True)
 
         self.frontend.start_session(skip_threshold, playlists, auto_start)

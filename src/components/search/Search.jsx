@@ -45,7 +45,10 @@ const Search = () => {
     }
 
     setFetching(true);
-    const queryParameters = searchTerm.split(" ").filter((term) => !!term);
+    const queryParameters = searchTerm
+      .split(" ")
+      .filter((term) => !!term)
+      .map((x) => `*${x}*`);
     try {
       const results = await searchLibrary(queryParameters);
       setResults(results);
