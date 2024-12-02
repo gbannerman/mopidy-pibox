@@ -15,9 +15,18 @@ import { LoadingScreen } from "components/common/LoadingScreen";
 
 const NewSessionPage = ({ onStartSessionClick }) => {
   const {
-    config: { defaultPlaylists, defaultSkipThreshold },
+    config: { defaultPlaylists, defaultSkipThreshold, offline },
   } = useConfig();
   const { playlists, playlistsLoading } = usePlaylists();
+
+  if (offline) {
+    return (
+      <OfflineSessionForm
+        initialSkipThreshold={defaultSkipThreshold}
+        onSubmit={onStartSessionClick}
+      />
+    );
+  }
 
   if (playlistsLoading) {
     return <LoadingScreen />;
@@ -36,6 +45,61 @@ const NewSessionPage = ({ onStartSessionClick }) => {
     />
   );
 };
+
+function OfflineSessionForm({ onSubmit, initialSkipThreshold }) {
+  const [votesToSkip, setVotesToSkip] = useState(`${initialSkipThreshold}`);
+  const [automaticallyStartPlaying, setAutomaticallyStartPlaying] =
+    useState(true);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSubmit({
+      votesToSkip,
+      automaticallyStartPlaying,
+    });
+  };
+
+  return (
+    <form
+      className="flex flex-col items-center justify-evenly mx-auto h-4/5 w-4/5"
+      onSubmit={handleSubmit}
+    >
+      <h2 className="font-bold text-xl">pibox</h2>
+
+      <TextField
+        fullWidth
+        label="Number of votes to skip"
+        type="number"
+        value={votesToSkip}
+        onChange={(event) => setVotesToSkip(event.target.value)}
+        placeholder="3"
+      />
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="automaticallyStartPlaying"
+            checked={automaticallyStartPlaying}
+            color="secondary"
+            onChange={(event) =>
+              setAutomaticallyStartPlaying(event.target.checked)
+            }
+          />
+        }
+        label="Automatically start playing music when session starts"
+      />
+
+      <Button
+        type="submit"
+        variant="contained"
+        disabled={!votesToSkip}
+        color="primary"
+      >
+        Start
+      </Button>
+    </form>
+  );
+}
 
 function NewSessionForm({
   onSubmit,
