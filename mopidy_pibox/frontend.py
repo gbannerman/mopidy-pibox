@@ -91,7 +91,6 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             return
 
         next_track = remaining_playlist[0]
-        print(next_track)
 
         self.core.tracklist.add(uris=[next_track.uri], at_position=0).get()
         self.logger.info("Pibox auto-added " + next_track.name + " to tracklist")
