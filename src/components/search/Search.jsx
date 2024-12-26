@@ -9,6 +9,7 @@ import BounceLoader from "react-spinners/BounceLoader";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDebounce } from "hooks/debounce.js";
 import { IconButton } from "@mui/material";
+import { Suggestions } from "./Suggestions.jsx";
 
 const Search = () => {
   const [results, setResults] = useState(null);
@@ -84,6 +85,8 @@ const Search = () => {
   };
 
   const defaultStyleResults = {
+    height: "100%",
+    display: "flex",
     transition: "opacity 100ms ease-in-out",
   };
 
@@ -110,15 +113,17 @@ const Search = () => {
     displayResults = (
       <div className="text-white text-center">No results found</div>
     );
+  } else if (!searchTerm) {
+    displayResults = <Suggestions onSuggestionSelected={queue} />;
   } else {
     displayResults = <div className="w-full">{searchResults}</div>;
   }
 
   return (
-    <div className="search">
+    <div className="h-full w-full">
       <Transition appear={true} in={true} timeout={50} nodeRef={ref}>
         {(state) => (
-          <div>
+          <div className="h-full flex flex-col">
             <div
               style={{
                 ...defaultStyleBar,

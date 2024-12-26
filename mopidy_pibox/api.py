@@ -92,6 +92,16 @@ class SessionHandler(PiboxHandler):
         self.set_status(200)
 
 
+class SuggestionsHandler(PiboxHandler):
+    def initialize(self, core, frontend):
+        super(SuggestionsHandler, self).initialize(core, frontend)
+
+    def get(self):
+        suggestions = self.frontend.get_suggestions(3).get()
+        self.set_header("Content-Type", "application/json")
+        self.write(json.dumps({"suggestions": suggestions}, cls=ModelJSONEncoder))
+
+
 class ConfigHandler(tornado.web.RequestHandler):
     def initialize(self, config: config.Proxy):
         self.config = config

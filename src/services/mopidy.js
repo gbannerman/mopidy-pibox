@@ -97,6 +97,11 @@ export const getCurrentSession = async () => {
   return result.data;
 };
 
+export const getSuggestions = async () => {
+  const result = await axios.get("/pibox/api/suggestions");
+  return result.data;
+};
+
 export const getPlaylists = async () => {
   const playlists = await mopidy.playlists.asList();
   return playlists;

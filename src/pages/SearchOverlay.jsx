@@ -10,7 +10,7 @@ export default function SearchOverlay() {
     right: 0,
     top: 0,
     bottom: 0,
-    position: "fixed",
+    position: "absolute",
     background: "rgba(0, 0, 0, 0)",
     overflowY: "scroll",
     zIndex: 1100,

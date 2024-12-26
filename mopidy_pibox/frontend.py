@@ -1,9 +1,10 @@
 import pykka
 import logging
-from random import shuffle
+from random import sample, shuffle
 
 from mopidy import core
 
+from mopidy_pibox import Extension
 from mopidy_pibox.pibox import Pibox
 
 PUSSYCAT_LIST = [
@@ -18,8 +19,10 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core = core
         self.config = config["pibox"]
         self.pussycat_list = pussycat_list
-        self.pibox = pykka.traversable(Pibox())
         self.logger = logging.getLogger(__name__)
+
+        data_dir = Extension.get_data_dir(config)
+        self.pibox = pykka.traversable(Pibox(data_dir=data_dir))
 
         self.core.tracklist.set_consume(value=True)
 
@@ -65,6 +68,25 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core.tracklist.clear()
 
         self.pibox.end_session()
+
+    def get_suggestions(self, length):
+        suggestions = self.pibox.get_suggestions()
+
+        unqueued_suggestions = [
+            track for track in suggestions if not self.__is_queued(track)
+        ]
+        size = (
+            len(unqueued_suggestions) if len(unqueued_suggestions) < length else length
+        )
+        unplayed_tracks = [
+            track
+            for tracks in self.core.library.lookup(sample(unqueued_suggestions, size))
+            .get()
+            .values()
+            for track in tracks
+        ]
+
+        return unplayed_tracks
 
     def __queue_song_from_session_playlists(self):
         self.logger.info("Pibox is trying to queue a song")
@@ -117,6 +139,9 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         return (uri not in self.pibox.played_tracks) and (
             uri not in self.pibox.denylist
         )
+
+    def __is_queued(self, uri):
+        return self.core.tracklist.filter({"uri": [uri]}).get() != []
 
     def __start_playing(self):
         if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
