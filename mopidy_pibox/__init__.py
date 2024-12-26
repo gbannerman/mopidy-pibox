@@ -26,6 +26,11 @@ def get_http_handlers(core, config, frontend, static_directory_path):
             {"core": core, "frontend": frontend},
         ),
         (
+            r"/api/suggestions/?",
+            api.SuggestionsHandler,
+            {"core": core, "frontend": frontend},
+        ),
+        (
             r"/config/?",
             api.ConfigHandler,
             {"config": config},
