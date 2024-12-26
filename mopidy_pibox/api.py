@@ -28,6 +28,17 @@ class TracklistHandler(PiboxHandler):
     def initialize(self, core, frontend):
         super(TracklistHandler, self).initialize(core, frontend)
 
+    def post(self):
+        data = self._get_body()
+        fingerprint = self._get_user_fingerprint()
+        track_uri = data["track"]
+        (_success, error) = self.frontend.add_track_to_queue(track_uri).get()
+        tracklist = self.frontend.get_queued_tracks(fingerprint).get()
+        self.set_header("Content-Type", "application/json")
+        self.write(
+            json.dumps({"tracklist": tracklist, "error": error}, cls=ModelJSONEncoder)
+        )
+
     def get(self):
         fingerprint = self._get_user_fingerprint()
         tracklist = self.frontend.get_queued_tracks(fingerprint).get()

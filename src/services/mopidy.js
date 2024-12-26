@@ -108,23 +108,22 @@ export const getPlaylists = async () => {
 };
 
 export const queueTrack = async (selectedTrack) => {
-  const { playedTracks } = await getCurrentSession();
+  const result = await axios.post("/pibox/api/tracklist", {
+    track: selectedTrack.uri,
+  });
 
-  if (playedTracks.includes(selectedTrack.uri)) {
-    throw new PiboxError("Track has already been played");
+  if (result?.data?.error) {
+    switch (result?.data?.error) {
+      case "ALREADY_PLAYED":
+        throw new PiboxError("Track has already been played");
+      case "ALREADY_QUEUED":
+        throw new PiboxError("Track has already been queued");
+      default:
+        throw new PiboxError("An unknown error occurred");
+    }
   }
 
-  const tracklist = await getTracklist();
-
-  if (
-    tracklist.filter((track) => track.info.uri === selectedTrack.uri).length > 0
-  ) {
-    throw new PiboxError("Track has already been queued");
-  }
-
-  await mopidy.tracklist.add({ tracks: [selectedTrack] });
-  const updatedTracklist = [...tracklist, selectedTrack];
-  return updatedTracklist;
+  return result.data.tracklist;
 };
 
 export const startSession = async (
