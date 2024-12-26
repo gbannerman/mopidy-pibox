@@ -74,7 +74,6 @@ class Pibox:
         try:
             with open(self.data_dir.joinpath("pibox-queue-history.json")) as f:
                 history = json.load(f)
-                self.logger.info(history)
                 return history
         except FileNotFoundError:
             return []
