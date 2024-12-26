@@ -56,6 +56,17 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             for track in self.core.tracklist.get_tracks().get()
         ]
 
+    def add_track_to_queue(self, track_uri):
+        if track_uri in self.pibox.played_tracks:
+            return (False, "ALREADY_PLAYED")
+
+        if self.__is_queued(track_uri):
+            return (False, "ALREADY_QUEUED")
+
+        self.core.tracklist.add(uris=[track_uri]).get()
+
+        return (True, None)
+
     def add_vote_for_user_on_queued_track(self, user_fingerprint, track):
         vote_count = self.pibox.add_vote_for_user_on_track(user_fingerprint, track)
         if vote_count >= self.pibox.skip_threshold:
