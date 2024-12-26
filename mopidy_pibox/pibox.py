@@ -7,7 +7,7 @@ class Pibox:
     def __init__(self, data_dir):
         super().__init__()
         self.data_dir = data_dir
-        self.stored_history = []
+        self.queued_history = []
         self.__initialise()
 
         self.logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class Pibox:
         self.playlists = playlists
 
         playlist_names = ",".join([playlist["name"] for playlist in playlists])
-        self.stored_history = self.__load_stored_history()
+        self.queued_history = self.__load_queued_history()
         self.logger.info(
             f"Started Pibox session with skip threshold {skip_threshold} and {len(playlists)} playlists: {playlist_names}"
         )
@@ -48,14 +48,14 @@ class Pibox:
         self.denylist.append(track.uri)
 
     def get_suggestions(self):
-        unplayed_history = [
-            uri for uri in self.stored_history if uri not in self.played_tracks
+        unplayed_queue_history = [
+            uri for uri in self.queued_history if uri not in self.played_tracks
         ]
 
-        return unplayed_history
+        return unplayed_queue_history
 
     def end_session(self):
-        self.__save_stored_history()
+        self.__save_queued_history()
         self.__initialise()
 
         self.logger.info("Ended Pibox session")
@@ -70,19 +70,19 @@ class Pibox:
             "remainingPlaylistTracks": self.remaining_playlist_tracks,
         }
 
-    def __load_stored_history(self):
+    def __load_queued_history(self):
         try:
-            with open(self.data_dir.joinpath("pibox-history.json")) as f:
+            with open(self.data_dir.joinpath("pibox-queue-history.json")) as f:
                 history = json.load(f)
                 self.logger.info(history)
                 return history
         except FileNotFoundError:
             return []
 
-    def __save_stored_history(self):
-        existing_suggestions = self.stored_history
-        new_suggestions = existing_suggestions + self.played_tracks
-        with open(self.data_dir.joinpath("pibox-history.json"), "w+") as f:
+    def __save_queued_history(self):
+        existing_suggestions = self.queued_history
+        new_suggestions = existing_suggestions + self.manually_queued_tracks
+        with open(self.data_dir.joinpath("pibox-queue-history.json"), "w+") as f:
             json.dump(new_suggestions, f)
 
     def __initialise(self):
@@ -92,6 +92,7 @@ class Pibox:
         self.playlists = []
         self.denylist = ["spotify:track:0afhq8XCExXpqazXczTSve"]
         self.played_tracks = []
+        self.manually_queued_tracks = []
         self.remaining_playlist_tracks = []
         self.votes = {}
         self.has_voted = {}

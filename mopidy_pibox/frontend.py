@@ -64,6 +64,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             return (False, "ALREADY_QUEUED")
 
         self.core.tracklist.add(uris=[track_uri]).get()
+        self.pibox.manually_queued_tracks.append(track_uri)
 
         return (True, None)
 
