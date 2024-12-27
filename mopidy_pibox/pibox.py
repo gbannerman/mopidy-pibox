@@ -80,7 +80,10 @@ class Pibox:
 
     def __save_queued_history(self):
         existing_suggestions = self.queued_history
-        new_suggestions = existing_suggestions + self.manually_queued_tracks
+        suggestions_to_add = [
+            uri for uri in self.manually_queued_tracks if uri not in self.denylist
+        ]
+        new_suggestions = existing_suggestions + suggestions_to_add
         with open(self.data_dir.joinpath("pibox-queue-history.json"), "w+") as f:
             json.dump(new_suggestions, f)
 
