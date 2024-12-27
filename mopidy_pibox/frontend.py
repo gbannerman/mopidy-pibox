@@ -70,9 +70,14 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def add_vote_for_user_on_queued_track(self, user_fingerprint, track):
         vote_count = self.pibox.add_vote_for_user_on_track(user_fingerprint, track)
+        self.logger.info(
+            f"Vote added for {track.uri} by {user_fingerprint} ({vote_count}/{self.pibox.skip_threshold})"
+        )
         if vote_count >= self.pibox.skip_threshold:
-            self.core.tracklist.remove({"uri": [track.uri]})
+            self.logger.info(f"Skipping {track.uri} due to votes")
+            self.core.tracklist.remove({"uri": [track.uri]}).get()
 
+            self.logger.info("Track removed from tracklist")
             self.pibox.skip_queued_track(track)
 
     def end_session(self):
