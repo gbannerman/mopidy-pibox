@@ -84,7 +84,7 @@ class SessionHandler(PiboxHandler):
         playlists = data.get("playlists", [])
         auto_start = data.get("autoStart", True)
 
-        self.frontend.start_session(skip_threshold, playlists, auto_start)
+        self.frontend.start_session(int(skip_threshold), playlists, auto_start)
         session = self.frontend.pibox.to_json().get()
 
         socket.PiboxWebSocket.send(
