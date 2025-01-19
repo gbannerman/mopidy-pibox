@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { Router } from "wouter";
 import dayjs from "dayjs";
@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { initialiseFingerprint } from "services/fingerprint";
 import { initialiseMopidy } from "services/mopidy";
+import { LoadingScreen } from "components/common/LoadingScreen";
 import Root from "./Root";
 import "./index.css";
 
@@ -33,19 +34,27 @@ const initialise = async () => {
   const root = createRoot(document.getElementById("root"));
 
   root.render(
-    <Router base="/pibox">
-      <StyledEngineProvider injectFirst>
-        <CssBaseline />
-        <ThemeProvider theme={theme}>
-          <SnackbarProvider>
-            <QueryClientProvider client={queryClient}>
-              <Root />
-              <ReactQueryDevtools />
-            </QueryClientProvider>
-          </SnackbarProvider>
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </Router>,
+    <Suspense
+      fallback={
+        <div className="Root">
+          <LoadingScreen />
+        </div>
+      }
+    >
+      <Router base="/pibox">
+        <StyledEngineProvider injectFirst>
+          <CssBaseline />
+          <ThemeProvider theme={theme}>
+            <SnackbarProvider>
+              <QueryClientProvider client={queryClient}>
+                <Root />
+                <ReactQueryDevtools />
+              </QueryClientProvider>
+            </SnackbarProvider>
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </Router>
+    </Suspense>,
   );
 };
 
