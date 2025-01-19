@@ -4,7 +4,7 @@ import SearchResultItem from "./SearchResultItem.jsx";
 import { Transition } from "react-transition-group";
 import { searchLibrary, queueTrack, playIfStopped } from "services/mopidy.js";
 import { useLocation } from "wouter";
-import { useSnackbar } from "notistack";
+import toast from "react-hot-toast";
 import BounceLoader from "react-spinners/BounceLoader";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDebounce } from "hooks/debounce.js";
@@ -21,8 +21,6 @@ const Search = () => {
 
   const [_, navigate] = useLocation();
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const queue = async (track) => {
     try {
       const updatedTracklist = await queueTrack(track);
@@ -31,12 +29,12 @@ const Search = () => {
 
       // TODO: This should use the actual length of the tracklist that is shown
       if (updatedTracklist.length > 4) {
-        enqueueSnackbar(`${track.name} added to queue`, { variant: "success" });
+        toast.success(`${track.name} added to queue`);
       }
 
       navigate("/");
     } catch (e) {
-      enqueueSnackbar(e.message, { variant: "error" });
+      toast.error(e.message);
     }
   };
 
