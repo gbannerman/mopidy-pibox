@@ -1,6 +1,6 @@
-import axios from "axios";
 import MopidyConnection from "mopidy";
 import { getFingerprint } from "./fingerprint";
+import { pibox } from "./pibox";
 import { BACKEND_PRIORITY_ORDER } from "components/search/Search";
 
 let mopidy = null;
@@ -71,7 +71,7 @@ export const initialiseMopidy = async () => {
 };
 
 export const getTracklist = async () => {
-  const result = await axios.get("/pibox/api/tracklist/");
+  const result = await pibox.get("/api/tracklist/");
   return result.data.tracklist;
 };
 
@@ -88,17 +88,17 @@ export const getArtwork = (uri) =>
   });
 
 export const getConfig = async () => {
-  const result = await axios.get("/pibox/config");
+  const result = await pibox.get("/config");
   return result.data;
 };
 
 export const getCurrentSession = async () => {
-  const result = await axios.get("/pibox/api/session");
+  const result = await pibox.get("/api/session");
   return result.data;
 };
 
 export const getSuggestions = async () => {
-  const result = await axios.get("/pibox/api/suggestions");
+  const result = await pibox.get("/api/suggestions");
   return result.data;
 };
 
@@ -108,7 +108,7 @@ export const getPlaylists = async () => {
 };
 
 export const queueTrack = async (selectedTrack) => {
-  const result = await axios.post("/pibox/api/tracklist", {
+  const result = await pibox.post("/api/tracklist", {
     track: selectedTrack.uri,
   });
 
@@ -131,7 +131,7 @@ export const startSession = async (
   playlists,
   automaticallyStartPlaying,
 ) => {
-  const result = await axios.post("/pibox/api/session", {
+  const result = await pibox.post("/api/session", {
     skipThreshold,
     playlists,
     autoStart: automaticallyStartPlaying,
@@ -140,7 +140,7 @@ export const startSession = async (
 };
 
 export const endSession = async () => {
-  const result = await axios.delete("/pibox/api/session");
+  const result = await pibox.delete("/api/session");
   return result.data;
 };
 
@@ -173,7 +173,7 @@ export const voteToSkipTrack = async (uri) => {
   const fingerprint = getFingerprint();
 
   try {
-    const result = await axios.post("/pibox/api/vote", {
+    const result = await pibox.post("/api/vote", {
       uri,
       fingerprint,
     });
