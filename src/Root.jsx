@@ -1,15 +1,16 @@
-import React from "react";
+import React, { lazy } from "react";
 import HomePage from "pages/HomePage";
 import { Route, Switch, Redirect, useLocation } from "wouter";
 import { startSession } from "services/mopidy.js";
-import SessionPage from "pages/SessionPage.jsx";
 import { AdminContext, useAdminContext } from "hooks/admin.js";
-import NewSessionPage from "pages/NewSessionPage";
-import DisplayPage from "pages/DisplayPage";
 import { useConfig } from "hooks/config";
 import { useSessionStarted } from "hooks/session";
 import { LoadingScreen } from "components/common/LoadingScreen";
 import { useConnected } from "hooks/connection";
+
+const NewSessionPage = lazy(() => import("./pages/NewSessionPage.jsx"));
+const SessionPage = lazy(() => import("./pages/SessionPage.jsx"));
+const DisplayPage = lazy(() => import("./pages/DisplayPage.jsx"));
 
 const App = () => {
   const { sessionStarted, sessionStartedLoading, refetchSessionStarted } =
