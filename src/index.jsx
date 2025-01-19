@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { teal, pink } from "@mui/material/colors";
-import { SnackbarProvider } from "notistack";
+import { Toaster } from "react-hot-toast";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider } from "@mui/material/styles";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -45,12 +45,16 @@ const initialise = async () => {
         <StyledEngineProvider injectFirst>
           <CssBaseline />
           <ThemeProvider theme={theme}>
-            <SnackbarProvider>
-              <QueryClientProvider client={queryClient}>
-                <Root />
-                <ReactQueryDevtools />
-              </QueryClientProvider>
-            </SnackbarProvider>
+            <QueryClientProvider client={queryClient}>
+              <Root />
+              <ReactQueryDevtools />
+            </QueryClientProvider>
+            <Toaster
+              position="bottom-center"
+              toastOptions={{
+                duration: 3500,
+              }}
+            />
           </ThemeProvider>
         </StyledEngineProvider>
       </Router>
