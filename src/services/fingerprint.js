@@ -1,5 +1,4 @@
 import Fingerprint2 from "fingerprintjs2";
-import axios from "axios";
 
 let fingerprint = null;
 
@@ -48,7 +47,6 @@ const generateFingerprint = () =>
 
 export const initialiseFingerprint = async () => {
   fingerprint = await generateFingerprint();
-  axios.defaults.headers.common["X-Pibox-Fingerprint"] = fingerprint;
   return fingerprint;
 };
 
