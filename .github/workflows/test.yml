@@ -23,6 +23,7 @@ jobs:
           - name: "Test: Python 3.12"
             python: "3.12"
             tox-command: py312
+            upload-coverage: true
 
           - name: "Lint: check-manifest"
             python: "3.12"
@@ -50,3 +51,10 @@ jobs:
       - run: python -m pip install pygobject tox
 
       - run: python -m tox -e ${{ matrix.tox-command }}
+
+      - name: Upload results to Codecov
+        if: ${{ matrix.upload-coverage }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: gbannerman/mopidy-pibox
