@@ -23,6 +23,7 @@ Features
 - Prevents tracks from being queued again after they have been played or skipped
 - Admins controls to pause/resume playback or skip current track
 - Display view for showing on a TV or monitor
+- Suggests songs to queue based on frequently played tracks
 - Can be used offline without an internet connection using Mopidy-Local_
 
 .. image:: https://raw.githubusercontent.com/gbannerman/mopidy-pibox/main/docs/screenshots/pibox-mobile.png
