@@ -12,6 +12,10 @@ Mopidy-Pibox
     :target: https://github.com/gbannerman/mopidy-pibox/releases
     :alt: GitHub Actions
 
+.. image:: https://codecov.io/gh/gbannerman/mopidy-pibox/branch/main/graph/badge.svg?token=N4XSRNJUU3 
+    :target: https://codecov.io/gh/gbannerman/mopidy-pibox
+    :alt: Codecov
+
 
 **pibox** is a Mopidy HTTP client that allows multiple users to search for and queue songs as a group, via a clean and simple interface.
 
