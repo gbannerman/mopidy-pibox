@@ -9,7 +9,7 @@ from tests import dummy_audio, dummy_backend
 
 def config():
     return {
-        "core": {"max_tracklist_length": 5},
+        "core": {"max_tracklist_length": 5, "data_dir": "/tmp"},
         "pibox": {
             "enabled": True,
             "offline": False,
@@ -113,6 +113,38 @@ class TestPiboxFrontend(unittest.TestCase):
         assert current_track.uri == "dummy:d"
         assert playback_state == core.PlaybackState.PLAYING
 
+    def test_add_track_to_queue_is_unsuccessful_if_already_played(self):
+        self.__start_session()
+        self.__play_track("Dummy Track A", "dummy:a")
+
+        (success, error) = self.frontend.add_track_to_queue("dummy:a")
+
+        assert success is False
+        assert error == "ALREADY_PLAYED"
+
+    def test_add_track_to_queue_is_unsuccessful_if_already_queued(self):
+        self.__start_session()
+        self.core.tracklist.add(uris=["dummy:a"])
+
+        (success, error) = self.frontend.add_track_to_queue("dummy:a")
+
+        assert success is False
+        assert error == "ALREADY_QUEUED"
+
+    def test_add_track_to_queue_adds_manually_queued_track_to_queue(self):
+        self.__start_session()
+
+        (success, error) = self.frontend.add_track_to_queue("dummy:a")
+        queued_tracks = self.core.tracklist.get_tracks().get()
+
+        assert success is True
+        assert error is None
+
+        assert len(queued_tracks) == 1
+        assert queued_tracks[0].uri == "dummy:a"
+
+        assert "dummy:a" in self.frontend.pibox.manually_queued_tracks
+
     def test_add_vote_for_user_on_queued_track_removes_track_if_skip_threshold_reached(
         self,
     ):
@@ -195,9 +227,67 @@ class TestPiboxFrontend(unittest.TestCase):
         assert current_track.uri == "dummy:c"
         assert playback_state == core.PlaybackState.PLAYING
 
-    def __start_session(self, auto_start=False):
+    def test_get_suggestions_skips_queued_tracks(self):
+        self.__start_session()
+        self.frontend.pibox.queued_history = ["dummy:a", "dummy:b"]
+        self.core.tracklist.add(uris=["dummy:a"])
+
+        suggestions = self.frontend.get_suggestions(3)
+
+        assert len(suggestions) == 1
+        assert suggestions[0].uri == "dummy:b"
+
+    def test_get_suggestions_limits_suggestions_to_requested_number(self):
+        self.__start_session()
+        self.frontend.pibox.queued_history = ["dummy:a", "dummy:b", "dummy:c"]
+
+        suggestions = self.frontend.get_suggestions(1)
+
+        assert len(suggestions) == 1
+
+    def test_get_queued_tracks_returns_tracklist_with_current_users_votes(self):
+        self.__start_session(skip_threshold=3)
+
+        self.core.tracklist.add(uris=["dummy:a", "dummy:b"])
+        queued_tracks = self.core.tracklist.get_tracks().get()
+
+        self.frontend.add_vote_for_user_on_queued_track(
+            user_fingerprint="dummy", track=queued_tracks[0]
+        )
+
+        tracklist = self.frontend.get_queued_tracks("dummy")
+
+        assert len(tracklist) == 2
+        assert tracklist[0]["info"].uri == "dummy:a"
+        assert tracklist[0]["votes"] == 1
+        assert tracklist[0]["voted"] is True
+        assert tracklist[1]["info"].uri == "dummy:b"
+        assert tracklist[1]["votes"] == 0
+        assert tracklist[1]["voted"] is False
+
+    def test_get_queued_tracks_returns_tracklist_with_other_users_votes(self):
+        self.__start_session(skip_threshold=3)
+
+        self.core.tracklist.add(uris=["dummy:a", "dummy:b"])
+        queued_tracks = self.core.tracklist.get_tracks().get()
+
+        self.frontend.add_vote_for_user_on_queued_track(
+            user_fingerprint="dummy", track=queued_tracks[0]
+        )
+
+        tracklist = self.frontend.get_queued_tracks("dummy2")
+
+        assert len(tracklist) == 2
+        assert tracklist[0]["info"].uri == "dummy:a"
+        assert tracklist[0]["votes"] == 1
+        assert tracklist[0]["voted"] is False
+        assert tracklist[1]["info"].uri == "dummy:b"
+        assert tracklist[1]["votes"] == 0
+        assert tracklist[1]["voted"] is False
+
+    def __start_session(self, auto_start=False, skip_threshold=1):
         self.frontend.start_session(
-            skip_threshold=1,
+            skip_threshold=skip_threshold,
             playlists=[
                 {"name": "Dummy Playlist", "uri": "dummy:playlist1"},
                 {"name": "Dummy Playlist 2", "uri": "dummy:playlist2"},

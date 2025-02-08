@@ -64,6 +64,26 @@ class TestTracklistHandler(TestPiboxHandlerBase):
         self.assertEqual(response.code, 200)
         self.assertEqual(body["tracklist"], queued_tracks)
 
+    def test_post(self):
+        fingerprint = "fingerprint"
+        queued_tracks = [
+            {"uri": "dummy:track1", "votes": 0, "voted": False},
+            {"uri": "dummy:track2", "votes": 1, "voted": True},
+        ]
+        _mock_actor_return_value(self.frontend.get_queued_tracks, queued_tracks)
+        _mock_actor_return_value(self.frontend.add_track_to_queue, (True, None))
+
+        response = self.fetch(
+            "/api/tracklist",
+            method="POST",
+            headers={"X-Pibox-Fingerprint": fingerprint},
+            body=json.dumps({"track": "dummy:track1"}),
+        )
+        body = json.loads(response.body)
+
+        self.frontend.add_track_to_queue.assert_called_once_with("dummy:track1")
+        self.assertEqual(body["tracklist"], queued_tracks)
+
 
 class TestVoteHandler(TestPiboxHandlerBase):
     def test_post_ok_if_not_yet_voted(self):
@@ -163,6 +183,12 @@ class TestSessionHandler(TestPiboxHandlerBase):
             skip_threshold, playlists, auto_start
         )
 
+    def test_delete(self):
+        response = self.fetch("/api/session", method="DELETE")
+
+        self.assertEqual(response.code, 200)
+        self.frontend.end_session.assert_called_once()
+
 
 class TestConfigHandler(TestPiboxHandlerBase):
     def test_get(self):
@@ -177,6 +203,18 @@ class TestConfigHandler(TestPiboxHandlerBase):
             ["dummy:user:someuser:playlist1", "dummy:user:someuser:playlist2"],
         )
         self.assertEqual(body["defaultSkipThreshold"], 10)
+
+
+class TestSuggestionsHandler(TestPiboxHandlerBase):
+    def test_get(self):
+        suggestions = [{"uri": "dummy:track1"}, {"uri": "dummy:track2"}]
+        _mock_actor_return_value(self.frontend.get_suggestions, suggestions)
+
+        response = self.fetch("/api/suggestions")
+        body = json.loads(response.body)
+
+        self.assertEqual(response.code, 200)
+        self.assertEqual(body["suggestions"], suggestions)
 
 
 class TestClientRoutingHandler(TestPiboxHandlerBase):
