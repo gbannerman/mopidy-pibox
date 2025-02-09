@@ -4,7 +4,7 @@ on: workflow_call
 
 jobs:
   build_js:
-    name: Build
+    name: Build JavaScript app
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,3 +29,40 @@ jobs:
           path: build
           retention-days: 1
           if-no-files-found: error
+
+  build_python:
+    name: Build python package
+    runs-on: ubuntu-latest
+    needs: build_js
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download built React app
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.sha }}-js-build
+          path: build
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Move React app to Tornado static directory
+        run: mv build mopidy_pibox/static
+
+      - name: Install PyGObject dependencies
+        run: |
+          sudo apt-get install -y libgirepository1.0-dev libcairo2-dev pkg-config python3-dev
+
+      - name: Install python dependencies
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install build twine==5.0.0
+          pip install -e .
+
+      - name: Create packages
+        run: |
+          . venv/bin/activate
+          python -m build

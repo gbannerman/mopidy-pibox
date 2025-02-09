@@ -32,7 +32,7 @@ jobs:
 
       - name: Install PyGObject dependencies
         run: |
-          sudo apt-get install -y libgirepository1.0-dev
+          sudo apt-get install -y libgirepository1.0-dev libcairo2-dev pkg-config python3-dev
 
       - name: Install python dependencies
         run: |
