@@ -9,37 +9,18 @@ jobs:
     name: Build
     uses: gbannerman/mopidy-pibox/.github/workflows/build.yml@main
 
-  build_and_publish_py:
-    name: Build and publish python package
+  publish_py:
+    name: Publish python package
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download built React app
+      - name: Download built Python package
         uses: actions/download-artifact@v4
         with:
-          name: ${{ github.sha }}-js-build
-          path: build
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Move React app to Tornado static directory
-        run: mv build mopidy_pibox/static
-
-      - name: Install PyGObject dependencies
-        run: |
-          sudo apt-get install -y libgirepository1.0-dev libcairo2-dev pkg-config python3-dev
-
-      - name: Install python dependencies
-        run: |
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install build twine==5.0.0
-          pip install -e .
+          name: ${{ github.sha }}-mopidy-pibox
+          path: dist
 
       - name: Init .pypirc
         env:
@@ -48,11 +29,6 @@ jobs:
           echo -e "[pypi]" >> ~/.pypirc
           echo -e "username = gbannerman" >> ~/.pypirc
           echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
-
-      - name: Create packages
-        run: |
-          . venv/bin/activate
-          python -m build
 
       - name: Upload to pypi
         run: |

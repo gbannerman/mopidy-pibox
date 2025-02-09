@@ -66,3 +66,11 @@ jobs:
         run: |
           . venv/bin/activate
           python -m build
+
+      - name: Store built Python package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.sha }}-mopidy-pibox
+          path: dist
+          retention-days: 1
+          if-no-files-found: error
