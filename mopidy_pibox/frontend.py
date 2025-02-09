@@ -26,8 +26,8 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
         self.core.tracklist.set_consume(value=True)
 
-    def start_session(self, skip_threshold, playlists, auto_start):
-        self.pibox.start_session(skip_threshold, playlists)
+    def start_session(self, skip_threshold, playlists, auto_start, shuffle):
+        self.pibox.start_session(skip_threshold, playlists, shuffle)
         if auto_start:
             self.__queue_song_from_session_playlists()
             self.__start_playing()
@@ -109,7 +109,9 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         self.logger.info("Pibox is trying to queue a song")
 
         playlist_items = self.__get_session_playlist_items()
-        shuffle(playlist_items)
+
+        if self.pibox.shuffle:
+            shuffle(playlist_items)
 
         seen = set()
 

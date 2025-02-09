@@ -164,6 +164,7 @@ class TestSessionHandler(TestPiboxHandlerBase):
             {"name": "test2", "uri": "dummy:playlist2"},
         ]
         auto_start = False
+        shuffle = False
 
         response = self.fetch(
             "/api/session",
@@ -173,6 +174,7 @@ class TestSessionHandler(TestPiboxHandlerBase):
                     "skipThreshold": skip_threshold,
                     "playlists": playlists,
                     "autoStart": auto_start,
+                    "shuffle": shuffle,
                 }
             ),
         )
@@ -180,7 +182,7 @@ class TestSessionHandler(TestPiboxHandlerBase):
         self.assertEqual(response.code, 200)
 
         self.frontend.start_session.assert_called_once_with(
-            skip_threshold, playlists, auto_start
+            skip_threshold, playlists, auto_start, shuffle
         )
 
     def test_delete(self):

@@ -12,12 +12,13 @@ class Pibox:
 
         self.logger = logging.getLogger(__name__)
 
-    def start_session(self, skip_threshold, playlists):
+    def start_session(self, skip_threshold, playlists, shuffle):
         self.started = True
         self.start_time = datetime.now(timezone.utc)
 
         self.skip_threshold = skip_threshold
         self.playlists = playlists
+        self.shuffle = shuffle
 
         playlist_names = ",".join([playlist["name"] for playlist in playlists])
         self.queued_history = self.__load_queued_history()

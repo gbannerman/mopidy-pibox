@@ -175,10 +175,8 @@ class TestPiboxFrontend(unittest.TestCase):
 
         assert "dummy:a" in self.frontend.pibox.denylist
 
-    def test_when_track_ends_skips_songs_that_are_on_denylist(self):
+    def test_when_track_ends_and_shuffle_enabled_picks_random_song(self):
         self.__start_session()
-
-        self.frontend.pibox.denylist = ["dummy:a"]
 
         self.__play_track("Dummy Track Z", "dummy:z")
 
@@ -186,6 +184,30 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track.uri == "dummy:c"
+        assert playback_state == core.PlaybackState.PLAYING
+
+    def test_when_track_ends_and_shuffle_disabled_picks_next_song(self):
+        self.__start_session(shuffle=False)
+
+        self.__play_track("Dummy Track Z", "dummy:z")
+
+        current_track = self.core.playback.get_current_track().get()
+        playback_state = self.core.playback.get_state().get()
+
+        assert current_track.uri == "dummy:a"
+        assert playback_state == core.PlaybackState.PLAYING
+
+    def test_when_track_ends_skips_songs_that_are_on_denylist(self):
+        self.__start_session()
+
+        self.frontend.pibox.denylist = ["dummy:c"]
+
+        self.__play_track("Dummy Track Z", "dummy:z")
+
+        current_track = self.core.playback.get_current_track().get()
+        playback_state = self.core.playback.get_state().get()
+
+        assert current_track.uri == "dummy:a"
         assert playback_state == core.PlaybackState.PLAYING
 
     def test_when_track_ends_resets_session_when_playlist_exhausted(self):
@@ -285,7 +307,7 @@ class TestPiboxFrontend(unittest.TestCase):
         assert tracklist[1]["votes"] == 0
         assert tracklist[1]["voted"] is False
 
-    def __start_session(self, auto_start=False, skip_threshold=1):
+    def __start_session(self, auto_start=False, skip_threshold=1, shuffle=True):
         self.frontend.start_session(
             skip_threshold=skip_threshold,
             playlists=[
@@ -293,6 +315,7 @@ class TestPiboxFrontend(unittest.TestCase):
                 {"name": "Dummy Playlist 2", "uri": "dummy:playlist2"},
             ],
             auto_start=auto_start,
+            shuffle=shuffle,
         )
 
     def __play_track(self, name, uri):
