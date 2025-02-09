@@ -22,6 +22,12 @@ jobs:
           name: ${{ github.sha }}-mopidy-pibox
           path: dist
 
+      - name: Install twine
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install twine==5.0.0
+
       - name: Init .pypirc
         env:
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
