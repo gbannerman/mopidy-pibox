@@ -130,11 +130,13 @@ export const startSession = async (
   skipThreshold,
   playlists,
   automaticallyStartPlaying,
+  enableShuffle,
 ) => {
   const result = await pibox.post("/api/session", {
     skipThreshold,
     playlists,
     autoStart: automaticallyStartPlaying,
+    shuffle: enableShuffle,
   });
   return result.data;
 };
