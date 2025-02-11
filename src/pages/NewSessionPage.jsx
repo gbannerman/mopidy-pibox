@@ -50,12 +50,14 @@ function OfflineSessionForm({ onSubmit, initialSkipThreshold }) {
   const [votesToSkip, setVotesToSkip] = useState(`${initialSkipThreshold}`);
   const [automaticallyStartPlaying, setAutomaticallyStartPlaying] =
     useState(true);
+  const [enableShuffle, setEnableShuffle] = useState(true);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     onSubmit({
       votesToSkip,
       automaticallyStartPlaying,
+      enableShuffle,
     });
   };
 
@@ -73,6 +75,18 @@ function OfflineSessionForm({ onSubmit, initialSkipThreshold }) {
         value={votesToSkip}
         onChange={(event) => setVotesToSkip(event.target.value)}
         placeholder="3"
+      />
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="enableShuffle"
+            checked={enableShuffle}
+            color="secondary"
+            onChange={(event) => setEnableShuffle(event.target.checked)}
+          />
+        }
+        label="Shuffle songs in the playlist"
       />
 
       <FormControlLabel
@@ -110,6 +124,7 @@ function NewSessionForm({
   const [votesToSkip, setVotesToSkip] = useState(`${initialSkipThreshold}`);
   const [automaticallyStartPlaying, setAutomaticallyStartPlaying] =
     useState(true);
+  const [enableShuffle, setEnableShuffle] = useState(true);
   const [selectedPlaylists, setSelectedPlaylists] = useState(initialPlaylists);
 
   const handleSubmit = (event) => {
@@ -118,6 +133,7 @@ function NewSessionForm({
       selectedPlaylists,
       votesToSkip,
       automaticallyStartPlaying,
+      enableShuffle,
     });
   };
 
@@ -169,6 +185,18 @@ function NewSessionForm({
           onChange={(_event, value) => setSelectedPlaylists(value)}
         />
       </FormControl>
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="enableShuffle"
+            checked={enableShuffle}
+            color="secondary"
+            onChange={(event) => setEnableShuffle(event.target.checked)}
+          />
+        }
+        label="Shuffle songs in the playlist"
+      />
 
       <FormControlLabel
         control={

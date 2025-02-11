@@ -26,11 +26,13 @@ const App = () => {
     votesToSkip,
     selectedPlaylists,
     automaticallyStartPlaying,
+    enableShuffle,
   }) => {
     await startSession(
       votesToSkip,
       selectedPlaylists,
       automaticallyStartPlaying,
+      enableShuffle,
     );
     refetchSessionStarted();
     navigate("/");
