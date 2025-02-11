@@ -15,6 +15,7 @@ dist/
 
 # testing
 /coverage
+coverage.xml
 
 # production
 /build
