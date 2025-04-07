@@ -29,7 +29,7 @@ const TracklistItem = ({
           {artistSentence}
         </Typography>
       </CardContent>
-      <CardActions className="flex flex-grow-0 flex-shrink-0">
+      <CardActions className="flex grow-0 shrink-0">
         <Button
           disabled={!buttonEnabled}
           onClick={onVoteClick}

@@ -10,7 +10,7 @@ const DisplayPage = () => {
   return (
     <div className="flex flex-col h-screen p-5 cursor-none">
       <div className="flex flex-row items-center flex-1">
-        <div className="flex-grow-0 flex-shrink-1 w-1/2">
+        <div className="grow-0 shrink-1 w-1/2">
           <NowPlaying />
         </div>
         <Tracklist display={5} readOnly />

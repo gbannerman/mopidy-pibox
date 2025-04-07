@@ -26,7 +26,7 @@ const NavigationBar = () => {
           </Link>
         )}
       </li>
-      <li className="flex-shrink">
+      <li className="shrink">
         <Link className="Link" to="/search">
           <IconButton color="secondary">
             <SearchIcon fontSize="large" />
