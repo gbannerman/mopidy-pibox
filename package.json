@@ -6,10 +6,10 @@
   "dependencies": {
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.0",
-    "@mui/icons-material": "7.0.1",
-    "@mui/material": "7.0.1",
-    "@tanstack/react-query": "5.72.0",
-    "@tanstack/react-query-devtools": "5.72.0",
+    "@mui/icons-material": "7.0.2",
+    "@mui/material": "7.0.2",
+    "@tanstack/react-query": "5.74.4",
+    "@tanstack/react-query-devtools": "5.74.4",
     "dayjs": "1.11.13",
     "eslint-plugin-react": "7.37.5",
     "events": "3.3.0",
@@ -20,9 +20,9 @@
     "react-dom": "19.1.0",
     "react-hot-toast": "2.5.2",
     "react-qr-code": "2.0.15",
-    "react-spinners": "0.15.0",
+    "react-spinners": "0.16.1",
     "react-transition-group": "4.4.5",
-    "wouter": "3.6.0"
+    "wouter": "3.7.0"
   },
   "scripts": {
     "start": "vite",
@@ -31,19 +31,19 @@
     "lint": "eslint src"
   },
   "devDependencies": {
-    "@eslint/js": "9.24.0",
-    "@tailwindcss/postcss": "4.1.3",
-    "@tailwindcss/vite": "4.1.3",
-    "@tanstack/eslint-plugin-query": "5.72.0",
-    "@vitejs/plugin-react": "4.3.4",
-    "eslint": "9.24.0",
-    "eslint-config-prettier": "10.1.1",
+    "@eslint/js": "9.25.0",
+    "@tailwindcss/postcss": "4.1.4",
+    "@tailwindcss/vite": "4.1.4",
+    "@tanstack/eslint-plugin-query": "5.73.3",
+    "@vitejs/plugin-react": "4.4.1",
+    "eslint": "9.25.0",
+    "eslint-config-prettier": "10.1.2",
     "eslint-plugin-prettier": "5.2.6",
     "globals": "16.0.0",
     "postcss": "8.5.3",
     "prettier": "3.5.3",
-    "tailwindcss": "4.1.3",
-    "vite": "6.2.5"
+    "tailwindcss": "4.1.4",
+    "vite": "6.3.2"
   },
   "proxy": "https://party.gavinb.site",
   "homepage": "/pibox",
