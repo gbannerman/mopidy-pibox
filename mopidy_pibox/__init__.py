@@ -7,12 +7,14 @@ import pykka
 
 from . import api
 from . import socket
-from .routing import ClientRoutingHandler
+from .routing import ClientRoutingHandler, ClientRoutingWithAnalyticsHandler
 
 __version__ = "2.3.0"
 
 
 def get_http_handlers(core, config, frontend, static_directory_path):
+    disable_analytics = config.get("pibox").get("disable_analytics", False)
+
     return [
         (
             r"/api/tracklist/?",
@@ -37,8 +39,12 @@ def get_http_handlers(core, config, frontend, static_directory_path):
         ),
         (
             r"/(.*)",
-            ClientRoutingHandler,
-            {"path": static_directory_path, "default_filename": "index.html"},
+            ClientRoutingHandler
+            if disable_analytics
+            else ClientRoutingWithAnalyticsHandler,
+            {
+                "path": static_directory_path,
+            },
         ),
     ]
 
@@ -72,6 +78,7 @@ class Extension(ext.Extension):
         )
         schema["default_skip_threshold"] = config.Integer(minimum=1)
         schema["offline"] = config.Boolean(optional=True)
+        schema["disable_analytics"] = config.Boolean(optional=True)
         return schema
 
     def setup(self, registry):
