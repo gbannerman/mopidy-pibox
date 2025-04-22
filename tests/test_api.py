@@ -27,6 +27,7 @@ def _config():
                 "dummy:user:someuser:playlist2",
             ],
             "default_skip_threshold": 10,
+            "disable_analytics": False,
         },
     }
 
@@ -40,10 +41,12 @@ class TestPiboxHandlerBase(tornado.testing.AsyncHTTPTestCase):
         self.core = mock.Mock()
         self.frontend = mock.Mock(spec=PiboxFrontend)
         self.frontend.pibox = mock.Mock(spec=Pibox)
-        config = _config()
+        self.config = _config()
         static_directory_path = os.path.join(os.path.dirname(__file__), "fixtures")
         return tornado.web.Application(
-            get_http_handlers(self.core, config, self.frontend, static_directory_path)
+            get_http_handlers(
+                self.core, self.config, self.frontend, static_directory_path
+            )
         )
 
 
@@ -231,3 +234,36 @@ class TestClientRoutingHandler(TestPiboxHandlerBase):
 
         self.assertEqual(response.code, 200)
         self.assertIn(b"<!doctype html>", response.body)
+
+    def test_includes_analytics_if_not_disabled(self):
+        response = self.fetch("/")
+
+        self.assertEqual(response.code, 200)
+        self.assertIn(b"goatcounter", response.body)
+
+    def test_does_not_include_analytics_if_static_file(self):
+        response = self.fetch("/favicon.ico")
+
+        self.assertEqual(response.code, 200)
+        self.assertNotIn(b"goatcounter", response.body)
+
+
+class TestClientRoutingHandlerAnalyticsDisabled(TestPiboxHandlerBase):
+    def get_app(self):
+        self.core = mock.Mock()
+        self.frontend = mock.Mock(spec=PiboxFrontend)
+        self.frontend.pibox = mock.Mock(spec=Pibox)
+        self.config = _config()
+        self.config["pibox"]["disable_analytics"] = True
+        static_directory_path = os.path.join(os.path.dirname(__file__), "fixtures")
+        return tornado.web.Application(
+            get_http_handlers(
+                self.core, self.config, self.frontend, static_directory_path
+            )
+        )
+
+    def test_does_not_include_analytics_if_disabled(self):
+        response = self.fetch("/")
+
+        self.assertEqual(response.code, 200)
+        self.assertNotIn(b"goatcounter", response.body)
