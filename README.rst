@@ -61,6 +61,8 @@ Installation
 Configuration
 =============
 
+*In order to understand if people are using Pibox, [GoatCounter](https://www.goatcounter.com/) is used to track basic usage. It does not store any personal data. If you do not want analytics to be collected, you can disable it by setting the `disable_analytics` config option to `true` in your Mopidy config file.*
+
 Before starting Mopidy, you must add configuration for
 Mopidy-Pibox to your Mopidy configuration file::
 
@@ -70,17 +72,20 @@ Mopidy-Pibox to your Mopidy configuration file::
     default_skip_threshold = 3
     default_playlists =
       spotify:playlist:79inBfAlnfUB7i5kRthmWL
+    disable_analytics = false
 
 The following configuration values are available:
 
 - ``pibox/enabled``: If the pibox extension should be enabled or not.
   Defaults to ``true``.
 
-- ``pibox/offline``: If the extension should be used offline. Defaults to false.
+- ``pibox/offline``: If the extension should be used offline. Defaults to ``false``.
 
-- ``pibox/default_skip_threshold``: The default number of votes required to skip a track. Defaults to 3.
+- ``pibox/default_skip_threshold``: The default number of votes required to skip a track. Defaults to ``3``.
 
 - ``pibox/default_playlists``: The URIs of the default playlists to play from when starting a new session. Defaults to `a Spotify playlist of great party songs <https://open.spotify.com/playlist/79inBfAlnfUB7i5kRthmWL?si=e8a5da23f91048c2>`_. Save it to your Spotify library!
+
+- ``pibox/disable_analytics``: Stops [GoatCounter](https://www.goatcounter.com/) analytics from being included in the Pibox web app. Defaults to ``false``.
 
 
 Project resources
