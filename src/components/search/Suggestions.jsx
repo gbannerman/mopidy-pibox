@@ -35,9 +35,10 @@ function Suggestion({ track, onClick }) {
   // Extract this common part from SearchResultItem
   const artistAndAlbum = (
     <span>
-      <ArtistSentence artists={track.artists} /> - {track.album.name}
+      <ArtistSentence artists={track.artists?.length ? track.artists : [{ name: "Unknown Artist" }]} /> - {track.album?.name ?? "Unknown Album"}
     </span>
   );
+  
 
   return (
     <Card
