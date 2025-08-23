@@ -6,7 +6,9 @@ import { getIconFromURI } from "utils/uris";
 const SearchResultItem = ({ track, onClick }) => {
   const artistAndAlbum = (
     <span>
-      <ArtistSentence artists={track.artists?.length ? track.artists : [{ name: "Unknown Artist" }]} /> - {track.album?.name ?? "Unknown Album"}
+      <ArtistSentence artists={track.artists?.length ? track.artists : [{ name: "Unknown Artist" }]
+}
+ /> - {track.album?.name ?? "Unknown Album"}
     </span>
   );
 
