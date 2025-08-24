@@ -9,7 +9,7 @@ const SearchResultItem = ({ track, onClick }) => {
       <ArtistSentence
         artists={
           track.artists?.length ? track.artists : [{ name: "Unknown Artist" }]
-}
+        }
       />{" "}
       - {track.album?.name ?? "Unknown Album"}
     </span>
