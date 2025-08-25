@@ -41,7 +41,7 @@ const NowPlaying = () => {
             <ArtistSentence
               artists={
                 currentTrack.artists?.length
-                  ? track.artists
+                  ? currentTrack.artists
                   : [{ name: "Unknown Artist" }]
               }
             />
