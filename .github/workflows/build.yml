@@ -1,6 +1,6 @@
 name: Build React App
 
-on: workflow_dispatch
+on: workflow_call
 
 jobs:
   build_js:
