@@ -15,8 +15,6 @@ const TracklistItem = ({
   buttonEnabled,
   onVoteClick,
 }) => {
-  const artistSentence = <ArtistSentence artists={track.info.artists} />;
-
   const buttonIcon = track.voted ? null : <SkipNextIcon className="ml-1" />;
 
   return (
@@ -26,7 +24,7 @@ const TracklistItem = ({
           {track.info.name}
         </Typography>
         <Typography type="body2" component="h2">
-          {artistSentence}
+          <ArtistSentence artists={track.info.artists} />
         </Typography>
       </CardContent>
       <CardActions className="flex grow-0 shrink-0">
