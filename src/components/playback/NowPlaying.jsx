@@ -41,7 +41,7 @@ const NowPlaying = () => {
             <ArtistSentence artists={currentTrack.artists} />
           </h3>
           <h3 className="text-base font-medium text-gray-400 py-1 text-ellipsis whitespace-nowrap overflow-x-hidden">
-            {currentTrack.album.name}
+            {currentTrack.album?.name ?? "Unknown Album"}
           </h3>
         </div>
       </div>
