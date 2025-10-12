@@ -1,15 +1,9 @@
 import React from "react";
-import ArtistSentence from "components/common/ArtistSentence";
 import { Card, CardContent, Typography, CardMedia } from "@mui/material";
 import { getIconFromURI } from "utils/uris";
+import { SearchItemAdditionalDetails } from "./SearchItemAdditionalDetails";
 
 const SearchResultItem = ({ track, onClick }) => {
-  const artistAndAlbum = (
-    <span>
-      <ArtistSentence artists={track.artists} /> - {track.album?.name ?? "Unknown Album"}
-    </span>
-  );
-
   const Icon = getIconFromURI(track.uri);
 
   return (
@@ -32,7 +26,7 @@ const SearchResultItem = ({ track, onClick }) => {
           {track.name}
         </Typography>
         <Typography noWrap type="body1" component="h2">
-          {artistAndAlbum}
+          <SearchItemAdditionalDetails track={track} />
         </Typography>
       </CardContent>
     </Card>

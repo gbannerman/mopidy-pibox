@@ -1,7 +1,7 @@
 import React from "react";
 import { useSuggestions } from "hooks/suggestions";
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
-import ArtistSentence from "components/common/ArtistSentence";
+import { SearchItemAdditionalDetails } from "./SearchItemAdditionalDetails";
 
 export function Suggestions({ onSuggestionSelected }) {
   const { suggestions, suggestionsLoading: loading, error } = useSuggestions();
@@ -32,13 +32,6 @@ export function Suggestions({ onSuggestionSelected }) {
 }
 
 function Suggestion({ track, onClick }) {
-  // Extract this common part from SearchResultItem
-  const artistAndAlbum = (
-    <span>
-      <ArtistSentence artists={track.artists} /> - {track.album.name}
-    </span>
-  );
-
   return (
     <Card
       sx={{
@@ -61,7 +54,7 @@ function Suggestion({ track, onClick }) {
           {track.name}
         </Typography>
         <Typography noWrap type="body2" component="h2" fontSize={12}>
-          {artistAndAlbum}
+          <SearchItemAdditionalDetails track={track} />
         </Typography>
       </CardContent>
     </Card>
