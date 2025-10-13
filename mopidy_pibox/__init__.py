@@ -3,13 +3,14 @@ from __future__ import unicode_literals
 import os
 
 from mopidy import config, ext
+import pkg_resources
 import pykka
 
 from . import api
 from . import socket
 from .routing import ClientRoutingHandler, ClientRoutingWithAnalyticsHandler
 
-__version__ = "3.0.2"
+__version__ = pkg_resources.get_distribution("Mopidy-Pibox").version
 
 
 def get_http_handlers(core, config, frontend, static_directory_path):
