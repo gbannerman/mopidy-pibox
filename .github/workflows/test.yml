@@ -8,10 +8,6 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - name: "Test: Python 3.9"
-            python: "3.9"
-            tox-command: py39
-
           - name: "Test: Python 3.10"
             python: "3.10"
             tox-command: py310
@@ -38,7 +34,7 @@ jobs:
             tox-command: ruff-format
 
     name: ${{ matrix.name }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container: ghcr.io/mopidy/ci:12
     steps:
       - name: Checkout code
