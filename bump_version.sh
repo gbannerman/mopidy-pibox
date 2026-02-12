@@ -75,9 +75,9 @@ esac
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 echo "New version: $NEW_VERSION"
 
-# Update package.json using npm version
+# Update package.json using pnpm version
 echo "Updating package.json..."
-npm version "$NEW_VERSION" --no-git-tag-version
+pnpm version "$NEW_VERSION" --no-git-tag-version
 
 # Update the version in setup.cfg
 if [[ "$OSTYPE" == "darwin"* ]]; then
