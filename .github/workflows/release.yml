@@ -2,7 +2,7 @@ name: Create stable release
 
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   build:
@@ -14,10 +14,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Download built Python package
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ github.sha }}-mopidy-pibox
           path: dist

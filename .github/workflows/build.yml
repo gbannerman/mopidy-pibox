@@ -7,8 +7,8 @@ jobs:
     name: Build JavaScript app
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
         with:
           version: 10
 
@@ -22,7 +22,7 @@ jobs:
         run: pnpm run build
 
       - name: Store built React app
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ github.sha }}-js-build
           path: build
@@ -34,16 +34,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_js
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Download built React app
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ github.sha }}-js-build
           path: build
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -68,7 +68,7 @@ jobs:
           python -m build
 
       - name: Store built Python package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ github.sha }}-mopidy-pibox
           path: dist
