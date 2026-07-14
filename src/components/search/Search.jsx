@@ -5,7 +5,7 @@ import { Transition } from "react-transition-group";
 import { searchLibrary, queueTrack, playIfStopped } from "services/mopidy.js";
 import { useLocation } from "wouter";
 import toast from "react-hot-toast";
-import BounceLoader from "react-spinners/BounceLoader";
+import { BounceLoader } from "react-spinners";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDebounce } from "hooks/debounce.js";
 import { IconButton } from "@mui/material";
@@ -104,7 +104,9 @@ const Search = () => {
   } else if (error) {
     displayResults = (
       <div className="max-w-4xl mx-auto">
-        <h4 className="text-center text-white m-2">{error}</h4>
+        <h4 className="text-center text-white m-2">
+          {error?.message ?? String(error)}
+        </h4>
       </div>
     );
   } else if (results && !results.length) {
