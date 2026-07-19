@@ -4,12 +4,15 @@ This class implements the audio API in the simplest way possible. It is used in
 tests of the core and backends.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import pykka
 from mopidy import audio
 from mopidy.config import Config
 from mopidy.mixer import MixerProxy
 from mopidy.models import Track
-from mopidy.types import PlaybackState, Uri
+from mopidy.types import DurationMs, PlaybackState, Uri
 
 
 def create_proxy(config: Config | None = None, mixer: MixerProxy | None = None):
@@ -31,7 +34,7 @@ class DummyAudio(pykka.ThreadingActor):
         self._tags = {}
         self._bad_uris = set()
 
-    def set_uri(self, uri: Uri, live_stream=False, download=False):
+    def set_uri(self, uri: Uri, live_stream: bool = False, download: bool = False):
         assert self._uri is None, "prepare change not called before set"
         self._position = 0
         self._uri = uri
@@ -39,16 +42,16 @@ class DummyAudio(pykka.ThreadingActor):
         self._live_stream = live_stream
         self._tags = {}
 
-    def set_appsrc(self, *args, **kwargs):
+    def set_appsrc(self, *args: Any, **kwargs: Any):
         pass
 
-    def emit_data(self, buffer_):
+    def emit_data(self, buffer_: bytes):
         pass
 
     def get_position(self):
         return self._position
 
-    def set_position(self, position):
+    def set_position(self, position: DurationMs):
         self._position = position
         audio.AudioListener.send("position_changed", position=position)
         return True
@@ -70,7 +73,7 @@ class DummyAudio(pykka.ThreadingActor):
     def get_volume(self):
         return self._volume
 
-    def set_volume(self, volume):
+    def set_volume(self, volume: int):
         self._volume = volume
         return True
 
@@ -80,10 +83,10 @@ class DummyAudio(pykka.ThreadingActor):
     def get_current_tags(self):
         return self._tags
 
-    def set_source_setup_callback(self, callback):
+    def set_source_setup_callback(self, callback: Callable[[], None]):
         self._source_setup_callback = callback
 
-    def set_about_to_finish_callback(self, callback):
+    def set_about_to_finish_callback(self, callback: Callable[[], None]):
         self._about_to_finish_callback = callback
 
     def enable_sync_handler(self):
@@ -92,7 +95,7 @@ class DummyAudio(pykka.ThreadingActor):
     def wait_for_state_change(self):
         pass
 
-    def _change_state(self, new_state):
+    def _change_state(self, new_state: PlaybackState):
         if not self._uri:
             return False
 
@@ -124,7 +127,7 @@ class DummyAudio(pykka.ThreadingActor):
     def trigger_fake_playback_failure(self, uri: Uri):
         self._bad_uris.add(uri)
 
-    def trigger_fake_tags_changed(self, tags):
+    def trigger_fake_tags_changed(self, tags: dict):
         self._tags.update(tags)
         audio.AudioListener.send("tags_changed", tags=self._tags.keys())
 

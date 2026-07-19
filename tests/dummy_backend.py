@@ -4,19 +4,23 @@ This backend implements the backend API in the simplest way possible.  It is
 used in tests of the frontends.
 """
 
+from collections.abc import Iterable
+from typing import Any
+
 import pykka
 from mopidy import backend
+from mopidy.audio import AudioProxy
 from mopidy.config import Config
 from mopidy.models import Playlist, Ref, SearchResult, Track
-from mopidy.types import Uri
+from mopidy.types import DistinctField, DurationMs, Query, SearchField, Uri
 
 
-def create_proxy(config: Config | None = None, audio=None):
+def create_proxy(config: Config | None = None, audio: AudioProxy | None = None):
     return DummyBackend.start(config=config, audio=audio).proxy()
 
 
 class DummyBackend(pykka.ThreadingActor, backend.Backend):
-    def __init__(self, config: Config, audio):
+    def __init__(self, config: Config, audio: AudioProxy | None):
         super().__init__()
 
         self.library = DummyLibraryProvider(backend=self)
@@ -32,7 +36,7 @@ class DummyBackend(pykka.ThreadingActor, backend.Backend):
 class DummyLibraryProvider(backend.LibraryProvider):
     root_directory = Ref.directory(uri="dummy:/", name="dummy")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
         self.dummy_library = []
         self.dummy_get_distinct_result = {}
@@ -41,13 +45,15 @@ class DummyLibraryProvider(backend.LibraryProvider):
         self.dummy_find_exact_result = SearchResult()
         self.dummy_search_result = SearchResult()
 
-    def browse(self, path):
+    def browse(self, path: Uri):
         return self.dummy_browse_result.get(path, [])
 
-    def get_distinct(self, field, query=None):
+    def get_distinct(
+        self, field: DistinctField, query: Query[SearchField] | None = None
+    ):
         return self.dummy_get_distinct_result.get(field, set())
 
-    def get_images(self, uris):
+    def get_images(self, uris: Iterable[Uri]):
         return self.dummy_get_images_result
 
     def lookup(self, uri: Uri):
@@ -57,14 +63,19 @@ class DummyLibraryProvider(backend.LibraryProvider):
     def refresh(self, uri: Uri | None = None):
         pass
 
-    def search(self, query=None, uris=None, exact=False):
+    def search(
+        self,
+        query: Query[SearchField] | None = None,
+        uris: Iterable[Uri] | None = None,
+        exact: bool = False,
+    ):
         if exact:  # TODO: remove uses of dummy_find_exact_result
             return self.dummy_find_exact_result
         return self.dummy_search_result
 
 
 class DummyPlaybackProvider(backend.PlaybackProvider):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
         self._uri = None
         self._time_position = 0
@@ -87,7 +98,7 @@ class DummyPlaybackProvider(backend.PlaybackProvider):
     def resume(self):
         return True
 
-    def seek(self, time_position):
+    def seek(self, time_position: DurationMs):
         self._time_position = time_position
         return True
 
@@ -100,16 +111,16 @@ class DummyPlaybackProvider(backend.PlaybackProvider):
 
 
 class DummyPlaylistsProvider(backend.PlaylistsProvider):
-    def __init__(self, backend):
+    def __init__(self, backend: backend.Backend):
         super().__init__(backend)
         self._playlists = []
         self._allow_save = True
 
-    def set_dummy_playlists(self, playlists):
+    def set_dummy_playlists(self, playlists: list[Playlist]):
         """For tests using the dummy provider through an actor proxy."""
         self._playlists = playlists
 
-    def set_allow_save(self, enabled):
+    def set_allow_save(self, enabled: bool):
         self._allow_save = enabled
 
     def as_list(self):
@@ -131,7 +142,7 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
     def refresh(self):
         pass
 
-    def create(self, name):
+    def create(self, name: str):
         playlist = Playlist(name=name, uri=f"dummy:{name}")
         self._playlists.append(playlist)
         return playlist
@@ -141,7 +152,7 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
         if playlist:
             self._playlists.remove(playlist)
 
-    def save(self, playlist):
+    def save(self, playlist: Playlist):
         if not self._allow_save:
             return None
 
