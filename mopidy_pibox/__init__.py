@@ -1,12 +1,10 @@
-from __future__ import unicode_literals
 
 import os
 from importlib.metadata import version
 
 from mopidy import config, ext
 
-from . import api
-from . import socket
+from . import api, socket
 from .routing import ClientRoutingHandler, ClientRoutingWithAnalyticsHandler
 
 __version__ = version("Mopidy-Pibox")
@@ -68,7 +66,7 @@ class Extension(ext.Extension):
         return config.read(conf_file)
 
     def get_config_schema(self):
-        schema = super(Extension, self).get_config_schema()
+        schema = super().get_config_schema()
         schema["default_playlists"] = config.List(
             optional=True, unique=True, subtype=config.String()
         )

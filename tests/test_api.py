@@ -1,11 +1,11 @@
-from datetime import datetime
 import json
 import os
+from datetime import datetime
 from unittest import mock
+
 import pykka
 import tornado.testing
 import tornado.web
-
 from mopidy.models import Track
 
 from mopidy_pibox import get_http_handlers

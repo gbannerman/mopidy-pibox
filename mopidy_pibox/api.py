@@ -1,13 +1,10 @@
-from __future__ import absolute_import, unicode_literals
 
 import json
-
-from mopidy import config
-import pykka
-import tornado.web
-
 import logging
 
+import pykka
+import tornado.web
+from mopidy import config
 from mopidy.models import Track
 
 from . import socket
@@ -27,7 +24,7 @@ class PiboxHandler(tornado.web.RequestHandler):
 
 class TracklistHandler(PiboxHandler):
     def initialize(self, core):
-        super(TracklistHandler, self).initialize(core)
+        super().initialize(core)
 
     def post(self):
         frontend = _get_frontend_proxy()
@@ -51,7 +48,7 @@ class TracklistHandler(PiboxHandler):
 
 class VoteHandler(PiboxHandler):
     def initialize(self, core):
-        super(VoteHandler, self).initialize(core)
+        super().initialize(core)
 
     def post(self):
         frontend = _get_frontend_proxy()
@@ -81,7 +78,7 @@ class VoteHandler(PiboxHandler):
 
 class SessionHandler(PiboxHandler):
     def initialize(self, core):
-        super(SessionHandler, self).initialize(core)
+        super().initialize(core)
 
     def post(self):
         frontend = _get_frontend_proxy()
@@ -117,7 +114,7 @@ class SessionHandler(PiboxHandler):
 
 class SuggestionsHandler(PiboxHandler):
     def initialize(self, core):
-        super(SuggestionsHandler, self).initialize(core)
+        super().initialize(core)
 
     def get(self):
         frontend = _get_frontend_proxy()

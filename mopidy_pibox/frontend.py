@@ -1,7 +1,7 @@
-import pykka
 import logging
 from random import sample, shuffle
 
+import pykka
 from mopidy import core
 from mopidy.types import PlaybackState
 
@@ -16,7 +16,7 @@ PUSSYCAT_LIST = [
 
 class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core, pussycat_list=PUSSYCAT_LIST):
-        super(PiboxFrontend, self).__init__()
+        super().__init__()
         self.core = core
         self.config = config["pibox"]
         self.pussycat_list = pussycat_list
@@ -95,7 +95,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             track for track in suggestions if not self.__is_queued(track)
         ]
         size = (
-            len(unqueued_suggestions) if len(unqueued_suggestions) < length else length
+            min(length, len(unqueued_suggestions))
         )
         unplayed_tracks = [
             track.model_dump(mode="json")
@@ -141,12 +141,11 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
     def __get_session_playlist_items(self):
         if self.config["offline"]:
             return self.core.library.browse(uri="local:directory?type=track").get()
-        else:
-            return [
-                track
-                for playlist in self.pibox.playlists
-                for track in self.core.playlists.get_items(playlist["uri"]).get()
-            ]
+        return [
+            track
+            for playlist in self.pibox.playlists
+            for track in self.core.playlists.get_items(playlist["uri"]).get()
+        ]
 
     def __update_played_tracks(self, tl_track):
         self.pibox.played_tracks.append(tl_track.track.uri)

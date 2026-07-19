@@ -1,9 +1,10 @@
 import random
 import unittest
 
+import pykka
 from mopidy import core, models
 from mopidy.types import PlaybackState
-import pykka
+
 from mopidy_pibox.frontend import PiboxFrontend
 from tests import dummy_audio, dummy_backend
 
