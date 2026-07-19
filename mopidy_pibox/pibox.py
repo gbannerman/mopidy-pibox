@@ -2,6 +2,8 @@ import json
 import logging
 from datetime import UTC, datetime
 
+from mopidy.models import Track
+
 
 class Pibox:
     def __init__(self, data_dir):
@@ -27,13 +29,13 @@ class Pibox:
             f"{len(playlists)} playlists: {playlist_names}"
         )
 
-    def get_votes_for_track(self, track):
+    def get_votes_for_track(self, track: Track):
         return self.votes.get(track.uri, 0)
 
-    def has_user_voted_on_track(self, user_fingerprint, track):
+    def has_user_voted_on_track(self, user_fingerprint, track: Track):
         return user_fingerprint in self.has_voted.get(track.uri, [])
 
-    def add_vote_for_user_on_track(self, user_fingerprint, track):
+    def add_vote_for_user_on_track(self, user_fingerprint, track: Track):
         users_who_voted = self.has_voted.get(track.uri, [])
         users_who_voted.append(user_fingerprint)
         self.has_voted[track.uri] = users_who_voted
@@ -43,7 +45,7 @@ class Pibox:
 
         return vote_count
 
-    def skip_queued_track(self, track):
+    def skip_queued_track(self, track: Track):
         del self.votes[track.uri]
         del self.has_voted[track.uri]
 

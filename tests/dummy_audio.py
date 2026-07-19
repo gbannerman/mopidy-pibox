@@ -6,16 +6,19 @@ tests of the core and backends.
 
 import pykka
 from mopidy import audio
-from mopidy.types import PlaybackState
+from mopidy.config import Config
+from mopidy.mixer import MixerProxy
+from mopidy.models import Track
+from mopidy.types import PlaybackState, Uri
 
 
-def create_proxy(config=None, mixer=None):
+def create_proxy(config: Config | None = None, mixer: MixerProxy | None = None):
     return DummyAudio.start(config, mixer).proxy()
 
 
 # TODO: reset position on track change?
 class DummyAudio(pykka.ThreadingActor):
-    def __init__(self, config=None, mixer=None):
+    def __init__(self, config: Config | None = None, mixer: MixerProxy | None = None):
         super().__init__()
         self.state = PlaybackState.STOPPED
         self._volume = 0
@@ -28,7 +31,7 @@ class DummyAudio(pykka.ThreadingActor):
         self._tags = {}
         self._bad_uris = set()
 
-    def set_uri(self, uri, live_stream=False, download=False):
+    def set_uri(self, uri: Uri, live_stream=False, download=False):
         assert self._uri is None, "prepare change not called before set"
         self._position = 0
         self._uri = uri
@@ -71,7 +74,7 @@ class DummyAudio(pykka.ThreadingActor):
         self._volume = volume
         return True
 
-    def set_metadata(self, track):
+    def set_metadata(self, track: Track):
         pass
 
     def get_current_tags(self):
@@ -118,7 +121,7 @@ class DummyAudio(pykka.ThreadingActor):
 
         return self._uri not in self._bad_uris
 
-    def trigger_fake_playback_failure(self, uri):
+    def trigger_fake_playback_failure(self, uri: Uri):
         self._bad_uris.add(uri)
 
     def trigger_fake_tags_changed(self, tags):

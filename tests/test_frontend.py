@@ -4,7 +4,7 @@ import unittest
 
 import pykka
 from mopidy import core, models
-from mopidy.types import PlaybackState
+from mopidy.types import PlaybackState, Uri
 
 from mopidy_pibox.frontend import PiboxFrontend
 from tests import dummy_audio, dummy_backend
@@ -324,7 +324,7 @@ class TestPiboxFrontend(unittest.TestCase):
             shuffle=shuffle,
         )
 
-    def __play_track(self, name, uri):
+    def __play_track(self, name, uri: Uri):
         track = models.Track(name=name, uri=uri, length=40000)
 
         self.core.tracklist.remove({"uri": [uri]}).get()

@@ -3,6 +3,8 @@ from importlib.metadata import version
 from pathlib import Path
 
 from mopidy import config, ext
+from mopidy.config import Config
+from mopidy.core import CoreProxy
 
 from . import api, socket
 from .routing import ClientRoutingHandler, ClientRoutingWithAnalyticsHandler
@@ -10,7 +12,7 @@ from .routing import ClientRoutingHandler, ClientRoutingWithAnalyticsHandler
 __version__ = version("Mopidy-Pibox")
 
 
-def get_http_handlers(core, config, static_directory_path):
+def get_http_handlers(core: CoreProxy, config: Config, static_directory_path: str):
     disable_analytics = config.get("pibox").get("disable_analytics", False)
 
     return [
@@ -47,7 +49,7 @@ def get_http_handlers(core, config, static_directory_path):
     ]
 
 
-def my_app_factory(config, core):
+def my_app_factory(config: Config, core: CoreProxy):
     static_directory_path = str(Path(__file__).parent / "static")
 
     return [

@@ -4,14 +4,15 @@ import logging
 
 import pykka
 import tornado.web
-from mopidy import config
+from mopidy.config import Config
+from mopidy.core import CoreProxy
 from mopidy.models import Track
 
 from . import socket
 
 
 class PiboxHandler(tornado.web.RequestHandler):
-    def initialize(self, core):
+    def initialize(self, core: CoreProxy) -> None:
         self.core = core
         self.logger = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ class PiboxHandler(tornado.web.RequestHandler):
 
 
 class TracklistHandler(PiboxHandler):
-    def initialize(self, core):
+    def initialize(self, core: CoreProxy) -> None:
         super().initialize(core)
 
     def post(self):
@@ -47,7 +48,7 @@ class TracklistHandler(PiboxHandler):
 
 
 class VoteHandler(PiboxHandler):
-    def initialize(self, core):
+    def initialize(self, core: CoreProxy) -> None:
         super().initialize(core)
 
     def post(self):
@@ -77,7 +78,7 @@ class VoteHandler(PiboxHandler):
 
 
 class SessionHandler(PiboxHandler):
-    def initialize(self, core):
+    def initialize(self, core: CoreProxy) -> None:
         super().initialize(core)
 
     def post(self):
@@ -113,7 +114,7 @@ class SessionHandler(PiboxHandler):
 
 
 class SuggestionsHandler(PiboxHandler):
-    def initialize(self, core):
+    def initialize(self, core: CoreProxy) -> None:
         super().initialize(core)
 
     def get(self):
@@ -125,7 +126,7 @@ class SuggestionsHandler(PiboxHandler):
 
 
 class ConfigHandler(tornado.web.RequestHandler):
-    def initialize(self, config: config.Proxy):
+    def initialize(self, config: Config) -> None:
         self.config = config
         self.logger = logging.getLogger(__name__)
 

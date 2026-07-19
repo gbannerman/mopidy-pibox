@@ -6,15 +6,17 @@ used in tests of the frontends.
 
 import pykka
 from mopidy import backend
-from mopidy.models import Playlist, Ref, SearchResult
+from mopidy.config import Config
+from mopidy.models import Playlist, Ref, SearchResult, Track
+from mopidy.types import Uri
 
 
-def create_proxy(config=None, audio=None):
+def create_proxy(config: Config | None = None, audio=None):
     return DummyBackend.start(config=config, audio=audio).proxy()
 
 
 class DummyBackend(pykka.ThreadingActor, backend.Backend):
-    def __init__(self, config, audio):
+    def __init__(self, config: Config, audio):
         super().__init__()
 
         self.library = DummyLibraryProvider(backend=self)
@@ -48,11 +50,11 @@ class DummyLibraryProvider(backend.LibraryProvider):
     def get_images(self, uris):
         return self.dummy_get_images_result
 
-    def lookup(self, uri):
+    def lookup(self, uri: Uri):
         uri = Ref.track(uri=uri).uri
         return [t for t in self.dummy_library if uri == t.uri]
 
-    def refresh(self, uri=None):
+    def refresh(self, uri: Uri | None = None):
         pass
 
     def search(self, query=None, uris=None, exact=False):
@@ -73,7 +75,7 @@ class DummyPlaybackProvider(backend.PlaybackProvider):
     def play(self):
         return self._uri and self._uri != "dummy:error"
 
-    def change_track(self, track):
+    def change_track(self, track: Track):
         """Pass a track with URI 'dummy:error' to force failure"""
         self._uri = track.uri
         self._time_position = 0
@@ -113,13 +115,13 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
     def as_list(self):
         return [Ref.playlist(uri=pl.uri, name=pl.name) for pl in self._playlists]
 
-    def get_items(self, uri):
+    def get_items(self, uri: Uri):
         playlist = self.lookup(uri)
         if playlist is None:
             return None
         return [Ref.track(uri=t.uri, name=t.name) for t in playlist.tracks]
 
-    def lookup(self, uri):
+    def lookup(self, uri: Uri):
         uri = Ref.playlist(uri=uri).uri
         for playlist in self._playlists:
             if playlist.uri == uri:
@@ -134,7 +136,7 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
         self._playlists.append(playlist)
         return playlist
 
-    def delete(self, uri):
+    def delete(self, uri: Uri):
         playlist = self.lookup(uri)
         if playlist:
             self._playlists.remove(playlist)
