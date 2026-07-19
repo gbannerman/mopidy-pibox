@@ -313,7 +313,9 @@ class TestPiboxFrontend(unittest.TestCase):
         assert tracklist[1]["votes"] == 0
         assert tracklist[1]["voted"] is False
 
-    def __start_session(self, auto_start=False, skip_threshold=1, shuffle=True):
+    def __start_session(
+        self, auto_start: bool = False, skip_threshold: int = 1, shuffle: bool = True
+    ):
         self.frontend.start_session(
             skip_threshold=skip_threshold,
             playlists=[
@@ -324,7 +326,7 @@ class TestPiboxFrontend(unittest.TestCase):
             shuffle=shuffle,
         )
 
-    def __play_track(self, name, uri: Uri):
+    def __play_track(self, name: str, uri: Uri):
         track = models.Track(name=name, uri=uri, length=40000)
 
         self.core.tracklist.remove({"uri": [uri]}).get()
