@@ -1,15 +1,15 @@
 from __future__ import unicode_literals
 
 import os
+from importlib.metadata import version
 
 from mopidy import config, ext
-import pkg_resources
 
 from . import api
 from . import socket
 from .routing import ClientRoutingHandler, ClientRoutingWithAnalyticsHandler
 
-__version__ = pkg_resources.get_distribution("Mopidy-Pibox").version
+__version__ = version("Mopidy-Pibox")
 
 
 def get_http_handlers(core, config, static_directory_path):
