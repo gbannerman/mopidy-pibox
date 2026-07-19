@@ -4,7 +4,6 @@ import os
 
 from mopidy import config, ext
 import pkg_resources
-import pykka
 
 from . import api
 from . import socket
@@ -13,25 +12,25 @@ from .routing import ClientRoutingHandler, ClientRoutingWithAnalyticsHandler
 __version__ = pkg_resources.get_distribution("Mopidy-Pibox").version
 
 
-def get_http_handlers(core, config, frontend, static_directory_path):
+def get_http_handlers(core, config, static_directory_path):
     disable_analytics = config.get("pibox").get("disable_analytics", False)
 
     return [
         (
             r"/api/tracklist/?",
             api.TracklistHandler,
-            {"core": core, "frontend": frontend},
+            {"core": core},
         ),
-        (r"/api/vote/?", api.VoteHandler, {"core": core, "frontend": frontend}),
+        (r"/api/vote/?", api.VoteHandler, {"core": core}),
         (
             r"/api/session/?",
             api.SessionHandler,
-            {"core": core, "frontend": frontend},
+            {"core": core},
         ),
         (
             r"/api/suggestions/?",
             api.SuggestionsHandler,
-            {"core": core, "frontend": frontend},
+            {"core": core},
         ),
         (
             r"/config/?",
@@ -51,15 +50,11 @@ def get_http_handlers(core, config, frontend, static_directory_path):
 
 
 def my_app_factory(config, core):
-    from .frontend import PiboxFrontend
-
-    frontend = pykka.ActorRegistry.get_by_class(PiboxFrontend)[0].proxy()
-
     static_directory_path = os.path.join(os.path.dirname(__file__), "static")
 
     return [
         (r"/ws/?", socket.PiboxWebSocket),
-        *get_http_handlers(core, config, frontend, static_directory_path),
+        *get_http_handlers(core, config, static_directory_path),
     ]
 
 

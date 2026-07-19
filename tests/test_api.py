@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 import os
 from unittest import mock
+import pykka
 import tornado.testing
 import tornado.web
 
@@ -37,16 +38,25 @@ class TestPiboxHandlerBase(tornado.testing.AsyncHTTPTestCase):
     def runTest(self):
         pass
 
-    def get_app(self):
-        self.core = mock.Mock()
+    def _patch_frontend_registry(self):
         self.frontend = mock.Mock(spec=PiboxFrontend)
         self.frontend.pibox = mock.Mock(spec=Pibox)
+
+        patcher = mock.patch.object(pykka.ActorRegistry, "get_by_class")
+        mock_get_by_class = patcher.start()
+        self.addCleanup(patcher.stop)
+
+        mock_actor_ref = mock.Mock()
+        mock_actor_ref.proxy.return_value = self.frontend
+        mock_get_by_class.return_value = [mock_actor_ref]
+
+    def get_app(self):
+        self.core = mock.Mock()
         self.config = _config()
+        self._patch_frontend_registry()
         static_directory_path = os.path.join(os.path.dirname(__file__), "fixtures")
         return tornado.web.Application(
-            get_http_handlers(
-                self.core, self.config, self.frontend, static_directory_path
-            )
+            get_http_handlers(self.core, self.config, static_directory_path)
         )
 
 
@@ -251,15 +261,12 @@ class TestClientRoutingHandler(TestPiboxHandlerBase):
 class TestClientRoutingHandlerAnalyticsDisabled(TestPiboxHandlerBase):
     def get_app(self):
         self.core = mock.Mock()
-        self.frontend = mock.Mock(spec=PiboxFrontend)
-        self.frontend.pibox = mock.Mock(spec=Pibox)
         self.config = _config()
         self.config["pibox"]["disable_analytics"] = True
+        self._patch_frontend_registry()
         static_directory_path = os.path.join(os.path.dirname(__file__), "fixtures")
         return tornado.web.Application(
-            get_http_handlers(
-                self.core, self.config, self.frontend, static_directory_path
-            )
+            get_http_handlers(self.core, self.config, static_directory_path)
         )
 
     def test_does_not_include_analytics_if_disabled(self):

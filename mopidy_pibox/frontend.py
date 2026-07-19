@@ -3,6 +3,7 @@ import logging
 from random import sample, shuffle
 
 from mopidy import core
+from mopidy.types import PlaybackState
 
 from mopidy_pibox import Extension
 from mopidy_pibox.pibox import Pibox
@@ -47,13 +48,14 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             self.__start_playing()
 
     def get_queued_tracks(self, user_fingerprint):
+        tracks = self.core.tracklist.get_tracks().get()
         return [
             {
-                "info": track,
+                "info": track.model_dump(mode="json"),
                 "votes": self.pibox.get_votes_for_track(track),
                 "voted": self.pibox.has_user_voted_on_track(user_fingerprint, track),
             }
-            for track in self.core.tracklist.get_tracks().get()
+            for track in tracks
         ]
 
     def add_track_to_queue(self, track_uri):
@@ -96,7 +98,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             len(unqueued_suggestions) if len(unqueued_suggestions) < length else length
         )
         unplayed_tracks = [
-            track
+            track.model_dump(mode="json")
             for tracks in self.core.library.lookup(sample(unqueued_suggestions, size))
             .get()
             .values()
@@ -163,7 +165,9 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         return self.core.tracklist.filter({"uri": [uri]}).get() != []
 
     def __start_playing(self):
-        if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
+        playback_state = self.core.playback.get_state().get()
+        self.logger.info(f"Pibox sees playback is {playback_state}")
+        if playback_state == PlaybackState.STOPPED:
             self.core.playback.play().get()
             self.logger.info("Pibox started playback")
 
