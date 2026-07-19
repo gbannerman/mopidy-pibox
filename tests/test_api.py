@@ -74,8 +74,8 @@ class TestTracklistHandler(TestPiboxHandlerBase):
         )
         body = json.loads(response.body)
 
-        self.assertEqual(response.code, 200)
-        self.assertEqual(body["tracklist"], queued_tracks)
+        assert response.code == 200
+        assert body["tracklist"] == queued_tracks
 
     def test_post(self):
         fingerprint = "fingerprint"
@@ -95,7 +95,7 @@ class TestTracklistHandler(TestPiboxHandlerBase):
         body = json.loads(response.body)
 
         self.frontend.add_track_to_queue.assert_called_once_with("dummy:track1")
-        self.assertEqual(body["tracklist"], queued_tracks)
+        assert body["tracklist"] == queued_tracks
 
 
 class TestVoteHandler(TestPiboxHandlerBase):
@@ -111,7 +111,7 @@ class TestVoteHandler(TestPiboxHandlerBase):
             body=json.dumps({"uri": "dummy:track1"}),
         )
 
-        self.assertEqual(response.code, 200)
+        assert response.code == 200
 
         self.frontend.add_vote_for_user_on_queued_track.assert_called_once_with(
             fingerprint, Track(uri="dummy:track1")
@@ -127,7 +127,7 @@ class TestVoteHandler(TestPiboxHandlerBase):
             body=json.dumps({"uri": "dummy:track1"}),
         )
 
-        self.assertEqual(response.code, 400)
+        assert response.code == 400
 
         self.frontend.add_vote_for_user_on_queued_track.assert_not_called()
 
@@ -153,22 +153,17 @@ class TestSessionHandler(TestPiboxHandlerBase):
         response = self.fetch("/api/session")
         body = json.loads(response.body)
 
-        self.assertEqual(response.code, 200)
+        assert response.code == 200
 
-        self.assertEqual(body["started"], True)
-        self.assertEqual(body["startTime"], start_time)
-        self.assertEqual(body["skipThreshold"], 3)
-        self.assertEqual(
-            body["playlists"],
-            [
-                {"name": "test", "uri": "dummy:playlist1"},
-                {"name": "test2", "uri": "dummy:playlist2"},
-            ],
-        )
-        self.assertEqual(body["playedTracks"], ["dummy:track1", "dummy:track2"])
-        self.assertEqual(
-            body["remainingPlaylistTracks"], ["dummy:track3", "dummy:track4"]
-        )
+        assert body["started"] is True
+        assert body["startTime"] == start_time
+        assert body["skipThreshold"] == 3
+        assert body["playlists"] == [
+            {"name": "test", "uri": "dummy:playlist1"},
+            {"name": "test2", "uri": "dummy:playlist2"},
+        ]
+        assert body["playedTracks"] == ["dummy:track1", "dummy:track2"]
+        assert body["remainingPlaylistTracks"] == ["dummy:track3", "dummy:track4"]
 
     def test_post(self):
         skip_threshold = 3
@@ -192,7 +187,7 @@ class TestSessionHandler(TestPiboxHandlerBase):
             ),
         )
 
-        self.assertEqual(response.code, 200)
+        assert response.code == 200
 
         self.frontend.start_session.assert_called_once_with(
             skip_threshold, playlists, auto_start, shuffle
@@ -201,7 +196,7 @@ class TestSessionHandler(TestPiboxHandlerBase):
     def test_delete(self):
         response = self.fetch("/api/session", method="DELETE")
 
-        self.assertEqual(response.code, 200)
+        assert response.code == 200
         self.frontend.end_session.assert_called_once()
 
 
@@ -210,14 +205,14 @@ class TestConfigHandler(TestPiboxHandlerBase):
         response = self.fetch("/config")
         body = json.loads(response.body)
 
-        self.assertEqual(response.code, 200)
+        assert response.code == 200
 
-        self.assertEqual(body["offline"], False)
-        self.assertEqual(
-            body["defaultPlaylists"],
-            ["dummy:user:someuser:playlist1", "dummy:user:someuser:playlist2"],
-        )
-        self.assertEqual(body["defaultSkipThreshold"], 10)
+        assert body["offline"] is False
+        assert body["defaultPlaylists"] == [
+            "dummy:user:someuser:playlist1",
+            "dummy:user:someuser:playlist2",
+        ]
+        assert body["defaultSkipThreshold"] == 10
 
 
 class TestSuggestionsHandler(TestPiboxHandlerBase):
@@ -228,34 +223,34 @@ class TestSuggestionsHandler(TestPiboxHandlerBase):
         response = self.fetch("/api/suggestions")
         body = json.loads(response.body)
 
-        self.assertEqual(response.code, 200)
-        self.assertEqual(body["suggestions"], suggestions)
+        assert response.code == 200
+        assert body["suggestions"] == suggestions
 
 
 class TestClientRoutingHandler(TestPiboxHandlerBase):
     def test_get_root(self):
         response = self.fetch("/")
 
-        self.assertEqual(response.code, 200)
-        self.assertIn(b"<!doctype html>", response.body)
+        assert response.code == 200
+        assert b"<!doctype html>" in response.body
 
     def test_get_invalid_route(self):
         response = self.fetch("/foo/bar/baz")
 
-        self.assertEqual(response.code, 200)
-        self.assertIn(b"<!doctype html>", response.body)
+        assert response.code == 200
+        assert b"<!doctype html>" in response.body
 
     def test_includes_analytics_if_not_disabled(self):
         response = self.fetch("/")
 
-        self.assertEqual(response.code, 200)
-        self.assertIn(b"goatcounter", response.body)
+        assert response.code == 200
+        assert b"goatcounter" in response.body
 
     def test_does_not_include_analytics_if_static_file(self):
         response = self.fetch("/favicon.ico")
 
-        self.assertEqual(response.code, 200)
-        self.assertNotIn(b"goatcounter", response.body)
+        assert response.code == 200
+        assert b"goatcounter" not in response.body
 
 
 class TestClientRoutingHandlerAnalyticsDisabled(TestPiboxHandlerBase):
@@ -272,5 +267,5 @@ class TestClientRoutingHandlerAnalyticsDisabled(TestPiboxHandlerBase):
     def test_does_not_include_analytics_if_disabled(self):
         response = self.fetch("/")
 
-        self.assertEqual(response.code, 200)
-        self.assertNotIn(b"goatcounter", response.body)
+        assert response.code == 200
+        assert b"goatcounter" not in response.body
