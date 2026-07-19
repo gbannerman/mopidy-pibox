@@ -1,3 +1,6 @@
+# type: ignore  # noqa: PGH003
+
+from collections.abc import Generator
 from pathlib import Path
 
 import tornado.web
@@ -7,7 +10,7 @@ class ClientRoutingHandler(tornado.web.StaticFileHandler):
     def initialize(self, path: str) -> None:
         super().initialize(path, "index.html")
 
-    def validate_absolute_path(self, root: str, absolute_path: str):
+    def validate_absolute_path(self, root: str, absolute_path: str) -> str | None:
         if not Path(absolute_path).exists():
             absolute_path = str(Path(root) / (self.default_filename or ""))
 
@@ -27,7 +30,9 @@ class ClientRoutingWithAnalyticsHandler(ClientRoutingHandler):
     """
 
     @classmethod
-    def get_content(cls, abspath, start=None, end=None):
+    def get_content(
+        cls, abspath: str, start: int | None = None, end: int | None = None
+    ) -> bytes | Generator[bytes]:
         if abspath.endswith(".html"):
             with Path(abspath).open(encoding="utf-8") as f:
                 html = f.read()
@@ -35,7 +40,7 @@ class ClientRoutingWithAnalyticsHandler(ClientRoutingHandler):
             return html.encode("utf-8")
         return super().get_content(abspath, start, end)
 
-    def get_content_size(self):
+    def get_content_size(self) -> int:
         if self.absolute_path.endswith(".html"):
             with Path(self.absolute_path).open(encoding="utf-8") as f:
                 html = f.read()
