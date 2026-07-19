@@ -79,6 +79,7 @@ ignore = [
     "D",      # pydocstyle
     "D203",   # one-blank-line-before-class
     "D213",   # multi-line-summary-second-line
+    "FBT",    # flake8-boolean-trap
     "FIX002", # line-contains-todo  # TODO
     "G004",   # logging-f-string
     "ISC001", # single-line-implicit-string-concatenation
@@ -99,7 +100,6 @@ ignore = [
     "ANN204",  # missing-return-type-special-method
     "ARG",     # flake8-unused-arguments
     "D",       # pydocstyle
-    "FBT",     # flake8-boolean-trap
     "PLR0913", # too-many-arguments
     "PLR2004", # magic-value-comparison
     "PT027",   # pytest-unittest-raises-assertion

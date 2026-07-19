@@ -20,7 +20,7 @@ class Pibox:
         self,
         skip_threshold: int,
         playlists: list[dict[str, str]],
-        shuffle: bool,  # noqa: FBT001
+        shuffle: bool,
     ) -> None:
         self.started = True
         self.start_time = datetime.now(UTC)
