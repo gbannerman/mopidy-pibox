@@ -1,10 +1,14 @@
-from datetime import datetime, timezone
 import json
 import logging
+from datetime import UTC, datetime
+from pathlib import Path
+
+from mopidy.models import Track
+from mopidy.types import Uri
 
 
 class Pibox:
-    def __init__(self, data_dir):
+    def __init__(self, data_dir: Path) -> None:
         super().__init__()
         self.data_dir = data_dir
         self.queued_history = []
@@ -12,9 +16,14 @@ class Pibox:
 
         self.logger = logging.getLogger(__name__)
 
-    def start_session(self, skip_threshold, playlists, shuffle):
+    def start_session(
+        self,
+        skip_threshold: int,
+        playlists: list[dict[str, str]],
+        shuffle: bool,
+    ) -> None:
         self.started = True
-        self.start_time = datetime.now(timezone.utc)
+        self.start_time = datetime.now(UTC)
 
         self.skip_threshold = skip_threshold
         self.playlists = playlists
@@ -23,16 +32,17 @@ class Pibox:
         playlist_names = ",".join([playlist["name"] for playlist in playlists])
         self.queued_history = self.__load_queued_history()
         self.logger.info(
-            f"Started Pibox session with skip threshold {skip_threshold} and {len(playlists)} playlists: {playlist_names}"
+            f"Started Pibox session with skip threshold {skip_threshold} and "
+            f"{len(playlists)} playlists: {playlist_names}"
         )
 
-    def get_votes_for_track(self, track):
+    def get_votes_for_track(self, track: Track) -> int:
         return self.votes.get(track.uri, 0)
 
-    def has_user_voted_on_track(self, user_fingerprint, track):
+    def has_user_voted_on_track(self, user_fingerprint: str, track: Track) -> bool:
         return user_fingerprint in self.has_voted.get(track.uri, [])
 
-    def add_vote_for_user_on_track(self, user_fingerprint, track):
+    def add_vote_for_user_on_track(self, user_fingerprint: str, track: Track) -> int:
         users_who_voted = self.has_voted.get(track.uri, [])
         users_who_voted.append(user_fingerprint)
         self.has_voted[track.uri] = users_who_voted
@@ -42,26 +52,22 @@ class Pibox:
 
         return vote_count
 
-    def skip_queued_track(self, track):
+    def skip_queued_track(self, track: Track) -> None:
         del self.votes[track.uri]
         del self.has_voted[track.uri]
 
         self.denylist.append(track.uri)
 
-    def get_suggestions(self):
-        unplayed_queue_history = [
-            uri for uri in self.queued_history if uri not in self.played_tracks
-        ]
+    def get_suggestions(self) -> list[Uri]:
+        return [uri for uri in self.queued_history if uri not in self.played_tracks]
 
-        return unplayed_queue_history
-
-    def end_session(self):
+    def end_session(self) -> None:
         self.__save_queued_history()
         self.__initialise()
 
         self.logger.info("Ended Pibox session")
 
-    def to_json(self):
+    def to_json(self) -> dict:
         return {
             "started": self.started,
             "startTime": (self.start_time.isoformat() if self.start_time else None),
@@ -71,24 +77,23 @@ class Pibox:
             "remainingPlaylistTracks": self.remaining_playlist_tracks,
         }
 
-    def __load_queued_history(self):
+    def __load_queued_history(self) -> list[Uri]:
         try:
-            with open(self.data_dir.joinpath("pibox-queue-history.json")) as f:
-                history = json.load(f)
-                return history
+            with self.data_dir.joinpath("pibox-queue-history.json").open() as f:
+                return json.load(f)
         except FileNotFoundError:
             return []
 
-    def __save_queued_history(self):
+    def __save_queued_history(self) -> None:
         existing_suggestions = self.queued_history
         suggestions_to_add = [
             uri for uri in self.manually_queued_tracks if uri not in self.denylist
         ]
         new_suggestions = existing_suggestions + suggestions_to_add
-        with open(self.data_dir.joinpath("pibox-queue-history.json"), "w+") as f:
+        with self.data_dir.joinpath("pibox-queue-history.json").open("w+") as f:
             json.dump(new_suggestions, f)
 
-    def __initialise(self):
+    def __initialise(self) -> None:
         self.started = False
         self.start_time = None
         self.skip_threshold = 1

@@ -1,15 +1,21 @@
 import random
+import tempfile
 import unittest
 
-from mopidy import core, models
 import pykka
+from mopidy import core, models
+from mopidy.types import PlaybackState, Uri
+
 from mopidy_pibox.frontend import PiboxFrontend
 from tests import dummy_audio, dummy_backend
 
 
 def config():
     return {
-        "core": {"max_tracklist_length": 5, "data_dir": "/tmp"},
+        "core": {
+            "max_tracklist_length": 5,
+            "data_dir": tempfile.gettempdir(),
+        },
         "pibox": {
             "enabled": True,
             "offline": False,
@@ -64,7 +70,7 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track.uri == "dummy:c"
-        assert playback_state == core.PlaybackState.PLAYING
+        assert playback_state == PlaybackState.PLAYING
 
     def test_start_session_doesnt_play_music_if_autostart_disabled(self):
         self.__start_session()
@@ -73,7 +79,7 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track is None
-        assert playback_state == core.PlaybackState.STOPPED
+        assert playback_state == PlaybackState.STOPPED
 
     def test_when_track_ends_plays_song_from_session_playlist_if_no_songs_in_queue(
         self,
@@ -86,7 +92,7 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track.uri == "dummy:c"
-        assert playback_state == core.PlaybackState.PLAYING
+        assert playback_state == PlaybackState.PLAYING
 
     def test_when_track_ends_skips_songs_which_have_already_been_played(self):
         self.__start_session()
@@ -98,7 +104,7 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track.uri == "dummy:b"
-        assert playback_state == core.PlaybackState.PLAYING
+        assert playback_state == PlaybackState.PLAYING
 
     def test_when_track_ends_plays_song_from_non_exhausted_session_playlists(self):
         self.__start_session()
@@ -111,7 +117,7 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track.uri == "dummy:d"
-        assert playback_state == core.PlaybackState.PLAYING
+        assert playback_state == PlaybackState.PLAYING
 
     def test_add_track_to_queue_is_unsuccessful_if_already_played(self):
         self.__start_session()
@@ -184,7 +190,7 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track.uri == "dummy:c"
-        assert playback_state == core.PlaybackState.PLAYING
+        assert playback_state == PlaybackState.PLAYING
 
     def test_when_track_ends_and_shuffle_disabled_picks_next_song(self):
         self.__start_session(shuffle=False)
@@ -195,7 +201,7 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track.uri == "dummy:a"
-        assert playback_state == core.PlaybackState.PLAYING
+        assert playback_state == PlaybackState.PLAYING
 
     def test_when_track_ends_skips_songs_that_are_on_denylist(self):
         self.__start_session()
@@ -208,7 +214,7 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track.uri == "dummy:a"
-        assert playback_state == core.PlaybackState.PLAYING
+        assert playback_state == PlaybackState.PLAYING
 
     def test_when_track_ends_resets_session_when_playlist_exhausted(self):
         self.__start_session()
@@ -221,7 +227,7 @@ class TestPiboxFrontend(unittest.TestCase):
         assert self.frontend.pibox.started is False
         assert self.frontend.pibox.played_tracks == []
 
-    def test_when_track_ends_plays_whats_new_pussycat_if_last_song_was_whats_new_pussycat_and_nothing_in_queue(
+    def test_when_track_ends_plays_pussycat_if_last_song_was_pussycat_and_queue_empty(
         self,
     ):
         self.__start_session()
@@ -232,9 +238,9 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track.uri == "dummy:pussycat1"
-        assert playback_state == core.PlaybackState.PLAYING
+        assert playback_state == PlaybackState.PLAYING
 
-    def test_when_track_ends_does_not_play_whats_new_pussycat_if_last_song_was_whats_new_pussycat_and_songs_in_queue(
+    def test_when_track_ends_skips_pussycat_if_last_was_pussycat_and_queue_has_songs(
         self,
     ):
         self.__start_session()
@@ -247,7 +253,7 @@ class TestPiboxFrontend(unittest.TestCase):
         playback_state = self.core.playback.get_state().get()
 
         assert current_track.uri == "dummy:c"
-        assert playback_state == core.PlaybackState.PLAYING
+        assert playback_state == PlaybackState.PLAYING
 
     def test_get_suggestions_skips_queued_tracks(self):
         self.__start_session()
@@ -257,7 +263,7 @@ class TestPiboxFrontend(unittest.TestCase):
         suggestions = self.frontend.get_suggestions(3)
 
         assert len(suggestions) == 1
-        assert suggestions[0].uri == "dummy:b"
+        assert suggestions[0]["uri"] == "dummy:b"
 
     def test_get_suggestions_limits_suggestions_to_requested_number(self):
         self.__start_session()
@@ -280,10 +286,10 @@ class TestPiboxFrontend(unittest.TestCase):
         tracklist = self.frontend.get_queued_tracks("dummy")
 
         assert len(tracklist) == 2
-        assert tracklist[0]["info"].uri == "dummy:a"
+        assert tracklist[0]["info"]["uri"] == "dummy:a"
         assert tracklist[0]["votes"] == 1
         assert tracklist[0]["voted"] is True
-        assert tracklist[1]["info"].uri == "dummy:b"
+        assert tracklist[1]["info"]["uri"] == "dummy:b"
         assert tracklist[1]["votes"] == 0
         assert tracklist[1]["voted"] is False
 
@@ -300,14 +306,16 @@ class TestPiboxFrontend(unittest.TestCase):
         tracklist = self.frontend.get_queued_tracks("dummy2")
 
         assert len(tracklist) == 2
-        assert tracklist[0]["info"].uri == "dummy:a"
+        assert tracklist[0]["info"]["uri"] == "dummy:a"
         assert tracklist[0]["votes"] == 1
         assert tracklist[0]["voted"] is False
-        assert tracklist[1]["info"].uri == "dummy:b"
+        assert tracklist[1]["info"]["uri"] == "dummy:b"
         assert tracklist[1]["votes"] == 0
         assert tracklist[1]["voted"] is False
 
-    def __start_session(self, auto_start=False, skip_threshold=1, shuffle=True):
+    def __start_session(
+        self, auto_start: bool = False, skip_threshold: int = 1, shuffle: bool = True
+    ):
         self.frontend.start_session(
             skip_threshold=skip_threshold,
             playlists=[
@@ -318,7 +326,7 @@ class TestPiboxFrontend(unittest.TestCase):
             shuffle=shuffle,
         )
 
-    def __play_track(self, name, uri):
+    def __play_track(self, name: str, uri: Uri):
         track = models.Track(name=name, uri=uri, length=40000)
 
         self.core.tracklist.remove({"uri": [uri]}).get()

@@ -1,37 +1,38 @@
-from __future__ import unicode_literals
-
-import os
+from importlib.metadata import version
+from pathlib import Path
 
 from mopidy import config, ext
-import pkg_resources
-import pykka
+from mopidy.config import Config, ConfigSchema
+from mopidy.core import CoreProxy
+from mopidy.ext import Registry
 
-from . import api
-from . import socket
+from . import api, socket
 from .routing import ClientRoutingHandler, ClientRoutingWithAnalyticsHandler
 
-__version__ = pkg_resources.get_distribution("Mopidy-Pibox").version
+__version__ = version("Mopidy-Pibox")
 
 
-def get_http_handlers(core, config, frontend, static_directory_path):
+def get_http_handlers(
+    core: CoreProxy, config: Config, static_directory_path: str
+) -> list[tuple]:
     disable_analytics = config.get("pibox").get("disable_analytics", False)
 
     return [
         (
             r"/api/tracklist/?",
             api.TracklistHandler,
-            {"core": core, "frontend": frontend},
+            {"core": core},
         ),
-        (r"/api/vote/?", api.VoteHandler, {"core": core, "frontend": frontend}),
+        (r"/api/vote/?", api.VoteHandler, {"core": core}),
         (
             r"/api/session/?",
             api.SessionHandler,
-            {"core": core, "frontend": frontend},
+            {"core": core},
         ),
         (
             r"/api/suggestions/?",
             api.SuggestionsHandler,
-            {"core": core, "frontend": frontend},
+            {"core": core},
         ),
         (
             r"/config/?",
@@ -50,16 +51,12 @@ def get_http_handlers(core, config, frontend, static_directory_path):
     ]
 
 
-def my_app_factory(config, core):
-    from .frontend import PiboxFrontend
-
-    frontend = pykka.ActorRegistry.get_by_class(PiboxFrontend)[0].proxy()
-
-    static_directory_path = os.path.join(os.path.dirname(__file__), "static")
+def my_app_factory(config: Config, core: CoreProxy) -> list[tuple]:
+    static_directory_path = str(Path(__file__).parent / "static")
 
     return [
         (r"/ws/?", socket.PiboxWebSocket),
-        *get_http_handlers(core, config, frontend, static_directory_path),
+        *get_http_handlers(core, config, static_directory_path),
     ]
 
 
@@ -68,12 +65,12 @@ class Extension(ext.Extension):
     ext_name = "pibox"
     version = __version__
 
-    def get_default_config(self):
-        conf_file = os.path.join(os.path.dirname(__file__), "ext.conf")
+    def get_default_config(self) -> str:
+        conf_file = Path(__file__).parent / "ext.conf"
         return config.read(conf_file)
 
-    def get_config_schema(self):
-        schema = super(Extension, self).get_config_schema()
+    def get_config_schema(self) -> ConfigSchema:
+        schema = super().get_config_schema()
         schema["default_playlists"] = config.List(
             optional=True, unique=True, subtype=config.String()
         )
@@ -82,8 +79,9 @@ class Extension(ext.Extension):
         schema["disable_analytics"] = config.Boolean(optional=True)
         return schema
 
-    def setup(self, registry):
-        from .frontend import PiboxFrontend
+    def setup(self, registry: Registry) -> None:
+        # Deferred to avoid a circular import with mopidy_pibox.frontend.
+        from .frontend import PiboxFrontend  # noqa: PLC0415
 
         registry.add("frontend", PiboxFrontend)
         registry.add(

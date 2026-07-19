@@ -1,10 +1,11 @@
-from datetime import datetime
 import json
-import os
+from datetime import UTC, datetime
+from pathlib import Path
 from unittest import mock
+
+import pykka
 import tornado.testing
 import tornado.web
-
 from mopidy.models import Track
 
 from mopidy_pibox import get_http_handlers
@@ -12,7 +13,7 @@ from mopidy_pibox.frontend import PiboxFrontend
 from mopidy_pibox.pibox import Pibox
 
 
-def _mock_actor_return_value(fn, value):
+def _mock_actor_return_value(fn: mock.Mock, value: object):
     fn.return_value.get.return_value = value
 
 
@@ -34,19 +35,28 @@ def _config():
 
 class TestPiboxHandlerBase(tornado.testing.AsyncHTTPTestCase):
     # Workaround for https://github.com/pytest-dev/pytest/issues/12263.
-    def runTest(self):
+    def runTest(self):  # noqa: N802
         pass
+
+    def _patch_frontend_registry(self):
+        self.frontend = mock.Mock(spec=PiboxFrontend)
+        self.frontend.pibox = mock.Mock(spec=Pibox)
+
+        patcher = mock.patch.object(pykka.ActorRegistry, "get_by_class")
+        mock_get_by_class = patcher.start()
+        self.addCleanup(patcher.stop)
+
+        mock_actor_ref = mock.Mock()
+        mock_actor_ref.proxy.return_value = self.frontend
+        mock_get_by_class.return_value = [mock_actor_ref]
 
     def get_app(self):
         self.core = mock.Mock()
-        self.frontend = mock.Mock(spec=PiboxFrontend)
-        self.frontend.pibox = mock.Mock(spec=Pibox)
         self.config = _config()
-        static_directory_path = os.path.join(os.path.dirname(__file__), "fixtures")
+        self._patch_frontend_registry()
+        static_directory_path = str(Path(__file__).parent / "fixtures")
         return tornado.web.Application(
-            get_http_handlers(
-                self.core, self.config, self.frontend, static_directory_path
-            )
+            get_http_handlers(self.core, self.config, static_directory_path)
         )
 
 
@@ -64,8 +74,8 @@ class TestTracklistHandler(TestPiboxHandlerBase):
         )
         body = json.loads(response.body)
 
-        self.assertEqual(response.code, 200)
-        self.assertEqual(body["tracklist"], queued_tracks)
+        assert response.code == 200
+        assert body["tracklist"] == queued_tracks
 
     def test_post(self):
         fingerprint = "fingerprint"
@@ -85,7 +95,7 @@ class TestTracklistHandler(TestPiboxHandlerBase):
         body = json.loads(response.body)
 
         self.frontend.add_track_to_queue.assert_called_once_with("dummy:track1")
-        self.assertEqual(body["tracklist"], queued_tracks)
+        assert body["tracklist"] == queued_tracks
 
 
 class TestVoteHandler(TestPiboxHandlerBase):
@@ -101,7 +111,7 @@ class TestVoteHandler(TestPiboxHandlerBase):
             body=json.dumps({"uri": "dummy:track1"}),
         )
 
-        self.assertEqual(response.code, 200)
+        assert response.code == 200
 
         self.frontend.add_vote_for_user_on_queued_track.assert_called_once_with(
             fingerprint, Track(uri="dummy:track1")
@@ -117,14 +127,14 @@ class TestVoteHandler(TestPiboxHandlerBase):
             body=json.dumps({"uri": "dummy:track1"}),
         )
 
-        self.assertEqual(response.code, 400)
+        assert response.code == 400
 
         self.frontend.add_vote_for_user_on_queued_track.assert_not_called()
 
 
 class TestSessionHandler(TestPiboxHandlerBase):
     def test_get(self):
-        start_time = datetime.now().isoformat()
+        start_time = datetime.now(UTC).isoformat()
         _mock_actor_return_value(
             self.frontend.pibox.to_json,
             {
@@ -143,22 +153,17 @@ class TestSessionHandler(TestPiboxHandlerBase):
         response = self.fetch("/api/session")
         body = json.loads(response.body)
 
-        self.assertEqual(response.code, 200)
+        assert response.code == 200
 
-        self.assertEqual(body["started"], True)
-        self.assertEqual(body["startTime"], start_time)
-        self.assertEqual(body["skipThreshold"], 3)
-        self.assertEqual(
-            body["playlists"],
-            [
-                {"name": "test", "uri": "dummy:playlist1"},
-                {"name": "test2", "uri": "dummy:playlist2"},
-            ],
-        )
-        self.assertEqual(body["playedTracks"], ["dummy:track1", "dummy:track2"])
-        self.assertEqual(
-            body["remainingPlaylistTracks"], ["dummy:track3", "dummy:track4"]
-        )
+        assert body["started"] is True
+        assert body["startTime"] == start_time
+        assert body["skipThreshold"] == 3
+        assert body["playlists"] == [
+            {"name": "test", "uri": "dummy:playlist1"},
+            {"name": "test2", "uri": "dummy:playlist2"},
+        ]
+        assert body["playedTracks"] == ["dummy:track1", "dummy:track2"]
+        assert body["remainingPlaylistTracks"] == ["dummy:track3", "dummy:track4"]
 
     def test_post(self):
         skip_threshold = 3
@@ -182,7 +187,7 @@ class TestSessionHandler(TestPiboxHandlerBase):
             ),
         )
 
-        self.assertEqual(response.code, 200)
+        assert response.code == 200
 
         self.frontend.start_session.assert_called_once_with(
             skip_threshold, playlists, auto_start, shuffle
@@ -191,7 +196,7 @@ class TestSessionHandler(TestPiboxHandlerBase):
     def test_delete(self):
         response = self.fetch("/api/session", method="DELETE")
 
-        self.assertEqual(response.code, 200)
+        assert response.code == 200
         self.frontend.end_session.assert_called_once()
 
 
@@ -200,14 +205,14 @@ class TestConfigHandler(TestPiboxHandlerBase):
         response = self.fetch("/config")
         body = json.loads(response.body)
 
-        self.assertEqual(response.code, 200)
+        assert response.code == 200
 
-        self.assertEqual(body["offline"], False)
-        self.assertEqual(
-            body["defaultPlaylists"],
-            ["dummy:user:someuser:playlist1", "dummy:user:someuser:playlist2"],
-        )
-        self.assertEqual(body["defaultSkipThreshold"], 10)
+        assert body["offline"] is False
+        assert body["defaultPlaylists"] == [
+            "dummy:user:someuser:playlist1",
+            "dummy:user:someuser:playlist2",
+        ]
+        assert body["defaultSkipThreshold"] == 10
 
 
 class TestSuggestionsHandler(TestPiboxHandlerBase):
@@ -218,52 +223,49 @@ class TestSuggestionsHandler(TestPiboxHandlerBase):
         response = self.fetch("/api/suggestions")
         body = json.loads(response.body)
 
-        self.assertEqual(response.code, 200)
-        self.assertEqual(body["suggestions"], suggestions)
+        assert response.code == 200
+        assert body["suggestions"] == suggestions
 
 
 class TestClientRoutingHandler(TestPiboxHandlerBase):
     def test_get_root(self):
         response = self.fetch("/")
 
-        self.assertEqual(response.code, 200)
-        self.assertIn(b"<!doctype html>", response.body)
+        assert response.code == 200
+        assert b"<!doctype html>" in response.body
 
     def test_get_invalid_route(self):
         response = self.fetch("/foo/bar/baz")
 
-        self.assertEqual(response.code, 200)
-        self.assertIn(b"<!doctype html>", response.body)
+        assert response.code == 200
+        assert b"<!doctype html>" in response.body
 
     def test_includes_analytics_if_not_disabled(self):
         response = self.fetch("/")
 
-        self.assertEqual(response.code, 200)
-        self.assertIn(b"goatcounter", response.body)
+        assert response.code == 200
+        assert b"goatcounter" in response.body
 
     def test_does_not_include_analytics_if_static_file(self):
         response = self.fetch("/favicon.ico")
 
-        self.assertEqual(response.code, 200)
-        self.assertNotIn(b"goatcounter", response.body)
+        assert response.code == 200
+        assert b"goatcounter" not in response.body
 
 
 class TestClientRoutingHandlerAnalyticsDisabled(TestPiboxHandlerBase):
     def get_app(self):
         self.core = mock.Mock()
-        self.frontend = mock.Mock(spec=PiboxFrontend)
-        self.frontend.pibox = mock.Mock(spec=Pibox)
         self.config = _config()
         self.config["pibox"]["disable_analytics"] = True
-        static_directory_path = os.path.join(os.path.dirname(__file__), "fixtures")
+        self._patch_frontend_registry()
+        static_directory_path = str(Path(__file__).parent / "fixtures")
         return tornado.web.Application(
-            get_http_handlers(
-                self.core, self.config, self.frontend, static_directory_path
-            )
+            get_http_handlers(self.core, self.config, static_directory_path)
         )
 
     def test_does_not_include_analytics_if_disabled(self):
         response = self.fetch("/")
 
-        self.assertEqual(response.code, 200)
-        self.assertNotIn(b"goatcounter", response.body)
+        assert response.code == 200
+        assert b"goatcounter" not in response.body

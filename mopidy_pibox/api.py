@@ -1,61 +1,64 @@
-from __future__ import absolute_import, unicode_literals
-
 import json
-
-from mopidy import config
-import tornado.web
-
 import logging
+from typing import Any
 
-from mopidy.models import ModelJSONEncoder, Track
+import pykka
+import tornado.web
+from mopidy.config import Config
+from mopidy.core import CoreProxy
+from mopidy.models import Track
+
 from . import socket
 
 
 class PiboxHandler(tornado.web.RequestHandler):
-    def initialize(self, core, frontend):
+    def initialize(self, core: CoreProxy) -> None:
         self.core = core
-        self.frontend = frontend
         self.logger = logging.getLogger(__name__)
 
-    def _get_body(self):
+    def _get_body(self) -> Any:
         return tornado.escape.json_decode(self.request.body)
 
-    def _get_user_fingerprint(self):
+    def _get_user_fingerprint(self) -> str:
         return self.request.headers["X-Pibox-Fingerprint"]
 
 
 class TracklistHandler(PiboxHandler):
-    def initialize(self, core, frontend):
-        super(TracklistHandler, self).initialize(core, frontend)
+    def initialize(self, core: CoreProxy) -> None:
+        super().initialize(core)
 
-    def post(self):
+    def post(self) -> None:
+        frontend = _get_frontend_proxy()
+
         data = self._get_body()
         fingerprint = self._get_user_fingerprint()
         track_uri = data["track"]
-        (_success, error) = self.frontend.add_track_to_queue(track_uri).get()
-        tracklist = self.frontend.get_queued_tracks(fingerprint).get()
+        (_success, error) = frontend.add_track_to_queue(track_uri).get()
+        tracklist = frontend.get_queued_tracks(fingerprint).get()
         self.set_header("Content-Type", "application/json")
-        self.write(
-            json.dumps({"tracklist": tracklist, "error": error}, cls=ModelJSONEncoder)
-        )
+        self.write(json.dumps({"tracklist": tracklist, "error": error}))
 
-    def get(self):
+    def get(self) -> None:
+        frontend = _get_frontend_proxy()
+
         fingerprint = self._get_user_fingerprint()
-        tracklist = self.frontend.get_queued_tracks(fingerprint).get()
+        tracklist = frontend.get_queued_tracks(fingerprint).get()
         self.set_header("Content-Type", "application/json")
-        self.write(json.dumps({"tracklist": tracklist}, cls=ModelJSONEncoder))
+        self.write(json.dumps({"tracklist": tracklist}))
 
 
 class VoteHandler(PiboxHandler):
-    def initialize(self, core, frontend):
-        super(VoteHandler, self).initialize(core, frontend)
+    def initialize(self, core: CoreProxy) -> None:
+        super().initialize(core)
 
-    def post(self):
+    def post(self) -> None:
+        frontend = _get_frontend_proxy()
+
         data = self._get_body()
         fingerprint = self._get_user_fingerprint()
         track = Track(uri=data["uri"])
 
-        if self.frontend.pibox.has_user_voted_on_track(fingerprint, track).get():
+        if frontend.pibox.has_user_voted_on_track(fingerprint, track).get():
             self.set_status(400)
             response = {
                 "code": "15",
@@ -64,7 +67,7 @@ class VoteHandler(PiboxHandler):
             }
             self.write(response)
         else:
-            self.frontend.add_vote_for_user_on_queued_track(fingerprint, track)
+            frontend.add_vote_for_user_on_queued_track(fingerprint, track)
 
             socket.PiboxWebSocket.send(
                 "VOTE_ADDED",
@@ -75,18 +78,20 @@ class VoteHandler(PiboxHandler):
 
 
 class SessionHandler(PiboxHandler):
-    def initialize(self, core, frontend):
-        super(SessionHandler, self).initialize(core, frontend)
+    def initialize(self, core: CoreProxy) -> None:
+        super().initialize(core)
 
-    def post(self):
+    def post(self) -> None:
+        frontend = _get_frontend_proxy()
+
         data = self._get_body()
         skip_threshold = data["skipThreshold"]
         playlists = data.get("playlists", [])
         auto_start = data.get("autoStart", True)
         shuffle = data.get("shuffle", True)
 
-        self.frontend.start_session(int(skip_threshold), playlists, auto_start, shuffle)
-        session = self.frontend.pibox.to_json().get()
+        frontend.start_session(int(skip_threshold), playlists, auto_start, shuffle)
+        session = frontend.pibox.to_json().get()
 
         socket.PiboxWebSocket.send(
             "SESSION_STARTED",
@@ -94,32 +99,38 @@ class SessionHandler(PiboxHandler):
         )
         self.set_status(200)
 
-    def get(self):
-        session = self.frontend.pibox.to_json().get()
+    def get(self) -> None:
+        frontend = _get_frontend_proxy()
+
+        session = frontend.pibox.to_json().get()
         self.write(session)
 
-    def delete(self):
-        self.frontend.end_session().get()
+    def delete(self) -> None:
+        frontend = _get_frontend_proxy()
+
+        frontend.end_session().get()
         socket.PiboxWebSocket.send("SESSION_ENDED", {})
         self.set_status(200)
 
 
 class SuggestionsHandler(PiboxHandler):
-    def initialize(self, core, frontend):
-        super(SuggestionsHandler, self).initialize(core, frontend)
+    def initialize(self, core: CoreProxy) -> None:
+        super().initialize(core)
 
-    def get(self):
-        suggestions = self.frontend.get_suggestions(3).get()
+    def get(self) -> None:
+        frontend = _get_frontend_proxy()
+
+        suggestions = frontend.get_suggestions(3).get()
         self.set_header("Content-Type", "application/json")
-        self.write(json.dumps({"suggestions": suggestions}, cls=ModelJSONEncoder))
+        self.write(json.dumps({"suggestions": suggestions}))
 
 
 class ConfigHandler(tornado.web.RequestHandler):
-    def initialize(self, config: config.Proxy):
+    def initialize(self, config: Config) -> None:
         self.config = config
         self.logger = logging.getLogger(__name__)
 
-    def get(self):
+    def get(self) -> None:
         pibox_config = self.config.get("pibox")
         self.write(
             {
@@ -128,3 +139,10 @@ class ConfigHandler(tornado.web.RequestHandler):
                 "defaultSkipThreshold": pibox_config.get("default_skip_threshold"),
             }
         )
+
+
+def _get_frontend_proxy() -> pykka.ActorProxy:
+    # Deferred to avoid a circular import with mopidy_pibox.frontend.
+    from mopidy_pibox.frontend import PiboxFrontend  # noqa: PLC0415
+
+    return pykka.ActorRegistry.get_by_class(PiboxFrontend)[0].proxy()

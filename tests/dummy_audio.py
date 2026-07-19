@@ -4,19 +4,26 @@ This class implements the audio API in the simplest way possible. It is used in
 tests of the core and backends.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import pykka
 from mopidy import audio
+from mopidy.config import Config
+from mopidy.mixer import MixerProxy
+from mopidy.models import Track
+from mopidy.types import DurationMs, PlaybackState, Uri
 
 
-def create_proxy(config=None, mixer=None):
+def create_proxy(config: Config | None = None, mixer: MixerProxy | None = None):
     return DummyAudio.start(config, mixer).proxy()
 
 
 # TODO: reset position on track change?
 class DummyAudio(pykka.ThreadingActor):
-    def __init__(self, config=None, mixer=None):
+    def __init__(self, config: Config | None = None, mixer: MixerProxy | None = None):
         super().__init__()
-        self.state = audio.PlaybackState.STOPPED
+        self.state = PlaybackState.STOPPED
         self._volume = 0
         self._position = 0
         self._source_setup_callback = None
@@ -27,7 +34,7 @@ class DummyAudio(pykka.ThreadingActor):
         self._tags = {}
         self._bad_uris = set()
 
-    def set_uri(self, uri, live_stream=False, download=False):
+    def set_uri(self, uri: Uri, live_stream: bool = False, download: bool = False):
         assert self._uri is None, "prepare change not called before set"
         self._position = 0
         self._uri = uri
@@ -35,25 +42,25 @@ class DummyAudio(pykka.ThreadingActor):
         self._live_stream = live_stream
         self._tags = {}
 
-    def set_appsrc(self, *args, **kwargs):
+    def set_appsrc(self, *args: Any, **kwargs: Any):
         pass
 
-    def emit_data(self, buffer_):
+    def emit_data(self, buffer_: bytes):
         pass
 
     def get_position(self):
         return self._position
 
-    def set_position(self, position):
+    def set_position(self, position: DurationMs):
         self._position = position
         audio.AudioListener.send("position_changed", position=position)
         return True
 
     def start_playback(self):
-        return self._change_state(audio.PlaybackState.PLAYING)
+        return self._change_state(PlaybackState.PLAYING)
 
     def pause_playback(self):
-        return self._change_state(audio.PlaybackState.PAUSED)
+        return self._change_state(PlaybackState.PAUSED)
 
     def prepare_change(self):
         self._uri = None
@@ -61,25 +68,25 @@ class DummyAudio(pykka.ThreadingActor):
         return True
 
     def stop_playback(self):
-        return self._change_state(audio.PlaybackState.STOPPED)
+        return self._change_state(PlaybackState.STOPPED)
 
     def get_volume(self):
         return self._volume
 
-    def set_volume(self, volume):
+    def set_volume(self, volume: int):
         self._volume = volume
         return True
 
-    def set_metadata(self, track):
+    def set_metadata(self, track: Track):
         pass
 
     def get_current_tags(self):
         return self._tags
 
-    def set_source_setup_callback(self, callback):
+    def set_source_setup_callback(self, callback: Callable[[], None]):
         self._source_setup_callback = callback
 
-    def set_about_to_finish_callback(self, callback):
+    def set_about_to_finish_callback(self, callback: Callable[[], None]):
         self._about_to_finish_callback = callback
 
     def enable_sync_handler(self):
@@ -88,11 +95,11 @@ class DummyAudio(pykka.ThreadingActor):
     def wait_for_state_change(self):
         pass
 
-    def _change_state(self, new_state):
+    def _change_state(self, new_state: PlaybackState):
         if not self._uri:
             return False
 
-        if new_state == audio.PlaybackState.STOPPED and self._uri:
+        if new_state == PlaybackState.STOPPED and self._uri:
             self._stream_changed = True
             self._uri = None
 
@@ -111,16 +118,16 @@ class DummyAudio(pykka.ThreadingActor):
             target_state=None,
         )
 
-        if new_state == audio.PlaybackState.PLAYING:
+        if new_state == PlaybackState.PLAYING:
             self._tags["audio-codec"] = ["fake info..."]
             audio.AudioListener.send("tags_changed", tags=["audio-codec"])
 
         return self._uri not in self._bad_uris
 
-    def trigger_fake_playback_failure(self, uri):
+    def trigger_fake_playback_failure(self, uri: Uri):
         self._bad_uris.add(uri)
 
-    def trigger_fake_tags_changed(self, tags):
+    def trigger_fake_tags_changed(self, tags: dict):
         self._tags.update(tags)
         audio.AudioListener.send("tags_changed", tags=self._tags.keys())
 

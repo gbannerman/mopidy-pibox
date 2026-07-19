@@ -1,8 +1,11 @@
-import pykka
 import logging
 from random import sample, shuffle
 
+import pykka
 from mopidy import core
+from mopidy.config import Config
+from mopidy.models import Ref, TlTrack, Track
+from mopidy.types import DurationMs, PlaybackState, Uri
 
 from mopidy_pibox import Extension
 from mopidy_pibox.pibox import Pibox
@@ -14,8 +17,13 @@ PUSSYCAT_LIST = [
 
 
 class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
-    def __init__(self, config, core, pussycat_list=PUSSYCAT_LIST):
-        super(PiboxFrontend, self).__init__()
+    def __init__(
+        self,
+        config: Config,
+        core: core.CoreProxy,
+        pussycat_list: list[Uri] = PUSSYCAT_LIST,
+    ) -> None:
+        super().__init__()
         self.core = core
         self.config = config["pibox"]
         self.pussycat_list = pussycat_list
@@ -26,13 +34,23 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
         self.core.tracklist.set_consume(value=True)
 
-    def start_session(self, skip_threshold, playlists, auto_start, shuffle):
+    def start_session(
+        self,
+        skip_threshold: int,
+        playlists: list[dict[str, str]],
+        auto_start: bool,
+        shuffle: bool,
+    ) -> None:
         self.pibox.start_session(skip_threshold, playlists, shuffle)
         if auto_start:
             self.__queue_song_from_session_playlists()
             self.__start_playing()
 
-    def track_playback_ended(self, tl_track, time_position):
+    def track_playback_ended(
+        self,
+        tl_track: TlTrack,
+        time_position: DurationMs,  # noqa: ARG002
+    ) -> None:
         if not self.pibox.started:
             return
 
@@ -46,17 +64,18 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             self.__queue_song_from_session_playlists()
             self.__start_playing()
 
-    def get_queued_tracks(self, user_fingerprint):
+    def get_queued_tracks(self, user_fingerprint: str) -> list[dict]:
+        tracks = self.core.tracklist.get_tracks().get()
         return [
             {
-                "info": track,
+                "info": track.model_dump(mode="json"),
                 "votes": self.pibox.get_votes_for_track(track),
                 "voted": self.pibox.has_user_voted_on_track(user_fingerprint, track),
             }
-            for track in self.core.tracklist.get_tracks().get()
+            for track in tracks
         ]
 
-    def add_track_to_queue(self, track_uri):
+    def add_track_to_queue(self, track_uri: Uri) -> tuple[bool, str | None]:
         if track_uri in self.pibox.played_tracks:
             return (False, "ALREADY_PLAYED")
 
@@ -68,10 +87,13 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
 
         return (True, None)
 
-    def add_vote_for_user_on_queued_track(self, user_fingerprint, track):
+    def add_vote_for_user_on_queued_track(
+        self, user_fingerprint: str, track: Track
+    ) -> None:
         vote_count = self.pibox.add_vote_for_user_on_track(user_fingerprint, track)
         self.logger.info(
-            f"Vote added for {track.uri} by {user_fingerprint} ({vote_count}/{self.pibox.skip_threshold})"
+            f"Vote added for {track.uri} by {user_fingerprint} "
+            f"({vote_count}/{self.pibox.skip_threshold})"
         )
         if vote_count >= self.pibox.skip_threshold:
             self.logger.info(f"Skipping {track.uri} due to votes")
@@ -80,32 +102,28 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             self.logger.info("Track removed from tracklist")
             self.pibox.skip_queued_track(track)
 
-    def end_session(self):
+    def end_session(self) -> None:
         self.core.playback.stop()
         self.core.tracklist.clear()
 
         self.pibox.end_session()
 
-    def get_suggestions(self, length):
+    def get_suggestions(self, length: int) -> list[dict]:
         suggestions = self.pibox.get_suggestions()
 
         unqueued_suggestions = [
             track for track in suggestions if not self.__is_queued(track)
         ]
-        size = (
-            len(unqueued_suggestions) if len(unqueued_suggestions) < length else length
-        )
-        unplayed_tracks = [
-            track
+        size = min(length, len(unqueued_suggestions))
+        return [
+            track.model_dump(mode="json")
             for tracks in self.core.library.lookup(sample(unqueued_suggestions, size))
             .get()
             .values()
             for track in tracks
         ]
 
-        return unplayed_tracks
-
-    def __queue_song_from_session_playlists(self):
+    def __queue_song_from_session_playlists(self) -> None:
         self.logger.info("Pibox is trying to queue a song")
 
         playlist_items = self.__get_session_playlist_items()
@@ -134,39 +152,40 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         next_track = remaining_playlist[0]
 
         self.core.tracklist.add(uris=[next_track.uri], at_position=0).get()
-        self.logger.info("Pibox auto-added " + next_track.name + " to tracklist")
+        self.logger.info("Pibox auto-added %s to tracklist", next_track.name)
 
-    def __get_session_playlist_items(self):
+    def __get_session_playlist_items(self) -> list[Ref]:
         if self.config["offline"]:
             return self.core.library.browse(uri="local:directory?type=track").get()
-        else:
-            return [
-                track
-                for playlist in self.pibox.playlists
-                for track in self.core.playlists.get_items(playlist["uri"]).get()
-            ]
+        return [
+            track
+            for playlist in self.pibox.playlists
+            for track in self.core.playlists.get_items(playlist["uri"]).get()
+        ]
 
-    def __update_played_tracks(self, tl_track):
+    def __update_played_tracks(self, tl_track: TlTrack) -> None:
         self.pibox.played_tracks.append(tl_track.track.uri)
 
-    def __update_remaining_playlist_tracks(self, remaining_playlist):
+    def __update_remaining_playlist_tracks(self, remaining_playlist: list) -> None:
         self.pibox.remaining_playlist_tracks = [
             track.uri for track in remaining_playlist
         ]
 
-    def __can_play(self, uri):
+    def __can_play(self, uri: Uri) -> bool:
         return (uri not in self.pibox.played_tracks) and (
             uri not in self.pibox.denylist
         )
 
-    def __is_queued(self, uri):
+    def __is_queued(self, uri: Uri) -> bool:
         return self.core.tracklist.filter({"uri": [uri]}).get() != []
 
-    def __start_playing(self):
-        if self.core.playback.get_state().get() == core.PlaybackState.STOPPED:
+    def __start_playing(self) -> None:
+        playback_state = self.core.playback.get_state().get()
+        self.logger.info(f"Pibox sees playback is {playback_state}")
+        if playback_state == PlaybackState.STOPPED:
             self.core.playback.play().get()
             self.logger.info("Pibox started playback")
 
-    def __should_play_whats_new_pussycat(self, tl_track):
+    def __should_play_whats_new_pussycat(self, tl_track: TlTrack) -> bool:
         tracklist = self.core.tracklist.get_tracks().get()
         return tl_track.track.uri in self.pussycat_list and len(tracklist) == 0
