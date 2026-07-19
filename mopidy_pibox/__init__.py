@@ -1,6 +1,6 @@
 
-import os
 from importlib.metadata import version
+from pathlib import Path
 
 from mopidy import config, ext
 
@@ -48,7 +48,7 @@ def get_http_handlers(core, config, static_directory_path):
 
 
 def my_app_factory(config, core):
-    static_directory_path = os.path.join(os.path.dirname(__file__), "static")
+    static_directory_path = str(Path(__file__).parent / "static")
 
     return [
         (r"/ws/?", socket.PiboxWebSocket),
@@ -62,7 +62,7 @@ class Extension(ext.Extension):
     version = __version__
 
     def get_default_config(self):
-        conf_file = os.path.join(os.path.dirname(__file__), "ext.conf")
+        conf_file = Path(__file__).parent / "ext.conf"
         return config.read(conf_file)
 
     def get_config_schema(self):
@@ -76,7 +76,8 @@ class Extension(ext.Extension):
         return schema
 
     def setup(self, registry):
-        from .frontend import PiboxFrontend
+        # Deferred to avoid a circular import with mopidy_pibox.frontend.
+        from .frontend import PiboxFrontend  # noqa: PLC0415
 
         registry.add("frontend", PiboxFrontend)
         registry.add(

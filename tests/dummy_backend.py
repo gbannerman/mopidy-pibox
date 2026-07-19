@@ -124,6 +124,7 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
         for playlist in self._playlists:
             if playlist.uri == uri:
                 return playlist
+        return None
 
     def refresh(self):
         pass

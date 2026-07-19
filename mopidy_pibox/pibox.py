@@ -23,7 +23,8 @@ class Pibox:
         playlist_names = ",".join([playlist["name"] for playlist in playlists])
         self.queued_history = self.__load_queued_history()
         self.logger.info(
-            f"Started Pibox session with skip threshold {skip_threshold} and {len(playlists)} playlists: {playlist_names}"
+            f"Started Pibox session with skip threshold {skip_threshold} and "
+            f"{len(playlists)} playlists: {playlist_names}"
         )
 
     def get_votes_for_track(self, track):
@@ -49,11 +50,9 @@ class Pibox:
         self.denylist.append(track.uri)
 
     def get_suggestions(self):
-        unplayed_queue_history = [
+        return [
             uri for uri in self.queued_history if uri not in self.played_tracks
         ]
-
-        return unplayed_queue_history
 
     def end_session(self):
         self.__save_queued_history()
@@ -73,9 +72,8 @@ class Pibox:
 
     def __load_queued_history(self):
         try:
-            with open(self.data_dir.joinpath("pibox-queue-history.json")) as f:
-                history = json.load(f)
-                return history
+            with self.data_dir.joinpath("pibox-queue-history.json").open() as f:
+                return json.load(f)
         except FileNotFoundError:
             return []
 
@@ -85,7 +83,7 @@ class Pibox:
             uri for uri in self.manually_queued_tracks if uri not in self.denylist
         ]
         new_suggestions = existing_suggestions + suggestions_to_add
-        with open(self.data_dir.joinpath("pibox-queue-history.json"), "w+") as f:
+        with self.data_dir.joinpath("pibox-queue-history.json").open("w+") as f:
             json.dump(new_suggestions, f)
 
     def __initialise(self):

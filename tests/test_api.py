@@ -1,6 +1,6 @@
 import json
-import os
-from datetime import datetime
+from datetime import UTC, datetime
+from pathlib import Path
 from unittest import mock
 
 import pykka
@@ -35,7 +35,7 @@ def _config():
 
 class TestPiboxHandlerBase(tornado.testing.AsyncHTTPTestCase):
     # Workaround for https://github.com/pytest-dev/pytest/issues/12263.
-    def runTest(self):
+    def runTest(self):  # noqa: N802
         pass
 
     def _patch_frontend_registry(self):
@@ -54,7 +54,7 @@ class TestPiboxHandlerBase(tornado.testing.AsyncHTTPTestCase):
         self.core = mock.Mock()
         self.config = _config()
         self._patch_frontend_registry()
-        static_directory_path = os.path.join(os.path.dirname(__file__), "fixtures")
+        static_directory_path = str(Path(__file__).parent / "fixtures")
         return tornado.web.Application(
             get_http_handlers(self.core, self.config, static_directory_path)
         )
@@ -134,7 +134,7 @@ class TestVoteHandler(TestPiboxHandlerBase):
 
 class TestSessionHandler(TestPiboxHandlerBase):
     def test_get(self):
-        start_time = datetime.now().isoformat()
+        start_time = datetime.now(UTC).isoformat()
         _mock_actor_return_value(
             self.frontend.pibox.to_json,
             {
@@ -264,7 +264,7 @@ class TestClientRoutingHandlerAnalyticsDisabled(TestPiboxHandlerBase):
         self.config = _config()
         self.config["pibox"]["disable_analytics"] = True
         self._patch_frontend_registry()
-        static_directory_path = os.path.join(os.path.dirname(__file__), "fixtures")
+        static_directory_path = str(Path(__file__).parent / "fixtures")
         return tornado.web.Application(
             get_http_handlers(self.core, self.config, static_directory_path)
         )

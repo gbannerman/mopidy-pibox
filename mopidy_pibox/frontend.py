@@ -33,7 +33,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
             self.__queue_song_from_session_playlists()
             self.__start_playing()
 
-    def track_playback_ended(self, tl_track, time_position):
+    def track_playback_ended(self, tl_track, time_position):  # noqa: ARG002
         if not self.pibox.started:
             return
 
@@ -73,7 +73,8 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
     def add_vote_for_user_on_queued_track(self, user_fingerprint, track):
         vote_count = self.pibox.add_vote_for_user_on_track(user_fingerprint, track)
         self.logger.info(
-            f"Vote added for {track.uri} by {user_fingerprint} ({vote_count}/{self.pibox.skip_threshold})"
+            f"Vote added for {track.uri} by {user_fingerprint} "
+            f"({vote_count}/{self.pibox.skip_threshold})"
         )
         if vote_count >= self.pibox.skip_threshold:
             self.logger.info(f"Skipping {track.uri} due to votes")
@@ -97,15 +98,13 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         size = (
             min(length, len(unqueued_suggestions))
         )
-        unplayed_tracks = [
+        return [
             track.model_dump(mode="json")
             for tracks in self.core.library.lookup(sample(unqueued_suggestions, size))
             .get()
             .values()
             for track in tracks
         ]
-
-        return unplayed_tracks
 
     def __queue_song_from_session_playlists(self):
         self.logger.info("Pibox is trying to queue a song")
@@ -136,7 +135,7 @@ class PiboxFrontend(pykka.ThreadingActor, core.CoreListener):
         next_track = remaining_playlist[0]
 
         self.core.tracklist.add(uris=[next_track.uri], at_position=0).get()
-        self.logger.info("Pibox auto-added " + next_track.name + " to tracklist")
+        self.logger.info("Pibox auto-added %s to tracklist", next_track.name)
 
     def __get_session_playlist_items(self):
         if self.config["offline"]:

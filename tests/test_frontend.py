@@ -1,4 +1,5 @@
 import random
+import tempfile
 import unittest
 
 import pykka
@@ -11,7 +12,10 @@ from tests import dummy_audio, dummy_backend
 
 def config():
     return {
-        "core": {"max_tracklist_length": 5, "data_dir": "/tmp"},
+        "core": {
+            "max_tracklist_length": 5,
+            "data_dir": tempfile.gettempdir(),
+        },
         "pibox": {
             "enabled": True,
             "offline": False,
@@ -223,7 +227,7 @@ class TestPiboxFrontend(unittest.TestCase):
         assert self.frontend.pibox.started is False
         assert self.frontend.pibox.played_tracks == []
 
-    def test_when_track_ends_plays_whats_new_pussycat_if_last_song_was_whats_new_pussycat_and_nothing_in_queue(
+    def test_when_track_ends_plays_pussycat_if_last_song_was_pussycat_and_queue_empty(
         self,
     ):
         self.__start_session()
@@ -236,7 +240,7 @@ class TestPiboxFrontend(unittest.TestCase):
         assert current_track.uri == "dummy:pussycat1"
         assert playback_state == PlaybackState.PLAYING
 
-    def test_when_track_ends_does_not_play_whats_new_pussycat_if_last_song_was_whats_new_pussycat_and_songs_in_queue(
+    def test_when_track_ends_skips_pussycat_if_last_was_pussycat_and_queue_has_songs(
         self,
     ):
         self.__start_session()

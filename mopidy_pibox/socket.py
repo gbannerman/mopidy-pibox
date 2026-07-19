@@ -1,13 +1,14 @@
 import logging
+from typing import ClassVar
 
 import tornado.websocket
 
 
 class PiboxWebSocket(tornado.websocket.WebSocketHandler):
-    clients = set()
+    clients: ClassVar[set] = set()
     logger = logging.getLogger(__name__)
 
-    def check_origin(self, origin):
+    def check_origin(self, origin):  # noqa: ARG002
         return True
 
     def open(self):

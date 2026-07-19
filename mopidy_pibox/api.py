@@ -141,6 +141,7 @@ class ConfigHandler(tornado.web.RequestHandler):
 
 
 def _get_frontend_proxy():
-    from mopidy_pibox.frontend import PiboxFrontend
+    # Deferred to avoid a circular import with mopidy_pibox.frontend.
+    from mopidy_pibox.frontend import PiboxFrontend  # noqa: PLC0415
 
     return pykka.ActorRegistry.get_by_class(PiboxFrontend)[0].proxy()
