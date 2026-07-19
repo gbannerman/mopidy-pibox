@@ -17,9 +17,9 @@ jobs:
             tox-command: py314
             upload-coverage: true
 
-          - name: "Lint: check-manifest"
+          - name: "Typecheck: pyright"
             python: "3.14"
-            tox-command: check-manifest
+            tox-command: pyright
 
           - name: "Lint: ruff"
             python: "3.14"
