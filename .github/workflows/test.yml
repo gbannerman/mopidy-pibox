@@ -23,7 +23,7 @@ jobs:
 
           - name: "Lint: ruff"
             python: "3.14"
-            tox-command: ruff-lint
+            tox-command: ruff-check
 
           - name: "Format: ruff"
             python: "3.14"
