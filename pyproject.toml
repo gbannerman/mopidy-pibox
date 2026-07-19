@@ -15,8 +15,6 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
     "mopidy >= 4.0.0",
-    "pykka >= 4.1",
-    "requests >= 2.32",
 ]
 
 [project.urls]
