@@ -1,4 +1,3 @@
-
 from mopidy_pibox import Extension
 
 

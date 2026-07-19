@@ -59,9 +59,7 @@ class Pibox:
         self.denylist.append(track.uri)
 
     def get_suggestions(self) -> list[Uri]:
-        return [
-            uri for uri in self.queued_history if uri not in self.played_tracks
-        ]
+        return [uri for uri in self.queued_history if uri not in self.played_tracks]
 
     def end_session(self) -> None:
         self.__save_queued_history()
