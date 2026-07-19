@@ -1,6 +1,7 @@
 
 import json
 import logging
+from typing import Any
 
 import pykka
 import tornado.web
@@ -16,10 +17,10 @@ class PiboxHandler(tornado.web.RequestHandler):
         self.core = core
         self.logger = logging.getLogger(__name__)
 
-    def _get_body(self):
+    def _get_body(self) -> Any:
         return tornado.escape.json_decode(self.request.body)
 
-    def _get_user_fingerprint(self):
+    def _get_user_fingerprint(self) -> str:
         return self.request.headers["X-Pibox-Fingerprint"]
 
 
@@ -27,7 +28,7 @@ class TracklistHandler(PiboxHandler):
     def initialize(self, core: CoreProxy) -> None:
         super().initialize(core)
 
-    def post(self):
+    def post(self) -> None:
         frontend = _get_frontend_proxy()
 
         data = self._get_body()
@@ -38,7 +39,7 @@ class TracklistHandler(PiboxHandler):
         self.set_header("Content-Type", "application/json")
         self.write(json.dumps({"tracklist": tracklist, "error": error}))
 
-    def get(self):
+    def get(self) -> None:
         frontend = _get_frontend_proxy()
 
         fingerprint = self._get_user_fingerprint()
@@ -51,7 +52,7 @@ class VoteHandler(PiboxHandler):
     def initialize(self, core: CoreProxy) -> None:
         super().initialize(core)
 
-    def post(self):
+    def post(self) -> None:
         frontend = _get_frontend_proxy()
 
         data = self._get_body()
@@ -81,7 +82,7 @@ class SessionHandler(PiboxHandler):
     def initialize(self, core: CoreProxy) -> None:
         super().initialize(core)
 
-    def post(self):
+    def post(self) -> None:
         frontend = _get_frontend_proxy()
 
         data = self._get_body()
@@ -99,13 +100,13 @@ class SessionHandler(PiboxHandler):
         )
         self.set_status(200)
 
-    def get(self):
+    def get(self) -> None:
         frontend = _get_frontend_proxy()
 
         session = frontend.pibox.to_json().get()
         self.write(session)
 
-    def delete(self):
+    def delete(self) -> None:
         frontend = _get_frontend_proxy()
 
         frontend.end_session().get()
@@ -117,7 +118,7 @@ class SuggestionsHandler(PiboxHandler):
     def initialize(self, core: CoreProxy) -> None:
         super().initialize(core)
 
-    def get(self):
+    def get(self) -> None:
         frontend = _get_frontend_proxy()
 
         suggestions = frontend.get_suggestions(3).get()
@@ -130,7 +131,7 @@ class ConfigHandler(tornado.web.RequestHandler):
         self.config = config
         self.logger = logging.getLogger(__name__)
 
-    def get(self):
+    def get(self) -> None:
         pibox_config = self.config.get("pibox")
         self.write(
             {
@@ -141,7 +142,7 @@ class ConfigHandler(tornado.web.RequestHandler):
         )
 
 
-def _get_frontend_proxy():
+def _get_frontend_proxy() -> pykka.ActorProxy:
     # Deferred to avoid a circular import with mopidy_pibox.frontend.
     from mopidy_pibox.frontend import PiboxFrontend  # noqa: PLC0415
 
