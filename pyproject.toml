@@ -1,2 +1,158 @@
+[project]
+name = "Mopidy-Pibox"
+description = "Mopidy extension for jukebox client"
+readme = "README.rst"
+requires-python = ">= 3.13"
+license = { text = "Apache License, Version 2.0" }
+authors = [{ name = "Gavin Bannerman", email = "pibox@gavinb.site" }]
+classifiers = [
+    "Environment :: No Input/Output (Daemon)",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Sound/Audio :: Players",
+]
+dynamic = ["version"]
+dependencies = [
+    "mopidy >= 4.0.0",
+    "pykka >= 4.1",
+    "requests >= 2.32",
+]
+
+[project.urls]
+Homepage = "https://github.com/gbannerman/mopidy-pibox"
+
+[project.entry-points."mopidy.ext"]
+pibox = "mopidy_pibox:Extension"
+
+
 [build-system]
-requires = ["setuptools>=30.3.0,<82", "wheel"]
+requires = ["setuptools >= 78", "setuptools-scm >= 8.2"]
+build-backend = "setuptools.build_meta"
+
+
+[dependency-groups]
+dev = [
+    "tox",
+    { include-group = "ruff" },
+    { include-group = "tests" },
+    { include-group = "typing" },
+]
+ruff = ["ruff"]
+tests = ["pytest", "pytest-cov", "responses"]
+typing = ["pyright"]
+
+
+[tool.coverage.paths]
+source = ["src/", "*/site-packages/"]
+
+[tool.coverage.run]
+source_pkgs = ["mopidy_pibox"]
+
+[tool.coverage.report]
+show_missing = true
+
+
+[tool.pyright]
+pythonVersion = "3.13"
+typeCheckingMode = "standard"
+# Not all dependencies have type hints:
+reportMissingTypeStubs = false
+# Already covered by ruff's flake8-self checks:
+reportPrivateImportUsage = false
+
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    # By default, fail tests on warnings from our own code
+    "error:::mopidy_pibox",
+    #
+    # Add any warnings you want to ignore here
+]
+
+
+[tool.ruff]
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN401", # any-type
+    "D",      # pydocstyle
+    "D203",   # one-blank-line-before-class
+    "D213",   # multi-line-summary-second-line
+    "FIX002", # line-contains-todo  # TODO
+    "G004",   # logging-f-string
+    "ISC001", # single-line-implicit-string-concatenation
+    "SLF001", # private-member-access
+    "TD002",  # missing-todo-author
+    "TD003",  # missing-todo-link
+    "TRY003", # raise-vanilla-args
+    #
+    # Conflicting with `ruff format`
+    "COM812", # missing-trailing-comma
+    "ISC001", # single-line-implicit-string-concatenation
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "ANN201",  # missing-return-type-undocumented-public-function
+    "ANN202",  # missing-return-type-private-function
+    "ANN204",  # missing-return-type-special-method
+    "ARG",     # flake8-unused-arguments
+    "D",       # pydocstyle
+    "FBT",     # flake8-boolean-trap
+    "PLR0913", # too-many-arguments
+    "PLR2004", # magic-value-comparison
+    "PT027",   # pytest-unittest-raises-assertion
+    "S101",    # assert
+    "TRY002",  # raise-vanilla-class
+]
+
+
+[tool.setuptools.packages.find]
+include = ["mopidy_pibox*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.conf"]
+
+
+[tool.setuptools_scm]
+# This section, even if empty, must be present for setuptools_scm to work
+
+
+[tool.tox]
+env_list = [
+    "3.13",
+    "3.14",
+    "pyright",
+    "ruff-check",
+    "ruff-format",
+]
+
+[tool.tox.env_run_base]
+package = "wheel"
+wheel_build_env = ".pkg"
+dependency_groups = ["tests"]
+commands = [
+    [
+        "pytest",
+        "--cov",
+        "--basetemp={envtmpdir}",
+        { replace = "posargs", extend = true },
+    ],
+]
+
+[tool.tox.env.pyright]
+dependency_groups = ["typing"]
+commands = [["pyright", "{posargs:src}"]]
+
+[tool.tox.env.ruff-check]
+skip_install = true
+dependency_groups = ["ruff"]
+commands = [["ruff", "check", "{posargs:.}"]]
+
+[tool.tox.env.ruff-format]
+skip_install = true
+dependency_groups = ["ruff"]
+commands = [["ruff", "format", "--check", "--diff", "{posargs:.}"]]
