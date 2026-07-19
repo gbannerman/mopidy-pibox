@@ -13,7 +13,7 @@ from mopidy_pibox.frontend import PiboxFrontend
 from mopidy_pibox.pibox import Pibox
 
 
-def _mock_actor_return_value(fn, value):
+def _mock_actor_return_value(fn: mock.Mock, value: object):
     fn.return_value.get.return_value = value
 
 
