@@ -87,6 +87,7 @@ ignore = [
     "TD002",  # missing-todo-author
     "TD003",  # missing-todo-link
     "TRY003", # raise-vanilla-args
+    "CPY001", # copyright-missing
     #
     # Conflicting with `ruff format`
     "COM812", # missing-trailing-comma
