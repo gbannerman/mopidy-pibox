@@ -1,6 +1,6 @@
 {
   "name": "mopidy-pibox",
-  "version": "3.0.13",
+  "version": "4.0.0",
   "type": "module",
   "private": true,
   "dependencies": {
